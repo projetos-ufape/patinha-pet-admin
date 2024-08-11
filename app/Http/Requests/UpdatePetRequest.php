@@ -11,7 +11,7 @@ class UpdatePetRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,34 @@ class UpdatePetRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'gender' => ['required', Rule::enum(Gender::class)],
+            'specie' => ['required', Rule::enum(Specie::class)],
+            'race' => ['required', 'string', 'max:255'],
+            'height' => ['nullable', 'numeric'],
+            'weight' => ['nullable', 'numeric'],
+            'birth' => ['required', 'date', 'before_or_equal:today']
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'O nome do pet é obrigatório.',
+            'name.string' => 'O nome do pet deve ser uma string.',
+            'name.max' => 'O nome do pet não pode ter mais de 255 caracteres.',
+            'gender.required' => 'O gênero do pet é obrigatório.',
+            'gender.enum' => 'O gênero do pet deve ser "female" ou "male".',
+            'specie.required' => 'A espécie do pet é obrigatória.',
+            'specie.enum' => 'A espécie do pet deve ser "cat" ou "dog".',
+            'race.required' => 'A raça do pet é obrigatória.',
+            'race.string' => 'A raça do pet deve ser uma string.',
+            'race.max' => 'A raça do pet não pode ter mais de 255 caracteres.',
+            'height.numeric' => 'A altura do pet deve ser um número.',
+            'weight.numeric' => 'O peso do pet deve ser um número.',
+            'birth.required' => 'A data de nascimento do pet é obrigatória.',
+            'birth.date' => 'A data de nascimento do pet deve ser uma data válida.',
+            'birth.before_or_equal' => 'A data de nascimento do pet não pode ser uma data futura.',
         ];
     }
 }
