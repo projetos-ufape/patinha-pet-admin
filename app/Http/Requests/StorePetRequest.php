@@ -30,7 +30,7 @@ class StorePetRequest extends FormRequest
             'race' => ['required', 'string', 'max:255'],
             'height' => ['nullable', 'numeric'],
             'weight' => ['nullable', 'numeric'],
-            'birth' => ['required', 'date', 'before_or_equal:today']
+            'birth' => ['nullable', 'date', 'before_or_equal:today']
         ];
     }
 
@@ -49,7 +49,6 @@ class StorePetRequest extends FormRequest
             'race.max' => 'A raça do pet não pode ter mais de 255 caracteres.',
             'height.numeric' => 'A altura do pet deve ser um número.',
             'weight.numeric' => 'O peso do pet deve ser um número.',
-            'birth.required' => 'A data de nascimento do pet é obrigatória.',
             'birth.date' => 'A data de nascimento do pet deve ser uma data válida.',
             'birth.before_or_equal' => 'A data de nascimento do pet não pode ser uma data futura.',
         ];

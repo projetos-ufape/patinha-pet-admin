@@ -17,9 +17,9 @@ return new class extends Migration
             $table->enum('gender', ['female', 'male']);
             $table->enum('specie', ['cat', 'dog']);
             $table->string('race');
-            $table->float('height', 8, 2);
-            $table->float('weight', 8, 2);
-            $table->date('birth');
+            $table->float('height', 8, 2)->nullable();
+            $table->float('weight', 8, 2)->nullable();
+            $table->date('birth')->nullable();
             $table->timestamps();
         });
     }
