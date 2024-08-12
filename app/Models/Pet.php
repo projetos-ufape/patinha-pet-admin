@@ -16,6 +16,7 @@ class Pet extends Model
         'gender',
         'specie',
         'race',
+        'castrated',
         'height', 
         'weight',
         'birth'
