@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Enum\Gender;
-use App\Enum\Specie;
+use App\Enums\Gender;
+use App\Enums\Specie;
 
 class Pet extends Model
 {

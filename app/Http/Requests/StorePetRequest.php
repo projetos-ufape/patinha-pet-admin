@@ -4,8 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Enum\Gender;
-use App\Enum\Specie;
+use App\Enums\Gender;
+use App\Enums\Specie;
 class StorePetRequest extends FormRequest
 {
     /**
@@ -28,6 +28,7 @@ class StorePetRequest extends FormRequest
             'gender' => ['required', Rule::enum(Gender::class)],
             'specie' => ['required', Rule::enum(Specie::class)],
             'race' => ['required', 'string', 'max:255'],
+            'castrated' => ['nullable', 'boolean'],
             'height' => ['nullable', 'numeric'],
             'weight' => ['nullable', 'numeric'],
             'birth' => ['nullable', 'date', 'before_or_equal:today']
