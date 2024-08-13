@@ -17,4 +17,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+Route::resource('products', App\Http\Controllers\ProductController::class);
+Route::resource('stocks', App\Http\Controllers\StockController::class)->only(['index', 'create', 'store']);
+
+require __DIR__ . '/auth.php';
