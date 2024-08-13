@@ -17,4 +17,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Rota para view cliente
+Route::get('/customer', function () {
+    return view('customer.index');})->name('customer.index');
+
 require __DIR__.'/auth.php';
