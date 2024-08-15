@@ -24,4 +24,8 @@ Route::post('/user', [UserController::class, 'store'])->name('user.store');
 Route::patch('/user/{id}', [UserController::class, 'update'])->name('user.update');
 Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 
+// Rota para view cliente
+Route::get('/customer', function () {
+    return view('customer.index');})->name('customer.index');
+
 require __DIR__.'/auth.php';
