@@ -6,7 +6,7 @@ use App\Models\User;
 test('index users', function () {
 	$user = User::factory()->create();
 
-    $response = $this->get('/user');
+    $response = $this->get('/users');
 
 	$response->assertStatus(200);
 	$response->assertJsonCount(1);
@@ -16,14 +16,14 @@ test('index users', function () {
 });
 
 test('index no users', function () {
-	$response = $this->get('/user');
+	$response = $this->get('/users');
 
 	$response->assertStatus(200);
 	$response->assertJsonCount(0);
 });
 
 test('store user', function () {
-    $response = $this->post('/user', [
+    $response = $this->post('/users', [
         'name' => 'aaaaa',
         'email' => 'aaaaa@email.com',
         'password' => 'password',
@@ -50,7 +50,7 @@ test('store user', function () {
 });
 
 test('store user with invalid email', function () {
-    $response = $this->post('/user', [
+    $response = $this->post('/users', [
         'name' => 'aaaaa',
         'email' => 'aaaaa',
         'password' => 'password',
@@ -76,7 +76,7 @@ test('store user with invalid email', function () {
 test('show user', function () {
 	$user = User::factory()->create();
 
-    $response = $this->get('/user/'.$user->id);
+    $response = $this->get('/users/'.$user->id);
 
 	$response->assertStatus(200);
 	$response->assertJson([
@@ -85,7 +85,7 @@ test('show user', function () {
 });
 
 test('show no user', function () {
-	$response = $this->get('/user/0');
+	$response = $this->get('/users/0');
 
 	$response->assertStatus(200);
 	$response->assertJson([]);
@@ -96,7 +96,7 @@ test('update user', function () {
 
 	Address::factory()->create(['user_id' => $user->id]);
 
-    $response = $this->patch('/user/'.$user->id, [
+    $response = $this->patch('/users/'.$user->id, [
         'name' => 'aaaaa',
         'email' => 'bbbbb@email.com',
         'password' => 'password',
@@ -125,7 +125,7 @@ test('update user', function () {
 
 test('update inexistent user', function () {
 
-    $response = $this->patch('/user/0', [
+    $response = $this->patch('/users/0', [
         'name' => 'aaaaa',
         'email' => 'bbbbb@email.com',
         'password' => 'password',
@@ -149,7 +149,7 @@ test('update inexistent user', function () {
 test('destroy user', function () {
 	$user = User::factory()->create();
 
-    $response = $this->delete('/user/'.$user->id);
+    $response = $this->delete('/users/'.$user->id);
 
 	$foundUser = User::where('id', $user->id)->first();
 
@@ -161,7 +161,7 @@ test('destroy user', function () {
 });
 
 test('destroy inexistent user', function () {
-    $response = $this->delete('/user/0');
+    $response = $this->delete('/users/0');
 
 	$response->assertStatus(500);
 });
