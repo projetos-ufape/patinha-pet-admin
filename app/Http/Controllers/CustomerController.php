@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 
 class CustomerController extends Controller
 {
@@ -13,7 +15,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        $customers = Customer::all();
+        return view("customer.index", ['customers' => $customers]);
     }
 
     /**
@@ -21,7 +24,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        return view('customer.create');
     }
 
     /**
@@ -29,7 +32,11 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
-        //
+        $data = $request->validated();
+        DB::transaction(function () use ($data) {
+            Customer::create($data);
+        });
+        return Redirect::route('customers.index')->with('success', 'Cliente cadastrado com sucesso.');
     }
 
     /**
@@ -37,7 +44,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        //
+        return view('customer.show', ['customer' => $customer]);
     }
 
     /**
@@ -45,7 +52,7 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        //
+        return view('customer.edit', ['customer' => $customer]);
     }
 
     /**
@@ -53,7 +60,11 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        //
+        $data = $request->validated();
+        DB::transaction(function () use ($data, $customer) {
+            $customer->updateOrFail($data);
+        });
+        return Redirect::route('customers.edit', [$customer])->with('success', 'Cliente atualizado com sucesso.');
     }
 
     /**
@@ -61,6 +72,9 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        DB::transaction(function () use ($customer) {
+            $customer->deleteOrFail();
+        });
+        return Redirect::route('customers.index')->with('success', 'Cliente excluído com sucesso.');
     }
 }
