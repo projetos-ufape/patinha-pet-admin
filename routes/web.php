@@ -24,6 +24,4 @@ Route::resource("users", UserController::class);
 Route::get('/customer', function () {
     return view('customer.index');})->name('customer.index');
 
-Route::get('/stock', function () {return view('stock.index');})->name('stock.index');
-
 require __DIR__.'/auth.php';
