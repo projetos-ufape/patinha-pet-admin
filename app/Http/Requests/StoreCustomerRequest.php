@@ -11,7 +11,7 @@ class StoreCustomerRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,28 @@ class StoreCustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:128'],
+            'cpf' => ['required', 'string', 'unique:customers,cpf'],
+            'phone_number' => ['required', 'string', 'max:20'],
+            'email' => ['required', 'email', 'unique:customers,email'],
+            'password' => ['required', 'min:4']
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'O campo nome é obrigatório.',
+            'name.max' => 'O campo nome não pode ter mais de :max caracteres.',
+            'cpf.required' => 'O campo CPF é obrigatório.',
+            'cpf.unique' => 'Este CPF já está em uso.',
+            'phone_number.required' => 'O campo número de telefone é obrigatório.',
+            'phone_number.max' => 'O campo número de telefone não pode ter mais de :max caracteres.',
+            'email.required' => 'O campo e-mail é obrigatório.',
+            'email.email' => 'Insira um endereço de e-mail válido.',
+            'email.unique' => 'Este e-mail já está em uso.',
+            'password.required' => 'O campo senha é obrigatório.',
+            'password.min' => 'A senha deve ter pelo menos :min caracteres.',
         ];
     }
 }

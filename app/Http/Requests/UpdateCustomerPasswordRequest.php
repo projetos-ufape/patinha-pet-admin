@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use PHPUnit\Framework\Constraint\IsTrue;
 
-class UpdateCustomerRequest extends FormRequest
+class UpdateCustomerPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,18 +23,15 @@ class UpdateCustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:128'],
-            'phone_number' => ['required', 'string', 'max:20'],
+            'password' => ['required', 'min:4'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'O campo nome é obrigatório.',
-            'name.max' => 'O campo nome não pode ter mais de :max caracteres.',
-            'phone_number.required' => 'O campo número de telefone é obrigatório.',
-            'phone_number.max' => 'O campo número de telefone não pode ter mais de :max caracteres.',
+            'password.required' => 'O campo senha é obrigatório.',
+            'password.min' => 'A senha deve ter pelo menos :min caracteres.'
         ];
     }
 }
