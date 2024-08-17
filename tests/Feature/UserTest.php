@@ -2,22 +2,24 @@
 
 use App\Models\Address;
 use App\Models\User;
-use Illuminate\Testing\Fluent\AssertableJson;
 
 test('index users', function () {
 	$user = User::factory()->create();
 
     $response = $this->get('/user');
 
+	$response->assertStatus(200);
+	$response->assertJsonCount(1);
 	$response->assertJson([[
 		'id' => $user->id,
-	]]); // remove later
+	]]);
 });
 
 test('index no users', function () {
 	$response = $this->get('/user');
 
-	$response->assertExactJson([]); // remove later
+	$response->assertStatus(200);
+	$response->assertJsonCount(0);
 });
 
 test('store user', function () {
@@ -38,9 +40,13 @@ test('store user', function () {
 		'cep' => '00000-000',
     ]);
 
+	$foundUser = User::where('id', $response->json('id'))->first();
+
+	$response->assertStatus(200);
     $response->assertJson([
 		'email' => 'aaaaa@email.com',
-	]); // remove later
+	]);
+	$this->assertEquals($foundUser->email, 'aaaaa@email.com');
 });
 
 test('store user with invalid email', function () {
@@ -62,6 +68,9 @@ test('store user with invalid email', function () {
     ]);
 
 	$response->assertStatus(302);
+	$response->assertInvalid([
+		'email' => 'The email field must be a valid email address.',
+	]);
 });
 
 test('show user', function () {
@@ -69,15 +78,17 @@ test('show user', function () {
 
     $response = $this->get('/user/'.$user->id);
 
+	$response->assertStatus(200);
 	$response->assertJson([
 		'id' => $user->id,
-	]); // remove later
+	]);
 });
 
 test('show no user', function () {
 	$response = $this->get('/user/0');
 
-	$response->assertJson([]); // remove later
+	$response->assertStatus(200);
+	$response->assertJson([]);
 });
 
 test('update user', function () {
@@ -103,9 +114,13 @@ test('update user', function () {
 		'id' => $user->id
     ]);
 
+	$foundUser = User::where('id', $response->json('id'))->first();
+
+	$response->assertStatus(200);
 	$response->assertJson([
 		'email' => 'bbbbb@email.com',
-	]); // remove later
+	]);
+	$this->assertEquals($foundUser->email, 'bbbbb@email.com');
 });
 
 test('update inexistent user', function () {
@@ -136,9 +151,13 @@ test('destroy user', function () {
 
     $response = $this->delete('/user/'.$user->id);
 
+	$foundUser = User::where('id', $user->id)->first();
+
+	$response->assertStatus(200);
 	$response->assertJson([
 		'id' => $user->id,
-	]); // remove later
+	]);
+	$this->assertEquals(null, $foundUser);
 });
 
 test('destroy inexistent user', function () {
