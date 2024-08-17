@@ -25,10 +25,10 @@ class UpdatePetApiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['nullable', 'string', 'max:255'],
+            'name' => ['string', 'min:2', 'max:255'],
             'gender' => ['nullable', Rule::enum(Gender::class)],
             'specie' => ['nullable', Rule::enum(Specie::class)],
-            'race' => ['nullable', 'string', 'max:255'],
+            'race' => ['nullable', 'string', 'min:2', 'max:255'],
             'castrated' => ['nullable', 'boolean'],
             'height' => ['nullable', 'numeric'],
             'weight' => ['nullable', 'numeric'],
@@ -41,10 +41,14 @@ class UpdatePetApiRequest extends FormRequest
         return [
             'name.string' => 'O nome do pet deve ser uma string.',
             'name.max' => 'O nome do pet não pode ter mais de 255 caracteres.',
+            'name.min' => 'O nome do pet precisa ter pelo menos 2 caracteres.',
             'gender.enum' => 'O gênero do pet deve ser "female" ou "male".',
+            'gender.invalid' => 'O gênero do pet é inválido.',
             'specie.enum' => 'A espécie do pet deve ser "cat" ou "dog".',
+            'specie.invalid' => 'A espécie do pet é inválido.',
             'race.string' => 'A raça do pet deve ser uma string.',
             'race.max' => 'A raça do pet não pode ter mais de 255 caracteres.',
+            'race.min' => 'A raça do pet precisa ter pelo menos 2 caracteres.',
             'height.numeric' => 'A altura do pet deve ser um número.',
             'weight.numeric' => 'O peso do pet deve ser um número.',
             'birth.date' => 'A data de nascimento do pet deve ser uma data válida.',
