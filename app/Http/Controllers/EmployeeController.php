@@ -68,15 +68,7 @@ class EmployeeController extends Controller
       ]);
 
       if (!empty($data['address'])) {
-        $user->address()->create([
-          'cep' => $data['address']['cep'],
-          'street' => $data['address']['street'],
-          'number' => $data['address']['number'],
-          'district' => $data['address']['district'],
-          'city' => $data['address']['city'],
-          'complement' => $data['address']['complement'],
-          'state' => $data['address']['state'],
-        ]);
+        $user->address()->create($data['address']);
       }
     });
 
@@ -141,15 +133,7 @@ class EmployeeController extends Controller
       } else if (isset($data['address'])) {
         $employee->user->address()->updateOrCreate(
           ['user_id' => $employee->user->id],
-          [
-            'cep' => $data['address']['cep'],
-            'street' => $data['address']['street'],
-            'number' => $data['address']['number'],
-            'district' => $data['address']['district'],
-            'city' => $data['address']['city'],
-            'complement' => $data['address']['complement'],
-            'state' => $data['address']['state'],
-          ]
+          $data['address']
         );
       }
     });
