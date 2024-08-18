@@ -1,11 +1,14 @@
 <?php
 
 use App\Models\Product;
+use App\Models\User;
 
 test('stock creation', function () {
+    $admin = User::factory()->create();
     $product = Product::factory()->create();
 
     $response = $this
+        ->actingAs($admin, 'web')
         ->post('/stocks', [
             'product_id' => $product->id,
             'quantity' => 10,
@@ -18,7 +21,9 @@ test('stock creation', function () {
 });
 
 test('stock creation must have a valide product', function () {
+    $admin = User::factory()->create();
     $response = $this
+        ->actingAs($admin, 'web')
         ->post('/stocks', [
             'product_id' => 1,
             'quantity' => 10,
@@ -29,9 +34,11 @@ test('stock creation must have a valide product', function () {
 });
 
 test('stock creation must have a valid range of quantity', function () {
+    $admin = User::factory()->create();
     $product = Product::factory()->create();
 
     $response1 = $this
+        ->actingAs($admin, 'web')
         ->post('/stocks', [
             'product_id' => $product->id,
             'quantity' => -9999999999,
@@ -39,6 +46,7 @@ test('stock creation must have a valid range of quantity', function () {
         ]);
 
     $response2 = $this
+        ->actingAs($admin, 'web')
         ->post('/stocks', [
             'product_id' => $product->id,
             'quantity' => 9999999999,
@@ -50,9 +58,11 @@ test('stock creation must have a valid range of quantity', function () {
 });
 
 test('stock creation must have a valid justification', function () {
+    $admin = User::factory()->create();
     $product = Product::factory()->create();
 
     $response = $this
+        ->actingAs($admin, 'web')
         ->post('/stocks', [
             'product_id' => $product->id,
             'quantity' => 10,
@@ -63,9 +73,11 @@ test('stock creation must have a valid justification', function () {
 });
 
 test('when a stock record is created, the total stock of the product must be updated', function () {
+    $admin = User::factory()->create();
     $product = Product::factory()->create();
 
     $this
+        ->actingAs($admin, 'web')
         ->post('/stocks', [
             'product_id' => $product->id,
             'quantity' => 10,
@@ -73,6 +85,7 @@ test('when a stock record is created, the total stock of the product must be upd
         ]);
 
     $this
+        ->actingAs($admin, 'web')
         ->post('/stocks', [
             'product_id' => $product->id,
             'quantity' => -5,
