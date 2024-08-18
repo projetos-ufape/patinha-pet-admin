@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PetController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn() => redirect()->route('login'));
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -19,6 +20,12 @@ Route::middleware('auth')->group(function () {
     
     Route::resource('pets', PetController::class);
 
+    Route::resource("employees", EmployeeController::class);
+    Route::resource('customers', CustomerController::class);
+    Route::resource('services', ServiceController::class);
+    Route::resource('products', App\Http\Controllers\ProductController::class);
+    Route::resource('stocks', App\Http\Controllers\StockController::class)->only(['index', 'create', 'store']);
 });
 
-require __DIR__.'/auth.php';
+
+require __DIR__ . '/auth.php';

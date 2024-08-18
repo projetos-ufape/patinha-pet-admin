@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Product;
 use App\Models\User;
 use App\Models\Pet;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -14,7 +15,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call([
+            CustomerSeeder::class,
+        ]);
 
         Pet::factory()->count(10)->create();
 
@@ -22,5 +25,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        Product::factory(50)
+            ->hasStocks(5)
+            ->create();
     }
 }
