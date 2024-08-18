@@ -17,8 +17,8 @@
                         <td class="px-6 py-4">{{ $cell }}</td>
                     @endforeach
                     <td class="px-6 py-4 flex">
-                        <a href="#" class="text-blue-600 hover:underline">
-                            <img src="{{ asset('icons/pencil.svg') }}" alt="Profile Icon" class="h-4 w-4">
+                        <a href="{{ route($editRoute, $row[0]) }}" class="text-blue-600 hover:underline">
+                            <img src="{{ asset('icons/pencil.svg') }}" alt="Editar" class="h-4 w-4">
                         </a>
                         <a href="#" class="text-red-600 hover:underline ml-4" onclick="return confirm('Tem certeza que deseja excluir este item?')">
                             <img src="{{ asset('icons/trash3.svg') }}" alt="Profile Icon" class="h-4 w-4">
