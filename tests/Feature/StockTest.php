@@ -17,7 +17,7 @@ test('stock creation', function () {
         ->assertRedirect('/stocks');
 });
 
-test('stock creation must have a valide product', function () {
+test('stock creation must have a valid product', function () {
     $response = $this
         ->post('/stocks', [
             'product_id' => 1,
