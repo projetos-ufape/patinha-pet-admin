@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProductController;
+use  App\Http\Controllers\StockController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -17,8 +19,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::resource('products', App\Http\Controllers\ProductController::class);
-Route::resource('stocks', App\Http\Controllers\StockController::class)->only(['index', 'create', 'store']);
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/product/{product}', [ProductController::class, 'show'])->name('product.show');
+Route::get('/products/add-product', [ProductController::class, 'create'])->name('products.add');
+Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+Route::get('/product/edit/{product}', [ProductController::class, 'edit'])->name('product.edit');
+Route::patch('/product/{product}', [ProductController::class, 'update'])->name('product.update');
+Route::delete('/product/{product}', [ProductController::class, 'destroy'])->name('product.destroy');
+
+// Replace later by:
+//Route::resource('products', ProductController::class);
+
+
+Route::resource('stocks', StockController::class)->only(['index', 'create', 'store']);
 
 require __DIR__ . '/auth.php';
 // Rota para view cliente
