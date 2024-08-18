@@ -2,12 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Customer>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Employee>
  */
-class CustomerFactory extends Factory
+class EmployeeFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +18,8 @@ class CustomerFactory extends Factory
     public function definition(): array
     {
         return [
-            'phone_number' => fake()->unique()->numerify('###########'),
+            'salary' => fake()->numberBetween(2500, 5000),
+            'admission_date' => fake()->date('Y-m-d'),
         ];
     }
 }
