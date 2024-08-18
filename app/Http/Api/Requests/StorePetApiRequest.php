@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Api\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Enums\Gender;
 use App\Enums\Specie;
-
-class UpdatePetApiRequest extends FormRequest
+class StorePetApiRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,27 +24,29 @@ class UpdatePetApiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['string', 'min:2', 'max:255'],
-            'gender' => [Rule::enum(Gender::class)],
-            'specie' => [Rule::enum(Specie::class)],
-            'race' => ['string', 'min:2', 'max:255'],
-            'castrated' => ['boolean'],
-            'height' => ['numeric'],
-            'weight' => ['numeric'],
-            'birth' => ['date', 'before_or_equal:today']
+            'name' => ['required', 'string', 'min:2', 'max:255'],
+            'gender' => ['required', Rule::enum(Gender::class)],
+            'specie' => ['required', Rule::enum(Specie::class)],
+            'race' => ['required', 'string', 'min:2', 'max:255'],
+            'castrated' => ['nullable', 'boolean'],
+            'height' => ['nullable', 'numeric'],
+            'weight' => ['nullable', 'numeric'],
+            'birth' => ['nullable', 'date', 'before_or_equal:today']
         ];
     }
 
     public function messages()
     {
         return [
+            'name.required' => 'O nome do pet é obrigatório.',
             'name.string' => 'O nome do pet deve ser uma string.',
             'name.max' => 'O nome do pet não pode ter mais de 255 caracteres.',
             'name.min' => 'O nome do pet precisa ter pelo menos 2 caracteres.',
+            'gender.required' => 'O gênero do pet é obrigatório.',
             'gender.enum' => 'O gênero do pet deve ser "female" ou "male".',
-            'gender.invalid' => 'O gênero do pet é inválido.',
+            'specie.required' => 'A espécie do pet é obrigatória.',
             'specie.enum' => 'A espécie do pet deve ser "cat" ou "dog".',
-            'specie.invalid' => 'A espécie do pet é inválido.',
+            'race.required' => 'A raça do pet é obrigatória.',
             'race.string' => 'A raça do pet deve ser uma string.',
             'race.max' => 'A raça do pet não pode ter mais de 255 caracteres.',
             'race.min' => 'A raça do pet precisa ter pelo menos 2 caracteres.',
@@ -56,7 +57,7 @@ class UpdatePetApiRequest extends FormRequest
         ];
     }
 
-     /**
+    /**
      * Handle a failed validation attempt.
      *
      * @param \Illuminate\Contracts\Validation\Validator $validator

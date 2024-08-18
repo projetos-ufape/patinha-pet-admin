@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Api\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\StorePetApiRequest;
-use App\Http\Requests\Api\UpdatePetApiRequest;
-use App\Http\Resources\PetResource;
+use App\Http\Api\Requests\StorePetApiRequest;
+use App\Http\Api\Requests\UpdatePetApiRequest;
+use App\Http\Api\Resources\PetResource;
 use App\Models\Pet;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
