@@ -5,8 +5,9 @@
 @endpush
 
 @section('content')
+
     <div class="p-6">
-        <h1 class="text-2xl font-light mb-4">Clientes</h1>
+        <h1 class="text-2xl mb-4">Clientes</h1>
         
         <div class="flex justify-between items-center mb-4">
 
@@ -30,13 +31,12 @@
             </div>
 
             <a
-                href="#" 
+                href="{{ route('customer.create') }}"
                 class="add-button"
             >
                 <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon" >
                 Cadastrar Cliente
             </a>
-
 
         </div>
 
@@ -52,6 +52,7 @@
         @include('components.table', [
             'header' => ['ID', 'Nome', 'CPF', 'Celular', 'E-mail', 'Senha', 'Endereço'],
             'content' => $content,
+            'editRoute' => 'customer.edit',
         ])
         
     </div>
