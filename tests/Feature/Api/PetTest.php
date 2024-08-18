@@ -29,6 +29,49 @@ test("Pets can be loaded", function () {
     );
 });
 
+test("A pet can be saved", function () {
+  $data = [
+    'name' => "Belinha",
+    'gender' => 'female',
+    'specie' => 'dog',
+    'race' => 'Maltês',
+    'height' => 1.5,
+    'weight' => 1.0,
+    'castrated' => true,
+    'birth' => fake()->date
+  ];
+
+  $response = $this->postJson('/api/pets', $data);
+
+  $response->assertStatus(201)
+    ->assertJson([
+      'message' => "Criado com sucesso",
+    ]);
+});
+
+test("A pet cannot be saved with invalid information", function () {
+  $data = [
+    'name' => 12,
+    'gender' => 'female',
+    'specie' => 'dog',
+    'race' => 'Maltês',
+    'height' => "text",
+    'weight' => 1.0,
+    'castrated' => true,
+    'birth' => fake()->date
+  ];
+
+  $response = $this->postJson('/api/pets', $data);
+
+  $response->assertStatus(422)
+    ->assertJson([
+      'errors' => [
+        'name' => ["O nome do pet deve ser uma string."],
+        'height' => ["A altura do pet deve ser um número."]
+      ],
+    ]);
+});
+
 test("A pet cannot be saved with your required information", function () {
   $data = [];
 
@@ -78,6 +121,15 @@ test("A pet must be searched by id", function () {
     );
 });
 
+test("Searching for a non-existing pet returns an error", function () {
+  $response = $this->getJson('/api/pets/999999');
+
+  $response->assertStatus(404)
+    ->assertJson([
+      'error' => 'Pet não encontrado.',
+    ]);
+});
+
 test("A pet can be updated", function () {
   $pet = Pet::factory()->create([
     'name' => "Belinha",
@@ -109,7 +161,7 @@ test("A pet can be updated", function () {
   ]);
 });
 
-test("A pet cannot be updated with invalid data", function () {
+test("A pet cannot be updated with invalid information", function () {
   $pet = Pet::factory()->create();
 
   $response = $this->putJson("api/pets/{$pet->id}", [
@@ -129,13 +181,13 @@ test("A pet cannot be updated with invalid data", function () {
 
 test("Updating a non-existing pet returns error", function () {
   $response = $this->putJson('/api/pets/999999', [
-      'name' => 'NewName',
+    'name' => 'NewName',
   ]);
 
   $response->assertStatus(404)
-           ->assertJson([
-               'error' => 'Pet não encontrado.',
-           ]);
+    ->assertJson([
+      'error' => 'Pet não encontrado.',
+    ]);
 });
 
 test("A pet can be deleted", function () {
@@ -155,7 +207,7 @@ test("Trying to delete a non-existing pet returns error", function () {
   $response = $this->deleteJson('/api/pets/999999');
 
   $response->assertStatus(404)
-           ->assertJson([
-               'error' => 'Pet não encontrado.',
-           ]);
+    ->assertJson([
+      'error' => 'Pet não encontrado.',
+    ]);
 });

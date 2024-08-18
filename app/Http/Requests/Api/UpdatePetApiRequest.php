@@ -26,13 +26,13 @@ class UpdatePetApiRequest extends FormRequest
     {
         return [
             'name' => ['string', 'min:2', 'max:255'],
-            'gender' => ['nullable', Rule::enum(Gender::class)],
-            'specie' => ['nullable', Rule::enum(Specie::class)],
-            'race' => ['nullable', 'string', 'min:2', 'max:255'],
-            'castrated' => ['nullable', 'boolean'],
-            'height' => ['nullable', 'numeric'],
-            'weight' => ['nullable', 'numeric'],
-            'birth' => ['nullable', 'date', 'before_or_equal:today']
+            'gender' => [Rule::enum(Gender::class)],
+            'specie' => [Rule::enum(Specie::class)],
+            'race' => ['string', 'min:2', 'max:255'],
+            'castrated' => ['boolean'],
+            'height' => ['numeric'],
+            'weight' => ['numeric'],
+            'birth' => ['date', 'before_or_equal:today']
         ];
     }
 
