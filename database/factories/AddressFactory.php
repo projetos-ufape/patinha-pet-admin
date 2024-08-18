@@ -20,13 +20,12 @@ class AddressFactory extends Factory
     {
         return [
             'state' => fake()->randomElement(AddressState::values()),
-			'city' => fake()->city(),
-			'district' => fake()->streetAddress(),
-			'street' => fake()->streetAddress(),
-			'number' => fake()->buildingNumber(),
-			'complement' => fake()->sentence(),
-			'cep' => fake()->postcode(),
-			'user_id' => User::factory(),
+            'city' => substr(fake()->city(), 0, 50),
+            'district' => substr(fake()->streetAddress(), 0, 50),
+            'street' => substr(fake()->streetAddress(), 0, 50),
+            'number' => substr(fake()->buildingNumber(), 0, 50),
+            'complement' => substr(fake()->sentence(), 0, 50),
+            'cep' => fake()->numerify('########'),
         ];
     }
 }

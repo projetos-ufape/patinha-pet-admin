@@ -3,23 +3,27 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Address extends Model
+class Employee extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'cep',
-        'street',
-        'number',
-        'complement',
-        'district',
-        'state',
-        'city',
+        'admission_date',
+        'salary',
+        'role',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'admission_date' => 'date',
+            'salary' => 'decimal:2',
+        ];
+    }
 
     public function user(): BelongsTo
     {

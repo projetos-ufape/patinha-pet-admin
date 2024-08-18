@@ -4,33 +4,33 @@ namespace App\Enums;
 
 enum AddressState: string
 {
-	case Acre = 'acre';
-	case Alagoas = 'alagoas';
-	case Amapa = 'amapa';
-	case Amazonas = 'amazonas';
-	case Bahia = 'bahia';
-	case Ceara = 'ceara';
-	case EspiritoSanto = 'espiritosanto';
-	case Goias = 'goias';
-	case Maranhao = 'maranhao';
-	case MatoGrosso = 'matogrosso';
-	case MatoGrossoDoSul = 'matogrossodosul';
-	case MinasGerais = 'minasgerais';
-	case Para = 'para';
-	case Paraiba = 'paraiba';
-	case Parana = 'parana';
-	case Pernambuco = 'pernambuco';
-	case Piaui = 'piaui';
-	case RioDeJaneiro = 'riodejaneiro';
-	case RioGrandeDoNorte = 'riograndedonorte';
-	case RioGrandeDoSul = 'riograndedosul';
-	case Rondonia = 'rondonia';
-	case Roraima = 'roraima';
-	case SantaCatarina = 'santacatarina';
-	case SaoPaulo = 'saopaulo';
-	case Sergipe = 'sergipe';
-	case Tocantins = 'tocantins';
-	case DistritoFederal = 'distritofederal';
+	case Acre = 'AC';
+	case Alagoas = 'AL';
+	case Amapa = 'AP';
+	case Amazonas = 'AM';
+	case Bahia = 'BA';
+	case Ceara = 'CE';
+	case EspiritoSanto = 'ES';
+	case Goias = 'GO';
+	case Maranhao = 'MA';
+	case MatoGrosso = 'MT';
+	case MatoGrossoDoSul = 'MS';
+	case MinasGerais = 'MG';
+	case Para = 'PA';
+	case Paraiba = 'PB';
+	case Parana = 'PR';
+	case Pernambuco = 'PE';
+	case Piaui = 'PI';
+	case RioDeJaneiro = 'RJ';
+	case RioGrandeDoNorte = 'RN';
+	case RioGrandeDoSul = 'RS';
+	case Rondonia = 'RO';
+	case Roraima = 'RR';
+	case SantaCatarina = 'SC';
+	case SaoPaulo = 'SP';
+	case Sergipe = 'SE';
+	case Tocantins = 'TO';
+	case DistritoFederal = 'DF';
 
 	public static function values(): array
 	{
