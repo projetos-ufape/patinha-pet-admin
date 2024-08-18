@@ -26,8 +26,8 @@ class ProductCreateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:255'],
-            'description' => ['nullable', 'string', 'max:255'],
-            'brand' =>  ['nullable','string','max:255'],
+            'description' => ['string', 'max:255'],
+            'brand' =>  ['string','max:255'],
             'category' => ['required', Rule::enum(ProductCategory::class)],
             'price' => ['required', 'numeric', 'min:0', 'regex:/^\d{1,5}(\.\d{1,2})?$/'],
             'quantity' => ['required','integer','min:0'],
