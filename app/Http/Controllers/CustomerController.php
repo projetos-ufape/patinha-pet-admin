@@ -17,15 +17,17 @@ class CustomerController extends Controller
     public function index()
     {
         $customers = Customer::all();
-        return view("customer.index", ['customers' => $customers]);
+        $users = User::has('customer')->get();
+        
+        return view("customers.index", ['customers' => $customers, 'users' => $users]);
     }
-
+    
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('customer.create');
+        return view('customers.create');
     }
 
     /**
@@ -63,7 +65,7 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        return view('customer.edit', ['customer' => $customer]);
+        return view('customers.edit', ['customer' => $customer]);
     }
 
     /**

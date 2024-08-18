@@ -7,6 +7,12 @@
 @section('content')
 
     <div class="p-6">
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <h1 class="text-2xl mb-4">Clientes</h1>
         
         <div class="flex justify-between items-center mb-4">
@@ -31,7 +37,7 @@
             </div>
 
             <a
-                href="{{ route('customer.create') }}"
+                href="{{ route('customers.create') }}"
                 class="add-button"
             >
                 <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon" >
@@ -40,20 +46,22 @@
 
         </div>
 
-        @php
-            // simulaçao
-            $content = [
-                [1, 'Maria Oliveira', '987.654.321-00', '(21) 99876-5432', 'maria.oliveira@example.com', 'senha456', 'Rua B, 456'],
-                [1, 'Maria Oliveira', '987.654.321-00', '(21) 99876-5432', 'maria.oliveira@example.com', 'senha456', 'Rua B, 456'],                [1, 'Maria Oliveira', '987.654.321-00', '(21) 99876-5432', 'maria.oliveira@example.com', 'senha456', 'Rua B, 456'],
-            ];
-
-        @endphp
-
         @include('components.table', [
-            'header' => ['ID', 'Nome', 'CPF', 'Celular', 'E-mail', 'Senha', 'Endereço'],
-            'content' => $content,
-            'editRoute' => 'customer.edit',
+            'header' => ['ID', 'Nome', 'CPF', 'Celular', 'E-mail', 'Endereço'],
+            'content' => $customers->map(function($customer) {
+                return [
+                    $customer->id, 
+                    $customer->user->name,
+                    $customer->user->cpf, 
+                    $customer->phone_number, 
+                    $customer->user->email, 
+                    $customer->user->address, 
+                ];
+            }),
+            'editRoute' => 'customers.edit',
+            'deleteRoute' => 'customers.destroy',
         ])
-        
+
     </div>
+
 @endsection
