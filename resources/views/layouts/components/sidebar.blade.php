@@ -3,7 +3,7 @@
 
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
             <img src="{{ asset('icons/sidebar/customer.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
-            <a href="{{ route('customer.index') }}" class="text-gray-700 hover:text-gray-900 block ml-2">Clientes</a>
+            <a href="{{ route('customers.index') }}" class="text-gray-700 hover:text-gray-900 block ml-2">Clientes</a>
         </li>
 
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
