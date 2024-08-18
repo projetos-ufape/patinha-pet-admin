@@ -15,7 +15,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
-class RegisteredUserController extends Controller
+class RegisteredEmployeeController extends Controller
 {
     /**
      * Display the registration view.
@@ -34,38 +34,38 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-			'cpf' => ['required', 'string'],
-			'salary' => ['required', 'numeric'],
-			'admission_date' => ['required', 'date', 'date_format:Y-m-d'],
-			'state' => ['required', Rule::enum(AddressState::class)],
-			'city' => ['required', 'string'],
-			'district' => ['required', 'string'],
-			'street' => ['required', 'string'],
-			'number' => ['required', 'integer'],
-			'complement' => ['string'],
-			'cep' => ['required', 'string'],
+            'cpf' => ['required', 'string'],
+            'salary' => ['required', 'numeric'],
+            'admission_date' => ['required', 'date', 'date_format:Y-m-d'],
+            'state' => ['required', Rule::enum(AddressState::class)],
+            'city' => ['required', 'string'],
+            'district' => ['required', 'string'],
+            'street' => ['required', 'string'],
+            'number' => ['required', 'integer'],
+            'complement' => ['string'],
+            'cep' => ['required', 'string'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-			'cpf' => $request->cpf,
-			'salary' => $request->salary,
-			'admission_date' => $request->admission_date,
+            'cpf' => $request->cpf,
+            'salary' => $request->salary,
+            'admission_date' => $request->admission_date,
         ]);
 
-		Address::create([
+        Address::create([
             'state' => $request->state,
             'city' => $request->city,
-			'district' => $request->district,
-			'street' => $request->street,
-			'number' => $request->number,
-			'cep' => $request->cep,
-			'complement' => $request->complement,
-			'user_id' => $user->id,
+            'district' => $request->district,
+            'street' => $request->street,
+            'number' => $request->number,
+            'cep' => $request->cep,
+            'complement' => $request->complement,
+            'user_id' => $user->id,
         ]);
 
         event(new Registered($user));

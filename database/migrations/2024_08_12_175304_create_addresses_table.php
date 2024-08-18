@@ -14,15 +14,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('addresses', function (Blueprint $table) {
-			$table->enum('state', AddressState::values());
-			$table->string('city');
-			$table->string('district');
-			$table->string('street');
-			$table->integer('number');
-			$table->string('complement')->nullable();
-			$table->string('cep');
-			$table->foreignIdFor(User::class)->unique()->constrained()->onDelete('cascade');
             $table->id();
+            $table->foreignIdFor(User::class)->unique()->constrained()->onDelete('cascade');
+            $table->string('cep');
+            $table->string('street');
+            $table->string('number', 10);
+            $table->string('complement')->nullable();
+            $table->string('district');
+            $table->enum('state', AddressState::values());
+            $table->string('city');
             $table->timestamps();
         });
     }
