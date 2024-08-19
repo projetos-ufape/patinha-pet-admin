@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use App\Enums\AddressState;
 
 class CustomerController extends Controller
 {
@@ -16,15 +18,18 @@ class CustomerController extends Controller
     public function index()
     {
         $customers = Customer::all();
-        return view("customer.index", ['customers' => $customers]);
+        $users = User::has('customer')->get();
+        
+        return view("customers.index", ['customers' => $customers, 'users' => $users]);
     }
-
+    
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('customer.create');
+        $states = AddressState::values(); 
+        return view('customers.create', ['states' => $states]); 
     }
 
     /**
@@ -34,8 +39,18 @@ class CustomerController extends Controller
     {
         $data = $request->validated();
         DB::transaction(function () use ($data) {
-            Customer::create($data);
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'cpf' => $data['cpf'],
+                'password' => bcrypt($data['password']),
+            ]);
+
+            $user->customer()->create([
+                'phone_number' => $data['phone_number'],
+            ]);
         });
+
         return Redirect::route('customers.index')->with('success', 'Cliente cadastrado com sucesso.');
     }
 
@@ -52,7 +67,8 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        return view('customer.edit', ['customer' => $customer]);
+        $states = AddressState::values();
+        return view('customers.edit', ['customer' => $customer, 'states' => $states]);
     }
 
     /**
@@ -62,9 +78,16 @@ class CustomerController extends Controller
     {
         $data = $request->validated();
         DB::transaction(function () use ($data, $customer) {
-            $customer->updateOrFail($data);
+            $customer->user->updateOrFail([
+                'name' => $data['name'],
+            ]);
+
+            $customer->updateOrFail([
+                'phone_number' => $data['phone_number'],
+            ]);
         });
-        return Redirect::route('customers.edit', [$customer])->with('success', 'Cliente atualizado com sucesso.');
+
+        return Redirect::route('customers.index', [$customer])->with('success', 'Cliente atualizado com sucesso.');
     }
 
     /**
@@ -72,9 +95,8 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        DB::transaction(function () use ($customer) {
-            $customer->deleteOrFail();
-        });
+        $customer->user->deleteOrFail();
+
         return Redirect::route('customers.index')->with('success', 'Cliente excluído com sucesso.');
     }
 }

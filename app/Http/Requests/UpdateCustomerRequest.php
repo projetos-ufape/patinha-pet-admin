@@ -14,6 +14,13 @@ class UpdateCustomerRequest extends FormRequest
         return true;
     }
 
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'cpf' => preg_replace('/\D/', '', $this->cpf), 
+            'phone_number' => preg_replace('/\D/', '', $this->phone_number), 
+        ]);
+    }
     /**
      * Get the validation rules that apply to the request.
      *

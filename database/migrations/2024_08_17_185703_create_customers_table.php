@@ -13,11 +13,8 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 128);
-            $table->string('cpf')->unique();
-            $table->string('phone_number', 20);
-            $table->string('email', 128)->unique();
-            $table->string('password');
+            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
+            $table->char('phone_number', 11)->unique();
             $table->timestamps();
         });
     }

@@ -4,33 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Customer extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'cpf',
+        'user_id',
         'phone_number',
-        'email',
-        'password'
     ];
 
-    protected $hidden = [
-        'password',
-    ];
-
-    protected function casts(): array
+    public function user(): BelongsTo
     {
-        return [
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(User::class);
     }
-
-    public function address()
-    {
-        // return $this->hasOne(Address::class, 'customer_id');
-    }
-
 }
