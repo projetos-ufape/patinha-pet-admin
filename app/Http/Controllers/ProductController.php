@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProductCategory;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Enums\ProductCategory;
 
 class ProductController extends Controller
 {
@@ -41,7 +41,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.  
+     * Display the specified resource.
      */
     public function show(Product $product)
     {
@@ -78,7 +78,7 @@ class ProductController extends Controller
         if ($product->stocks()->exists()) {
             return redirect()->route('products.index')->with('error', 'Este produto não pode ser removido, pois há estoque associado.');
         }
-        
+
         $product->delete();
 
         return redirect()->route('products.index')->with('success', 'Produto removido com sucesso.');
