@@ -18,6 +18,7 @@ class EmployeeFactory extends Factory
     public function definition(): array
     {
         return [
+			'user_id' => User::factory(),
             'salary' => fake()->numberBetween(2500, 5000),
             'admission_date' => fake()->date('Y-m-d'),
         ];
