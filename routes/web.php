@@ -18,24 +18,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource("employees", EmployeeController::class);
+    Route::resource('employees', EmployeeController::class);
     Route::resource('customers', CustomerController::class);
+    Route::resource('products', ProductController::class);
 });
 
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/product/{product}', [ProductController::class, 'show'])->name('product.show');
-Route::get('/products/add-product', [ProductController::class, 'create'])->name('products.add');
-Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-Route::get('/product/edit/{product}', [ProductController::class, 'edit'])->name('product.edit');
-Route::patch('/product/{product}', [ProductController::class, 'update'])->name('product.update');
-Route::delete('/product/{product}', [ProductController::class, 'destroy'])->name('product.destroy');
-
-// Replace later by:
-//Route::resource('products', ProductController::class);
-
-
 Route::resource('stocks', StockController::class)->only(['index', 'create', 'store']);
-
-require __DIR__ . '/auth.php';
 
 require __DIR__ . '/auth.php';
