@@ -6,6 +6,7 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Enums\ProductCategory;
 
 class ProductController extends Controller
 {
@@ -16,7 +17,7 @@ class ProductController extends Controller
     {
         $products = Product::paginate(15);
 
-        return view('product.index', compact('products'));
+        return view('products.index', compact('products'));
     }
 
     /**
@@ -24,7 +25,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('product.create');
+        $categories = ProductCategory::values();
+
+        return view('products.create', ['categories' => $categories]);
     }
 
     /**
@@ -38,11 +41,11 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified resource.  
      */
     public function show(Product $product)
     {
-        return view('product.show', compact('product'));
+        return view('products.show', compact('product'));
     }
 
     /**
@@ -50,7 +53,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('product.edit', compact('product'));
+        $categories = ProductCategory::values();
+
+        return view('products.edit', compact('product', 'categories'));
     }
 
     /**
