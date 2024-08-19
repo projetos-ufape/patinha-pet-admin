@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use App\Enums\Gender;
 use App\Enums\Specie;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdatePetRequest extends FormRequest
 {
@@ -32,7 +32,7 @@ class UpdatePetRequest extends FormRequest
             'castrated' => ['nullable', 'boolean'],
             'height' => ['nullable', 'numeric'],
             'weight' => ['nullable', 'numeric'],
-            'birth' => ['nullable', 'date', 'before_or_equal:today']
+            'birth' => ['nullable', 'date', 'before_or_equal:today'],
         ];
     }
 

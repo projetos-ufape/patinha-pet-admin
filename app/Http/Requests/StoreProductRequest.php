@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ProductCategory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Enums\ProductCategory;
-
 
 class StoreProductRequest extends FormRequest
 {
@@ -19,10 +18,10 @@ class StoreProductRequest extends FormRequest
         return [
             'name' => ['required', 'max:255'],
             'description' => ['string', 'max:255'],
-            'brand' =>  ['string','max:255'],
+            'brand' => ['string', 'max:255'],
             'category' => ['required', Rule::enum(ProductCategory::class)],
             'price' => ['required', 'numeric', 'min:0', 'regex:/^\d{1,5}(\.\d{1,2})?$/'],
-            'quantity' => ['required','integer','min:0'],
+            'quantity' => ['required', 'integer', 'min:0'],
         ];
     }
 }

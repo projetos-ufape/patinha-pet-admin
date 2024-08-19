@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Api\Controllers\PetController;
 use App\Http\Api\Controllers\CustomerAuthController;
+use App\Http\Api\Controllers\PetController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/customers/signup', [CustomerAuthController::class, 'signup'])->name('api.customers.signup');

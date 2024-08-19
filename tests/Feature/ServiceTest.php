@@ -1,8 +1,7 @@
 <?php
 
-use App\Models\User;
 use App\Models\Service;
-
+use App\Models\User;
 
 it('can list services', function () {
     $admin = User::factory()->create();
@@ -197,7 +196,7 @@ it('cannot update a service with a non-string name', function () {
     $service = Service::factory()->create();
 
     $data = [
-        'name' => 12345, 
+        'name' => 12345,
         'description' => 'Descrição com nome não-string',
         'price' => 60.00,
     ];
@@ -228,7 +227,7 @@ it('cannot update a service with a name longer than 255 characters', function ()
     $response->assertSessionHas('errors', function ($errors) {
         return $errors->has('name') && $errors->first('name') === 'O nome do serviço não pode ter mais que 255 caracteres.';
     });
-    
+
 });
 
 it('cannot update a service without a price', function () {
@@ -238,7 +237,7 @@ it('cannot update a service without a price', function () {
     $data = [
         'name' => 'Serviço Sem Preço',
         'description' => 'Descrição sem preço',
-        
+
     ];
 
     $response = $this->actingAs($admin, 'web')
@@ -257,7 +256,7 @@ it('cannot update a service with a non-numeric price', function () {
     $data = [
         'name' => 'Serviço com Preço Não Numérico',
         'description' => 'Descrição com preço inválido',
-        'price' => 'not a number', 
+        'price' => 'not a number',
     ];
 
     $response = $this->actingAs($admin, 'web')
@@ -287,4 +286,3 @@ it('cannot update a service with a negative price', function () {
         return $errors->has('price') && $errors->first('price') === 'O preço do serviço deve ser um valor positivo.';
     });
 });
-

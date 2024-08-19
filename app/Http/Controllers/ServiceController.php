@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Models\Service;
-use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
+use App\Models\Service;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 
 class ServiceController extends Controller
 {
@@ -32,12 +31,10 @@ class ServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-
     public function store(StoreServiceRequest $request)
     {
 
         $data = $request->validated();
-
 
         DB::transaction(function () use ($data) {
 
@@ -72,9 +69,9 @@ class ServiceController extends Controller
      */
     public function update(UpdateServiceRequest $request, Service $service)
     {
-        
+
         $data = $request->validated();
-    
+
         DB::transaction(function () use ($data, $service) {
 
             $service->updateOrFail([
@@ -83,7 +80,7 @@ class ServiceController extends Controller
                 'price' => $data['price'],
             ]);
         });
-    
+
         return Redirect::route('services.index', [$service])->with('success', 'Serviço atualizado com sucesso.');
     }
 

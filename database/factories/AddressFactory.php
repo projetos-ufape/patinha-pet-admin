@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Enums\AddressState;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

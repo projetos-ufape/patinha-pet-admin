@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
-use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -15,6 +15,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $products = Product::paginate(15);
+
         return view('product.index', compact('products'));
     }
 
@@ -58,6 +59,7 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         $product->update($request->validated());
+
         return redirect()->route('products.index')->with('success', 'Produto atualizado com sucesso.');
     }
 
@@ -68,6 +70,7 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         $product->delete();
+
         return redirect()->route('products.index')->with('success', 'Produto removido com sucesso.');
     }
 }
