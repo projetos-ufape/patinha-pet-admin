@@ -19,17 +19,18 @@ class EmployeeController extends Controller
    */
   public function index()
   {
-    $employees = User::whereHas('employee')->get();
-
-    return view('employees.index', compact('employees'));
+      $employees = User::with('employee')->whereHas('employee')->get();
+  
+      return view('employees.index', compact('employees'));
   }
-
+  
+  
   /**
    * Show the form for creating a new resource.
    */
   public function create(Request $request)
   {
-    //
+    return view('employees.create');
   }
 
   /**
@@ -85,9 +86,16 @@ class EmployeeController extends Controller
    */
   public function edit(string $id)
   {
-    //
+      $employee = Employee::findOrFail($id);
+      $user = User::with('employee')->findOrFail($employee->user_id);
+      return view('employees.edit', [
+          'employee' => $employee,
+          'user' => $user,
+      ]);
   }
-
+  
+  
+  
   /**
    * Update the specified resource in storage.
    */
@@ -147,9 +155,9 @@ class EmployeeController extends Controller
    */
   public function destroy(string $id)
   {
-    $user = User::where('id', $id)->first();
+    $employee = Employee::findOrFail($id);
+    $user = User::with('employee')->findOrFail($employee->user_id);
     $user->delete();
-
-    return response()->json($user); // remove later
+    return redirect()->route('employees.index')->with('success', 'Usuário Excluido com sucesso.');
   }
 }

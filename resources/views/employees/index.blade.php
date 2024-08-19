@@ -6,6 +6,13 @@
 
 @section('content')
     <div class="p-6">
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <h1 class="text-2xl mb-4">Funcionário</h1>
         
         <div class="flex justify-between items-center mb-4">
@@ -30,7 +37,7 @@
             </div>
 
             <a
-                href="{{ route('employee.create') }}"
+                href="{{ route('employees.create') }}"
                 class="add-button"
             >
                 <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon" >
@@ -39,21 +46,27 @@
 
 
         </div>
-
-        @php
-            $content = [
-                [1, 'Maria Oliveira', '987.654.321-00','500','(21) 99876-5432', 'maria.oliveira@example.com', 'senha456', 'Rua B, 456'],
-                [1, 'Maria Oliveira', '987.654.321-00', '700','(21) 99876-5432', 'maria.oliveira@example.com', 'senha456', 'Rua B, 456'],            
-            ];
-
-        @endphp
-
-
         @include('components.table', [
-            'header' => ['ID', 'Nome', 'CPF', 'Salario', 'Celular',  'E-mail', 'Senha', 'Endereço'],
-            'content' => $content,
-            'editRoute' => 'employee.edit',
+            'header' => ['ID', 'Nome', 'CPF','E-mail', 'Endereço'],
+            'content' => $employees->map(function($user) {
+                return [
+                    $user->employee->id ?? 'N/A',
+                    $user->name,            
+                    $user->cpf,             
+                    $user->email,           
+                    $user->address['street'] . ', ' . 
+                    $user->address['number'] . ' ' . 
+                    $user->address['district'] . ' ' .
+                    $user->address['city'] . ' - ' . 
+                    $user->address['state'],       
+                ];
+            }),
+            'editRoute' => 'employees.edit',
+            'deleteRoute' => 'employees.destroy',
         ])
         
     </div>
+
 @endsection
+
+

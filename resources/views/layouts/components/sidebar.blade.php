@@ -23,7 +23,7 @@
 
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
             <img src="{{ asset('icons/sidebar/employees.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
-            <a href="{{ route('employee.index') }}" class="text-gray-700 hover:text-gray-900 block ml-2">Funcionários</a>
+            <a href="{{ route('employees.index') }}" class="text-gray-700 hover:text-gray-900 block ml-2">Funcionários</a>
         </li>
 
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
