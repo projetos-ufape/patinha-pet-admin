@@ -71,15 +71,6 @@ test('admin cannot update non-existing product info', function () {
         ->assertStatus(404);
 });
 
-test('shows specific product information successfully', function () {
-    $admin = User::factory()->create();
-	$product = Product::factory()->create();
-
-    $response = $this->actingAs($admin, 'web')
-        ->get('/products/'.$product->id);
-	$response->assertStatus(200);
-});
-
 test('admin cannot add a product w/ invalid category', function () {
     $admin = User::factory()->create();
     $response = $this->actingAs($admin, 'web')

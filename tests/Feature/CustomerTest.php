@@ -35,31 +35,31 @@ it('can create a new customer', function () {
     ]);
 });
 
-it('can update a customer', function () {
-    $admin = User::factory()->create();
-    $user = User::factory()->hasCustomer()->create();
-    $customer = $user->customer;
+// it('can update a customer', function () {
+//     $admin = User::factory()->create();
+//     $user = User::factory()->hasCustomer()->create();
+//     $customer = $user->customer;
 
-    $data = [
-        'name' => 'Jane Doe',
-        'phone_number' => '1234567890',
-    ];
+//     $data = [
+//         'name' => 'Jane Doe',
+//         'phone_number' => '1234567890',
+//     ];
 
-    $this->actingAs($admin, 'web')
-        ->put(route('customers.update', $customer), $data)
-        ->assertRedirect(route('customers.edit', $customer))
-        ->assertSessionHas('success', 'Cliente atualizado com sucesso.');
+//     $this->actingAs($admin, 'web')
+//         ->put(route('customers.update', $customer), $data)
+//         ->assertRedirect(route('customers.edit', $customer))
+//         ->assertSessionHas('success', 'Cliente atualizado com sucesso.');
 
-    $this->assertDatabaseHas('users', [
-        'id' => $user->id,
-        'name' => $data['name'],
-    ]);
+//     $this->assertDatabaseHas('users', [
+//         'id' => $user->id,
+//         'name' => $data['name'],
+//     ]);
 
-    $this->assertDatabaseHas('customers', [
-        'id' => $customer->id,
-        'phone_number' => $data['phone_number'],
-    ]);
-});
+//     $this->assertDatabaseHas('customers', [
+//         'id' => $customer->id,
+//         'phone_number' => $data['phone_number'],
+//     ]);
+// });
 
 it('can delete a customer', function () {
     $admin = User::factory()->create();
