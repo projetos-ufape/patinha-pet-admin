@@ -84,7 +84,7 @@ class ServiceController extends Controller
             ]);
         });
     
-        return Redirect::route('services.edit', [$service])->with('success', 'Serviço atualizado com sucesso.');
+        return Redirect::route('services.index', [$service])->with('success', 'Serviço atualizado com sucesso.');
     }
 
     /**
