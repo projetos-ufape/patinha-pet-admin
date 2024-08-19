@@ -17,10 +17,9 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::all();
-        $users = User::has('customer')->get();
+        $customers = User::with('customer')->whereHas('customer')->get();
 
-        return view('customers.index', ['customers' => $customers, 'users' => $users]);
+        return view('customers.index', compact('customers'));
     }
 
     /**
@@ -66,11 +65,17 @@ class CustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Customer $customer)
+    public function edit(string $id)
     {
         $states = AddressState::values();
+        $customer = Customer::findOrFail($id);
+        $user = User::with('customer')->findOrFail($customer->user_id);
 
-        return view('customers.edit', ['customer' => $customer, 'states' => $states]);
+        return view('customers.edit', [
+            'customer' => $customer,
+            'user' => $user,
+            'states' => $states,
+        ]);
     }
 
     /**
