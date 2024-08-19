@@ -19,8 +19,6 @@ class DatabaseSeeder extends Seeder
             CustomerSeeder::class,
         ]);
 
-        Pet::factory()->count(10)->create();
-
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',

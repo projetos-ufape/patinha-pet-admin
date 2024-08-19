@@ -5,6 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Enums\Gender;
 use App\Enums\Specie;
+use App\Models\Customer;
 
 return new class extends Migration
 {
@@ -15,6 +16,7 @@ return new class extends Migration
     {
         Schema::create('pets', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Customer::class)->constrained()->onDelete('cascade');
             $table->string('name');
             $table->enum('gender', Gender::values());
             $table->enum('specie', Specie::values());
