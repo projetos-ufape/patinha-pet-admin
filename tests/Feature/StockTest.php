@@ -20,7 +20,7 @@ test('stock creation', function () {
         ->assertRedirect('/stocks');
 });
 
-test('stock creation must have a valide product', function () {
+test('stock creation must have a valid product', function () {
     $admin = User::factory()->create();
     $response = $this
         ->actingAs($admin, 'web')
