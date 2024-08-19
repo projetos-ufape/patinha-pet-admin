@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use App\Enums\AddressState;
 
 class CustomerController extends Controller
 {
@@ -27,7 +28,8 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('customers.create');
+        $states = AddressState::values(); 
+        return view('customers.create', ['states' => $states]); 
     }
 
     /**
@@ -65,7 +67,8 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        return view('customers.edit', ['customer' => $customer]);
+        $states = AddressState::values();
+        return view('customers.edit', ['customer' => $customer, 'states' => $states]);
     }
 
     /**

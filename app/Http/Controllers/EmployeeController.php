@@ -30,7 +30,8 @@ class EmployeeController extends Controller
    */
   public function create(Request $request)
   {
-    return view('employees.create');
+    $states = AddressState::values();
+    return view('employees.create', ['states' => $states]); 
   }
 
   /**
@@ -86,11 +87,13 @@ class EmployeeController extends Controller
    */
   public function edit(string $id)
   {
+      $states = AddressState::values();
       $employee = Employee::findOrFail($id);
       $user = User::with('employee')->findOrFail($employee->user_id);
       return view('employees.edit', [
           'employee' => $employee,
           'user' => $user,
+          'states' => $states,
       ]);
   }
   

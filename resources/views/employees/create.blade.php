@@ -108,7 +108,7 @@
             <div style="display: inline-block; width: 24%; margin-left: 2%;">
                 <select name="address[state]" id="state" class="w-full px-4 py-2 border border-gray-300 rounded-md" required>
                     <option value="" disabled selected>Selecione o Estado</option>
-                    @foreach (\App\Enums\AddressState::values() as $state)
+                    @foreach ($states as $state)
                         <option value="{{ $state }}">{{ $state }}</option>
                     @endforeach
                 </select>
