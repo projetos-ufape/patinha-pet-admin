@@ -6,8 +6,6 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use Illuminate\Http\Request;
 use App\Models\Product;
-use Illuminate\View\View;
-use PhpParser\Node\Expr\Cast\String_;
 
 class ProductController extends Controller
 {
@@ -33,9 +31,6 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request, Product $product)
     {
-        //$product->create($request->validated());
-        //$data = $request->validated();
-        //Product::create($data);
         $product->create($request->validated());
 
         return redirect()->route('products.index')->with('success', 'Produto adicionado com sucesso.');
