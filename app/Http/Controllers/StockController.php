@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreStockRequest;
+use App\Models\Employee;
+use App\Models\Product;
 use App\Models\Stock;
 
 class StockController extends Controller
@@ -12,12 +14,9 @@ class StockController extends Controller
      */
     public function index()
     {
-        $stocks = Stock::with(["product:id,name,price,quantity", "user:id,name"])->get();
-        foreach ($stocks as $stock) {
-            $total = $stock->product->price * $stock->quantity;
-            echo "BY: {$stock->user?->name} | PRODUCT: {$stock->product->name} ({$stock->product->quantity}) | QUANTITY: {$stock->quantity} | TOTAL: {$total} <br>";
-        }
-        return;
+        $stocks = Stock::with("product:id,name", "user:id,name")->get();
+
+        return view("stock.index", compact('stocks'));
     }
 
     /**
@@ -25,7 +24,9 @@ class StockController extends Controller
      */
     public function create()
     {
-        //
+        $employees = Employee::all();
+        $products = Product::all();
+        return view("stock.create", compact('employees', 'products'));
     }
 
     /**
@@ -34,6 +35,7 @@ class StockController extends Controller
     public function store(StoreStockRequest $request)
     {
         $data = $request->validated();
+        $data['user_id'] = $request->user()->id;
         Stock::create($data);
 
         return redirect()->route('stocks.index');

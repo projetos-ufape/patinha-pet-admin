@@ -16,15 +16,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             CustomerSeeder::class,
+            ProductSeeder::class,
         ]);
 
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
-
-        Product::factory(50)
-            ->hasStocks(5)
-            ->create();
     }
 }

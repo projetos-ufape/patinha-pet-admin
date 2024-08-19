@@ -15,17 +15,21 @@
             <img src="{{ asset('icons/sidebar/products.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
             <a href="#" class="text-gray-700 hover:text-gray-900 block ml-2">Produtos</a>
         </li>
-        
-        <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
-            <img src="{{ asset('icons/sidebar/services.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
-            <a href="#" class="text-gray-700 hover:text-gray-900 block ml-2">Serviços</a>
-        </li>
 
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
             <img src="{{ asset('icons/sidebar/stock.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
-            <a href="#" class="text-gray-700 hover:text-gray-900 block ml-2">Estoque</a>
+            <a href="{{ route('stocks.index') }}" class="text-gray-700 hover:text-gray-900 block ml-2">Estoque</a>
+        </li>        
+
+        <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
+            <img src="{{ asset('icons/sidebar/employees.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
+            <a href="{{ route('employees.index') }}" class="text-gray-700 hover:text-gray-900 block ml-2">Funcionários</a>
         </li>
-        
+
+        <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
+            <img src="{{ asset('icons/sidebar/services.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
+            <a href="{{ route('services.index') }}" class="text-gray-700 hover:text-gray-900 block ml-2">Serviços</a>
+        </li>
     </ul>
 </div>
 
