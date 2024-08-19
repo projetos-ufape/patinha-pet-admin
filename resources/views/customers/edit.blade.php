@@ -56,7 +56,15 @@
                 <input type="text" name="city" id="city" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Cidade" value="{{ $customer->city }}" required>
             </div>
             <div style="display: inline-block; width: 24%; margin-left: 2%;">
-                <input type="text" name="state" id="state" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Estado" value="{{ $customer->state }}" required>
+            <select name="address[state]" id="state" class="w-full px-4 py-2 border border-gray-300 rounded-md" required>
+                    <option value="" disabled selected>Selecione o Estado</option>
+                    @foreach (\App\Enums\AddressState::values() as $state)
+                        <option value="{{ $state }}">{{ $state }}</option>
+                    @endforeach
+                </select>
+                @error('address.state')
+                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                @enderror
             </div>
         </div>
 
@@ -66,6 +74,5 @@
         </div>
     </form>
 </div>
-
 
 @endsection

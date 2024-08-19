@@ -84,7 +84,7 @@ class CustomerController extends Controller
             ]);
         });
 
-        return Redirect::route('customers.edit', [$customer])->with('success', 'Cliente atualizado com sucesso.');
+        return Redirect::route('customers.index', [$customer])->with('success', 'Cliente atualizado com sucesso.');
     }
 
     /**
