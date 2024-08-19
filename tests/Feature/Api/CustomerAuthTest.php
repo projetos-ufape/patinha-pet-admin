@@ -40,7 +40,7 @@ it('can sign up a new customer with address', function () {
 });
 
 it('can sign up a new customer without address', function () {
-    $data =  User::factory()->make()->toArray();
+    $data = User::factory()->make()->toArray();
     $data = array_merge($data, Customer::factory()->make()->toArray());
     $data['password'] = 'password123';
     $data['password_confirmation'] = 'password123';

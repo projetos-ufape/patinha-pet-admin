@@ -14,9 +14,9 @@ class StockController extends Controller
      */
     public function index()
     {
-        $stocks = Stock::with("product:id,name", "user:id,name")->get();
+        $stocks = Stock::with('product:id,name', 'user:id,name')->get();
 
-        return view("stock.index", compact('stocks'));
+        return view('stock.index', compact('stocks'));
     }
 
     /**
@@ -26,7 +26,8 @@ class StockController extends Controller
     {
         $employees = Employee::all();
         $products = Product::all();
-        return view("stock.create", compact('employees', 'products'));
+
+        return view('stock.create', compact('employees', 'products'));
     }
 
     /**

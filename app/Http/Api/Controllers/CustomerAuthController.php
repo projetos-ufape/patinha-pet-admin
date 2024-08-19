@@ -46,7 +46,7 @@ class CustomerAuthController extends Controller
         ]);
 
         $user = User::where('email', $credentials['email'])->first();
-        if (!$user || !$user->customer || !Hash::check($credentials['password'], $user->password)) {
+        if (! $user || ! $user->customer || ! Hash::check($credentials['password'], $user->password)) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $token = $user->createToken('customer-api', ['customer'])->plainTextToken;

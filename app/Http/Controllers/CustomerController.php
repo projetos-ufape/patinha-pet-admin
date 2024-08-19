@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AddressState;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
-use App\Enums\AddressState;
 
 class CustomerController extends Controller
 {
@@ -19,17 +19,18 @@ class CustomerController extends Controller
     {
         $customers = Customer::all();
         $users = User::has('customer')->get();
-        
-        return view("customers.index", ['customers' => $customers, 'users' => $users]);
+
+        return view('customers.index', ['customers' => $customers, 'users' => $users]);
     }
-    
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        $states = AddressState::values(); 
-        return view('customers.create', ['states' => $states]); 
+        $states = AddressState::values();
+
+        return view('customers.create', ['states' => $states]);
     }
 
     /**
@@ -68,6 +69,7 @@ class CustomerController extends Controller
     public function edit(Customer $customer)
     {
         $states = AddressState::values();
+
         return view('customers.edit', ['customer' => $customer, 'states' => $states]);
     }
 
