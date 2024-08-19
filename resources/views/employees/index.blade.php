@@ -20,14 +20,6 @@
                     class="px-4 py-2 border border-gray-100 rounded-lg mr-2"
                 />
 
-                <button
-                    onclick="filterTable()"
-                    class="filter-button"
-                >
-                    <img src="{{ asset('icons/filter.svg') }}" alt="Filter Icon">
-                    Filtrar
-                </button>
-
             </div>
 
             <a
