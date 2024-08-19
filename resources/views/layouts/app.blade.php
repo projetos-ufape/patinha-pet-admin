@@ -9,7 +9,7 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=Quicksand:wght@100;300;400;500;600&display=swap" rel="stylesheet">
 
     <!-- Scripts -->
      
@@ -24,6 +24,11 @@
         <div class="flex flex-1">
             @include('layouts.components.sidebar') 
             <div class="flex-1 p-6">
+            @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+            @endif
                 @yield('content')
             </div>
         </div>

@@ -19,17 +19,19 @@ class EmployeeController extends Controller
    */
   public function index()
   {
-    $employees = User::whereHas('employee')->get();
-
-    return view('employees.index', compact('employees'));
+      $employees = User::with('employee')->whereHas('employee')->get();
+  
+      return view('employees.index', compact('employees'));
   }
-
+  
+  
   /**
    * Show the form for creating a new resource.
    */
   public function create(Request $request)
   {
-    //
+    $states = AddressState::values();
+    return view('employees.create', ['states' => $states]); 
   }
 
   /**
@@ -85,9 +87,18 @@ class EmployeeController extends Controller
    */
   public function edit(string $id)
   {
-    //
+      $states = AddressState::values();
+      $employee = Employee::findOrFail($id);
+      $user = User::with('employee')->findOrFail($employee->user_id);
+      return view('employees.edit', [
+          'employee' => $employee,
+          'user' => $user,
+          'states' => $states,
+      ]);
   }
-
+  
+  
+  
   /**
    * Update the specified resource in storage.
    */
@@ -147,9 +158,9 @@ class EmployeeController extends Controller
    */
   public function destroy(string $id)
   {
-    $user = User::where('id', $id)->first();
+    $employee = Employee::findOrFail($id);
+    $user = User::with('employee')->findOrFail($employee->user_id);
     $user->delete();
-
-    return response()->json($user); // remove later
+    return redirect()->route('employees.index')->with('success', 'Usuário Excluido com sucesso.');
   }
 }
