@@ -7,12 +7,6 @@
 @section('content')
     <div class="p-6">
 
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
         <h1 class="text-2xl mb-4">Funcionário</h1>
         
         <div class="flex justify-between items-center mb-4">

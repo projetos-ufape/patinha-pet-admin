@@ -7,11 +7,6 @@
 @section('content')
 
     <div class="p-6">
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
 
         <h1 class="text-2xl mb-4">Clientes</h1>
         

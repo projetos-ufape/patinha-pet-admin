@@ -24,6 +24,11 @@
         <div class="flex flex-1">
             @include('layouts.components.sidebar') 
             <div class="flex-1 p-6">
+            @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+            @endif
                 @yield('content')
             </div>
         </div>
