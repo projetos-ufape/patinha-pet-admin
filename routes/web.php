@@ -20,6 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::resource("employees", EmployeeController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('services', ServiceController::class);
+    Route::resource('products', App\Http\Controllers\ProductController::class);
+    Route::resource('stocks', App\Http\Controllers\StockController::class)->only(['index', 'create', 'store']);
 });
 
 
