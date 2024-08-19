@@ -26,7 +26,7 @@ class CustomerSignUpRequest extends FormRequest
             'address' => ['sometimes', 'array'],
             'address.cep' => ['sometimes', 'size:8'],
             'address.street' => ['required_with:address', 'min:3', 'max:50'],
-            'address.number' => ['required_with:address', 'string', 'min:1', 'max:10'],
+            'address.number' => ['nullable', 'string', 'min:1', 'max:10'],
             'address.district' => ['required_with:address', 'min:3', 'max:50'],
             'address.city' => ['required_with:address', 'min:3', 'max:50'],
             'address.complement' => ['string', 'max:50'],

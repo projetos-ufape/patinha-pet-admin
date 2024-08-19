@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->unique()->constrained()->onDelete('cascade');
             $table->string('cep');
             $table->string('street');
-            $table->string('number', 10);
+            $table->string('number', 10)->nullable();
             $table->string('complement')->nullable();
             $table->string('district');
             $table->enum('state', AddressState::values());
