@@ -6,6 +6,13 @@
 
 @section('content')
     <div class="p-6">
+
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <h1 class="text-2xl font-normal mb-4">Produtos</h1>
         
         <div class="flex justify-between items-center mb-4">

@@ -74,6 +74,11 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::find($id);
+
+        if ($product->stocks()->exists()) {
+            return redirect()->route('products.index')->with('error', 'Este produto não pode ser removido, pois há estoque associado.');
+        }
+        
         $product->delete();
 
         return redirect()->route('products.index')->with('success', 'Produto removido com sucesso.');

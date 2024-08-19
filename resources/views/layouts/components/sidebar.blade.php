@@ -5,12 +5,12 @@
             <img src="{{ asset('icons/sidebar/customer.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
             <a href="{{ route('customers.index') }}" class="text-gray-700 hover:text-gray-900 block ml-2">Clientes</a>
         </li>
-
+        <!--
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
             <img src="{{ asset('icons/sidebar/pets.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
             <a href="{{ route('pets.index') }}" class="text-gray-700 hover:text-gray-900 block ml-2">Pets</a>
         </li>
-
+        -->
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
             <img src="{{ asset('icons/sidebar/products.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
             <a href="{{ route('products.index') }}" class="text-gray-700 hover:text-gray-900 block ml-2">Produtos</a>
@@ -35,7 +35,6 @@
 
 
 <script>
-
     const menuButton = document.getElementById('menu-button');
     const sidebar = document.getElementById('sidebar');
     menuButton.addEventListener('click', () => {
