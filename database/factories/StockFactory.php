@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Employee;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,10 @@ class StockFactory extends Factory
     public function definition(): array
     {
         return [
+			'id' => $this->faker->numberBetween(0, 100),
             'quantity' => $this->faker->numberBetween(-10, 100),
+			'justification' => $this->faker->sentence(),
+			'created_at' => $this->faker->dateTimeBetween('-1 day'),
         ];
     }
 }
