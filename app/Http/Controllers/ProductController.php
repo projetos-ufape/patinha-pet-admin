@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProductCreateRequest;
-use App\Http\Requests\ProductUpdateRequest;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\View\View;
@@ -17,8 +17,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $products = Product::paginate(15);
-        return response()->json($products); // for testing
-        //return view('products.index', compact('products'));
+        return view('product.index', compact('products'));
     }
 
     /**
@@ -26,18 +25,20 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //return view('products.create');
+        return view('product.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductCreateRequest $request)
+    public function store(StoreProductRequest $request, Product $product)
     {
-        $product = Product::create($request->validated());
-        return response()->json($product); // for testing
+        //$product->create($request->validated());
+        //$data = $request->validated();
+        //Product::create($data);
+        $product->create($request->validated());
 
-        //return redirect()->route('products.index')->with('success', 'Added new product successfully.');
+        return redirect()->route('products.index')->with('success', 'Produto adicionado com sucesso.');
     }
 
     /**
@@ -45,8 +46,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return response()->json($product); // for testing
-        //return view('products.show', compact('product'));
+        return view('product.show', compact('product'));
     }
 
     /**
@@ -54,18 +54,16 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //return view('products.edit', compact('product'));
+        return view('product.edit', compact('product'));
     }
-
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductUpdateRequest $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
         $product->update($request->validated());
-        return response()->json($product); // for testing
-        //return redirect()->route('products.index')->with('status', 'Product updated successfully');
+        return redirect()->route('products.index')->with('success', 'Produto atualizado com sucesso.');
     }
 
     /**
@@ -75,7 +73,6 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         $product->delete();
-        return response()->json($product); // for testing
-        //return redirect()->route('products.index')->with('success', 'Removed product successfully.');
+        return redirect()->route('products.index')->with('success', 'Produto removido com sucesso.');
     }
 }
