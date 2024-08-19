@@ -34,21 +34,25 @@
         </div>
 
         @include('components.table', [
-            'header' => ['ID', 'Nome', 'CPF', 'Celular', 'E-mail', 'Endereço'],
-            'content' => $customers->map(function($customer) {
+            'header' => ['ID', 'Nome', 'CPF', 'Celular', 'E-mail'],
+            'content' => $customers->map(function($user) {
+
+            $formattedPhone = preg_replace('/(\d{2})(\d{5})(\d)/', '($1) $2-$3', $user->customer->phone_number);
+            $formattedCpf = preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $user->cpf);
+                
                 return [
-                    $customer->id, 
-                    $customer->user->name,
-                    $customer->user->cpf, 
-                    $customer->phone_number, 
-                    $customer->user->email, 
-                    $customer->user->address, 
+                    $user->customer->id, 
+                    $user->name,
+                    $formattedCpf,
+                    $formattedPhone, 
+                    $user->email, 
                 ];
             }),
             'editRoute' => 'customers.edit',
             'deleteRoute' => 'customers.destroy',
         ])
-
     </div>
 
+
 @endsection
+
