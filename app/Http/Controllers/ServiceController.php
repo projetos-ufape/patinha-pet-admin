@@ -36,14 +36,11 @@ class ServiceController extends Controller
 
         $data = $request->validated();
 
-        DB::transaction(function () use ($data) {
-
-            Service::create([
-                'name' => $data['name'],
-                'description' => $data['description'],
-                'price' => $data['price'],
-            ]);
-        });
+        Service::create([
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'price' => $data['price'],
+        ]);
 
         return Redirect::route('services.index')->with('success', 'Serviço cadastrado com sucesso.');
     }
@@ -72,14 +69,11 @@ class ServiceController extends Controller
 
         $data = $request->validated();
 
-        DB::transaction(function () use ($data, $service) {
-
-            $service->updateOrFail([
-                'name' => $data['name'],
-                'description' => $data['description'],
-                'price' => $data['price'],
-            ]);
-        });
+        $service->updateOrFail([
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'price' => $data['price'],
+        ]);
 
         return Redirect::route('services.index', [$service])->with('success', 'Serviço atualizado com sucesso.');
     }
