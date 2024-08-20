@@ -91,20 +91,6 @@
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
-
-                <div class="mb-4">
-                    <input 
-                        type="number" 
-                        name="quantity" 
-                        id="quantity" 
-                        placeholder="Quantidade"
-                        class="mt-1 px-4 py-2 border border-gray-300 rounded-lg w-full @error('quantity') border-red-500 @enderror" 
-                        required
-                    >
-                    @error('quantity')
-                        <span class="text-red-500 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
             </div>
 
             <div class="flex justify-between">

@@ -52,13 +52,13 @@
     
         <div class="flex mb-6 mt-2">
             <div style="display: inline-block; width: 30%;">
-                <input type="text" name="zip_code" id="zip_code" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('zip_code') border-red-500 @enderror" placeholder="CEP" required>
+                <input type="text" name="zip_code" id="zip_code" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('zip_code') border-red-500 @enderror" placeholder="CEP">
                 @error('zip_code')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div style="display: inline-block; width: 68%; margin-left: 2%;">
-                <input type="text" name="address" id="address" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('address') border-red-500 @enderror" placeholder="Endereço" required>
+                <input type="text" name="address" id="address" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('address') border-red-500 @enderror" placeholder="Endereço">
                 @error('address')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
@@ -70,19 +70,19 @@
                 <input type="text" name="complement" id="complement" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Complemento">
             </div>
             <div style="display: inline-block; width: 24%; margin-left: 2%;">
-                <input type="text" name="number" id="number" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('number') border-red-500 @enderror" placeholder="Número" required>
+                <input type="text" name="number" id="number" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('number') border-red-500 @enderror" placeholder="Número">
                 @error('number')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div style="display: inline-block; width: 24%; margin-left: 2%;">
-                <input type="text" name="city" id="city" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('city') border-red-500 @enderror" placeholder="Cidade" required>
+                <input type="text" name="city" id="city" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('city') border-red-500 @enderror" placeholder="Cidade">
                 @error('city')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div style="display: inline-block; width: 24%; margin-left: 2%;">
-            <select name="address[state]" id="state" class="w-full px-4 py-2 border border-gray-300 rounded-md" required>
+            <select name="address[state]" id="state" class="w-full px-4 py-2 border border-gray-300 rounded-md">
                 <option value="" disabled selected>Selecione o Estado</option>
                 @foreach ($states as $state)
                     <option value="{{ $state }}">{{ $state }}</option>
