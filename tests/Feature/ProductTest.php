@@ -96,15 +96,15 @@ test('admin cannot add a product invalid price', function () {
         ->assertInvalid(['price']);
 
     $this->actingAs($admin, 'web')
-        ->post('/products', [...$default, 'price' => "7777777fd"])
+        ->post('/products', [...$default, 'price' => '7777777fd'])
         ->assertInvalid(['price']);
 
     $this->actingAs($admin, 'web')
-        ->post('/products', [...$default, 'price' => "212.324234"])
+        ->post('/products', [...$default, 'price' => '212.324234'])
         ->assertInvalid(['price']);
 
     $this->actingAs($admin, 'web')
-        ->post('/products', [...$default, 'price' => "-30.40"])
+        ->post('/products', [...$default, 'price' => '-30.40'])
         ->assertInvalid(['price']);
 });
 
@@ -113,7 +113,7 @@ test('admin can destroy existing product', function () {
     $product = Product::factory()->create();
 
     $response = $this->actingAs($admin, 'web')
-        ->delete('/products/' . $product->id);
+        ->delete('/products/'.$product->id);
 
     $createdProduct = Product::find($product->id);
 
@@ -137,7 +137,7 @@ test('admin cannot destroy non-existing product', function () {
 
 test('non-admin cannot update product list', function () {
     $product = Product::factory()->create();
-    $response = $this->put('/products/' . $product->id, [
+    $response = $this->put('/products/'.$product->id, [
         'name' => 'Dog Bed',
         'description' => 'Comfortable blue checkered medium sized dog bed.',
         'brand' => 'Wild',
