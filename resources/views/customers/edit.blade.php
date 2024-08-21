@@ -15,13 +15,13 @@
         
         <div class="flex mb-6">
             <div style="display: inline-block; width: 30%;">
-                <input type="text" name="name" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('name') border-red-500 @enderror" placeholder="Nome" value="{{ $customer->name }}" required>
+                <input type="text" name="name" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('name') border-red-500 @enderror" placeholder="Nome" value="{{ $user->name }}" required>
                 @error('name')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>    
             <div style="display: inline-block; width: 40%; margin-left: 2%;">
-                <input type="email" name="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('email') border-red-500 @enderror" placeholder="E-mail" value="{{ $customer->email }}" required>
+                <input type="email" name="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('email') border-red-500 @enderror" placeholder="E-mail" value="{{ $user->email }}" required>
                 @error('email')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
@@ -42,7 +42,7 @@
                 @enderror
             </div>
             <div style="display: inline-block; width: 49%; margin-left: 2%;">
-                <input type="text" name="cpf" id="cpf" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('cpf') border-red-500 @enderror" placeholder="CPF" value="{{ $customer->cpf }}" required>
+                <input type="text" name="cpf" id="cpf" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('cpf') border-red-500 @enderror" placeholder="CPF" value="{{ $user->cpf }}" required>
                 @error('cpf')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
@@ -53,13 +53,13 @@
     
         <div class="flex mb-6 mt-2">
             <div style="display: inline-block; width: 30%;">
-                <input type="text" name="zip_code" id="zip_code" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('zip_code') border-red-500 @enderror" placeholder="CEP" value="{{ $customer->zip_code }}" required>
+                <input type="text" name="zip_code" id="zip_code" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('zip_code') border-red-500 @enderror" placeholder="CEP" value="{{ $user->zip_code }}">
                 @error('zip_code')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div style="display: inline-block; width: 68%; margin-left: 2%;">
-                <input type="text" name="address" id="address" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('address') border-red-500 @enderror" placeholder="Endereço" value="{{ $customer->address }}" required>
+                <input type="text" name="address" id="address" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('address') border-red-500 @enderror" placeholder="Endereço" value="{{ $user->address }}">
                 @error('address')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
@@ -68,25 +68,25 @@
 
         <div class="flex mb-6">
             <div style="display: inline-block; width: 24%;">
-                <input type="text" name="complement" id="complement" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Complemento" value="{{ $customer->complement }}">
+                <input type="text" name="complement" id="complement" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Complemento" value="{{ $user->complement }}">
                 @error('complement')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div style="display: inline-block; width: 24%; margin-left: 2%;">
-                <input type="text" name="number" id="number" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('number') border-red-500 @enderror" placeholder="Número" value="{{ $customer->number }}" required>
+                <input type="text" name="number" id="number" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('number') border-red-500 @enderror" placeholder="Número" value="{{ $user->number }}">
                 @error('number')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div style="display: inline-block; width: 24%; margin-left: 2%;">
-                <input type="text" name="city" id="city" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('city') border-red-500 @enderror" placeholder="Cidade" value="{{ $customer->city }}" required>
+                <input type="text" name="city" id="city" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('city') border-red-500 @enderror" placeholder="Cidade" value="{{ $user->city}}">
                 @error('city')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div style="display: inline-block; width: 24%; margin-left: 2%;">
-                <select name="address[state]" id="state" class="w-full px-4 py-2 border border-gray-300 rounded-md" required>
+                <select name="address[state]" id="state" class="w-full px-4 py-2 border border-gray-300 rounded-md">
                     <option value="" disabled selected>Selecione o Estado</option>
                     @foreach ($states as $state)
                         <option value="{{ $state }}">{{ $state }}</option>

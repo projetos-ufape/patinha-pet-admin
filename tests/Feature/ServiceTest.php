@@ -45,9 +45,12 @@ it('can update a service', function () {
         'price' => 99.90,
     ];
 
-    $response = $this->actingAs($admin, 'web')
-        ->put(route('services.update', $service), $data)
-        ->assertRedirect(route('services.edit', $service))
+    $response = $this
+        ->actingAs($admin, 'web')
+        ->put(route('services.update', $service), $data);
+
+    $response
+        ->assertRedirect(route('services.index', $service))
         ->assertSessionHas('success', 'Serviço atualizado com sucesso.');
 
     $this->assertDatabaseHas('services', [
@@ -227,7 +230,6 @@ it('cannot update a service with a name longer than 255 characters', function ()
     $response->assertSessionHas('errors', function ($errors) {
         return $errors->has('name') && $errors->first('name') === 'O nome do serviço não pode ter mais que 255 caracteres.';
     });
-
 });
 
 it('cannot update a service without a price', function () {

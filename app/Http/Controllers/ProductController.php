@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProductCategory;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
@@ -16,7 +17,7 @@ class ProductController extends Controller
     {
         $products = Product::paginate(15);
 
-        return view('product.index', compact('products'));
+        return view('products.index', compact('products'));
     }
 
     /**
@@ -24,7 +25,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('product.create');
+        $categories = ProductCategory::values();
+
+        return view('products.create', ['categories' => $categories]);
     }
 
     /**
@@ -42,7 +45,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return view('product.show', compact('product'));
+        return view('products.show', compact('product'));
     }
 
     /**
@@ -50,7 +53,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('product.edit', compact('product'));
+        $categories = ProductCategory::values();
+
+        return view('products.edit', compact('product', 'categories'));
     }
 
     /**
@@ -69,6 +74,11 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::find($id);
+
+        if ($product->stocks()->exists()) {
+            return redirect()->route('products.index')->with('error', 'Este produto não pode ser removido, pois há estoque associado.');
+        }
+
         $product->delete();
 
         return redirect()->route('products.index')->with('success', 'Produto removido com sucesso.');
