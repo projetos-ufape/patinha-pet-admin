@@ -1,5 +1,7 @@
 # Sistema de Gerenciamento de Petshop
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/be1ed76eedfe44ec9e4c9e887964865e)](https://app.codacy.com/gh/projetos-ufape/patinha-pet-admin?utm_source=github.com&utm_medium=referral&utm_content=projetos-ufape/patinha-pet-admin&utm_campaign=Badge_Grade)
+
 ## Integrantes
 
 - **Analice de Melo Battisti** - [AnaliceBattisti](https://github.com/AnaliceBattisti)
