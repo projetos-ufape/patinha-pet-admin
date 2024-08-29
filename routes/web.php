@@ -20,13 +20,17 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('pets', PetController::class);
+    Route::middleware('employeeRole:admin,basic')->group(function () {
+        Route::resource('pets', PetController::class);
+        Route::resource('customers', CustomerController::class);
+    });
 
-    Route::resource('employees', EmployeeController::class);
-    Route::resource('customers', CustomerController::class);
-    Route::resource('services', ServiceController::class);
-    Route::resource('products', ProductController::class);
-    Route::resource('stocks', StockController::class)->only(['index', 'create', 'store']);
+    Route::middleware('employeeRole:admin')->group(function () {
+        Route::resource('employees', EmployeeController::class);
+        Route::resource('services', ServiceController::class);
+        Route::resource('products', ProductController::class);
+        Route::resource('stocks', StockController::class)->only(['index', 'create', 'store']);
+    });
 });
 
 require __DIR__.'/auth.php';

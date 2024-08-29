@@ -63,9 +63,9 @@ class User extends Authenticatable
         return $this->hasOne(Address::class);
     }
 
-    public function hasRole(string $role): bool
+    public function hasAnyRole(array $roles): bool
     {
-        return $this->employee && $this->employee->hasRole($role);
+        return $this->employee && $this->employee->hasAnyRole($roles);
     }
 
     public function hasPermissionTo(string $permission): bool

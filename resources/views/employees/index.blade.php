@@ -33,18 +33,23 @@
 
         </div>
         @include('components.table', [
-            'header' => ['ID', 'Nome', 'CPF','E-mail', 'Endereço'],
-            'content' => $employees->map(function($user) {
+            'header' => ['ID', 'Nome', 'CPF', 'E-mail', 'Tipo', 'Endereço'],
+            'content' => $employees->map(function ($user) {
                 return [
                     $user->employee->id ?? 'N/A',
-                    $user->name,            
-                    $user->cpf,             
-                    $user->email,           
-                    $user->address['street'] . ', ' . 
-                    $user->address['number'] . ' ' . 
-                    $user->address['district'] . ' ' .
-                    $user->address['city'] . ' - ' . 
-                    $user->address['state'],       
+                    $user->name,
+                    $user->cpf,
+                    $user->email,
+                    $user->hasAnyRole(['admin']) ? 'Adminstrador' : 'Regular',
+                    isset($user->address) ? $user->address['street'] .
+                    ', ' .
+                    $user->address['number'] .
+                    ' ' .
+                    $user->address['district'] .
+                    ' ' .
+                    $user->address['city'] .
+                    ' - ' .
+                    $user->address['state'] : 'Endereço não disponível',
                 ];
             }),
             'editRoute' => 'employees.edit',
