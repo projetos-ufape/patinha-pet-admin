@@ -62,4 +62,15 @@ class User extends Authenticatable
     {
         return $this->hasOne(Address::class);
     }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->employee && $this->employee->hasRole($role);
+    }
+
+    public function hasPermissionTo(string $permission): bool
+    {
+        return $this->employee && $this->employee->can($permission);
+    }
+
 }
