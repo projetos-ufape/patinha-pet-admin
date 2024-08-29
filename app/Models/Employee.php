@@ -11,6 +11,8 @@ class Employee extends Model
 {
     use HasFactory, HasRoles;
 
+    protected $guard_name = 'web'; 
+
     protected $fillable = [
         'user_id',
         'admission_date',

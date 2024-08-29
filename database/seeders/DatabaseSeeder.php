@@ -16,11 +16,21 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CustomerSeeder::class,
             ProductSeeder::class,
+            PermissionsSeeder::class,
+            RolesSeeder::class,
         ]);
 
-        User::factory()->create([
+        $employee = User::factory()
+        ->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+        ])
+        ->employee()
+        ->create([
+            'admission_date' => date('Y-m-d'),
+            'salary' => rand(1000, 5000)
         ]);
+
+        $employee->assignRole('admin');
     }
 }
