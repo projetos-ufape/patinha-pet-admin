@@ -2,6 +2,7 @@
 
 use App\Models\Address;
 use App\Models\User;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Laravel\Sanctum\Sanctum;
 
 it('can update a customer with only one attribute', function () {
@@ -33,7 +34,7 @@ it('can update a customer with only one attribute', function () {
   ]);
 });
 
-it('can update a customer with only the email attribute', function () {
+it('can not update a email', function () {
   $user = User::factory()->hasCustomer()->create([
       'name' => 'Original Name',
       'email' => 'original@example.com',
@@ -45,6 +46,7 @@ it('can update a customer with only the email attribute', function () {
 
   $response = $this->patchJson(route('api.customers.update'), [
       'email' => $newEmail,
+      'name' => 'change Customer'
   ]);
 
   $response->assertStatus(200)
@@ -52,8 +54,39 @@ it('can update a customer with only the email attribute', function () {
 
   $this->assertDatabaseHas('users', [
       'id' => $user->id,
+      'name' => 'change Customer',
+      'email' => $user->email,
+  ]);
+
+  $this->assertDatabaseHas('customers', [
+      'user_id' => $user->id,
+      'phone_number' => $user->customer->phone_number,
+  ]);
+});
+
+it('can not update a cpf', function () {
+  $user = User::factory()->hasCustomer()->create([
       'name' => 'Original Name',
-      'email' => $newEmail,
+      'email' => 'original@example.com',
+      'cpf' => '00000000000'
+  ]);
+
+  Sanctum::actingAs($user, ['customer']);
+
+  $newCpf = '11111111111';
+
+  $response = $this->patchJson(route('api.customers.update'), [
+      'cpf' => $newCpf,
+      'name' => 'change Customer'
+  ]);
+
+  $response->assertStatus(200)
+      ->assertJson(['message' => 'Atualizado com sucesso']);
+
+  $this->assertDatabaseHas('users', [
+      'id' => $user->id,
+      'name' => 'change Customer',
+      'cpf' => $user->cpf,
   ]);
 
   $this->assertDatabaseHas('customers', [
@@ -132,4 +165,14 @@ it('fails to update a customer with no attributes provided', function () {
       'user_id' => $user->id,
       'phone_number' => $user->customer->phone_number,
   ]);
+});
+
+test('Customer can be loaded', function () {
+    $user = User::factory()->hasCustomer()->create();
+    Sanctum::actingAs($user, ['customer']);
+
+    $response = $this->getJson(route('api.customers.index'));
+
+    $response->assertStatus(200)
+        ->assertJsonStructure([ 'user' => ['name', 'email', 'cpf', 'phone_number', 'address']]);
 });

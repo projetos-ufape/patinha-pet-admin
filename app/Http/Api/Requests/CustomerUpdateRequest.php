@@ -3,7 +3,6 @@
 namespace App\Http\Api\Requests;
 
 use App\Enums\AddressState;
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -18,7 +17,6 @@ class CustomerUpdateRequest extends FormRequest
     {
         return [
             'name' => ['sometimes', 'string', 'max:255'],
-            'email' => ['sometimes', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'phone_number' => ['sometimes', 'numeric', 'digits:11'],
             'address' => ['sometimes', 'array'],
             'address.cep' => ['sometimes', 'size:8'],
