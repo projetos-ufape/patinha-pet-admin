@@ -70,7 +70,7 @@ class User extends Authenticatable
 
     public function hasPermissionTo(string $permission): bool
     {
-        return $this->employee && $this->employee->can($permission);
+        return $this->employee && $this->employee->hasPermissionTo($permission);
     }
 
 }
