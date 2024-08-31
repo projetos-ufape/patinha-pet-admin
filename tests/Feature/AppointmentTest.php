@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Appointment;
-use App\Models\Employee;
 use App\Models\Customer;
+use App\Models\Employee;
 use App\Models\Pet;
 use App\Models\Service;
 
@@ -21,6 +21,7 @@ test('list of appointments is displayed', function () {
             'service_id' => $appointment->service->id,
             'status' => $appointment->status,
             'start_time' => $appointment->start_time,
+            'end_time' => $appointment->end_time,
             'end_time' => $appointment->end_time,
         ]);
     }
@@ -74,6 +75,7 @@ test('employee cannot update non-existing appointment info', function () {
             'status' => 'canceled',
             'start_time' => '2024-08-30 03:54:01',
             'end_time' => null,
+            'end_time' => null,
         ]);
 
     $response
@@ -87,7 +89,7 @@ test('employee cannot update an appointment w/ invalid pet id', function () {
     $updateData = [
         'pet_id' =>  '1', 
     ];
-    
+
     $response = $this
         ->actingAs($employee->user, 'web')
         ->put(route('appointments.update', compact('appointment')), $updateData);
@@ -208,7 +210,7 @@ test('employee can store a new appointment', function () {
         'customer_id' => $customer->id,
         'service_id' => $service->id,
         'start_time' => '2024-08-30 03:54:01',
-        'end_time' => null, 
+        'end_time' => null,
     ];
 
     $response = $this

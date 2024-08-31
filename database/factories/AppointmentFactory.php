@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Enums\AppointmentStatus;
+use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Pet;
 use App\Models\Service;
-use App\Enums\AppointmentStatus;
-use App\Models\Customer;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Appointment>
@@ -28,7 +28,7 @@ class AppointmentFactory extends Factory
             'service_id' => Service::factory(),
             'status' => fake()->randomElement(AppointmentStatus::values()),
             'start_time' => fake()->dateTime('Y-m-d H:i:s'),
-            'end_time' => null, 
+            'end_time' => null,
         ];
     }
 }

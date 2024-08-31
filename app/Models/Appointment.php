@@ -16,7 +16,7 @@ class Appointment extends Model
         'pet_id',
         'service_id',
         'status',
-        'start_time' ,
+        'start_time',
         'end_time',
     ];
 

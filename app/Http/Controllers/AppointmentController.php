@@ -28,13 +28,13 @@ class AppointmentController extends Controller
      */
     public function create()
     {
-        $customers =  Customer::all();
+        $customers = Customer::all();
         $pets = Pet::all();
         $services = Service::all();
         $status = AppointmentStatus::values();
 
         return view('appointments.create', compact('customers', 'pets', 'services', 'status'));
-    } 
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -47,7 +47,7 @@ class AppointmentController extends Controller
     
         $appointment->create($validatedData);
 
-        return redirect()->route('appointments.index')->with('success', 'Registro de atendimento criado com sucesso.'); 
+        return redirect()->route('appointments.index')->with('success', 'Registro de atendimento criado com sucesso.');
     }
 
     /**
@@ -70,7 +70,7 @@ class AppointmentController extends Controller
     {
         $appointment->update($request->validated());
 
-        return redirect()->route('appointments.index')->with('success', 'Registro de atendimento atualizado com sucesso.'); 
+        return redirect()->route('appointments.index')->with('success', 'Registro de atendimento atualizado com sucesso.');
     }
 
     /**
@@ -80,6 +80,6 @@ class AppointmentController extends Controller
     {
         $appointment->deleteOrFail();
 
-        return redirect()->route('appointments.index')->with('success', 'Registro de atendimento removido com sucesso.'); 
+        return redirect()->route('appointments.index')->with('success', 'Registro de atendimento removido com sucesso.');
     }
 }
