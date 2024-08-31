@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Customer;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Pet>
@@ -17,6 +18,7 @@ class PetFactory extends Factory
     public function definition(): array
     {
         return [
+            'customer_id' => Customer::factory(),
             'name' => fake()->firstName,
             'gender' => fake()->randomElement(['female', 'male']),
             'specie' => fake()->randomElement(['cat', 'dog']),
