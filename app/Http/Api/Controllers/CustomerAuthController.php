@@ -39,8 +39,8 @@ class CustomerAuthController extends Controller
             'token' => $token,
             'user' => [
                 'email' => $user->email,
-                'name' => $user->name
-            ]
+                'name' => $user->name,
+            ],
         ]);
     }
 
@@ -61,8 +61,8 @@ class CustomerAuthController extends Controller
             'token' => $token,
             'user' => [
                 'email' => $user->email,
-                'name' => $user->name
-            ]
+                'name' => $user->name,
+            ],
         ]);
     }
 
