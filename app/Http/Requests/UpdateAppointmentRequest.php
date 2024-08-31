@@ -37,13 +37,13 @@ class UpdateAppointmentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'employee_id.exists' => 'O campo de funcionário deve ser preenchido por um id válido.', 
-            'customer_id.exists' => 'O campo de cliente deve ser preenchido por um id válido.', 
+            'employee_id.exists' => 'O campo de funcionário deve ser preenchido por um id válido.',
+            'customer_id.exists' => 'O campo de cliente deve ser preenchido por um id válido.',
             'pet_id.exists' => 'O campo de pet deve ser preenchido por um id válido.',
             'service_id.exists' => 'O campo de serviço deve ser preenchido por um id válido.',
             'status' => 'O status do atendimento deve ser "pendente", "concluído" ou "cancelado".',
-            'start_time'=> 'O horário para o atendimento deve ter o formato Y-m-d H:i:s.',
-            'end_time'=> 'O horário para conclusão do atendimento deve ter o formato Y-m-d H:i:s.',
+            'start_time' => 'O horário para o atendimento deve ter o formato Y-m-d H:i:s.',
+            'end_time' => 'O horário para conclusão do atendimento deve ter o formato Y-m-d H:i:s.',
         ];
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Appointment;
-use App\Models\Employee;
 use App\Models\Customer;
+use App\Models\Employee;
 use App\Models\Pet;
 use App\Models\Service;
 
@@ -21,7 +21,7 @@ test('list of appointments is displayed', function () {
             'service_id' => $appointment->service->id,
             'status' => $appointment->status,
             'start_time' => $appointment->start_time,
-            'end_time' => $appointment->end_time
+            'end_time' => $appointment->end_time,
         ]);
     }
     $response->assertStatus(200);
@@ -40,12 +40,12 @@ test('employee can update existing appointment info', function () {
     $appointment = Appointment::factory()->for($employee)->create();
 
     $dataToUpdate = [
-        'pet_id' => $appointment->pet->id, 
+        'pet_id' => $appointment->pet->id,
         'customer_id' => $appointment->customer->id,
         'service_id' => $appointment->service->id,
         'status' => 'pending',
         'start_time' => '2024-08-30 03:54:01',
-        'end_time' => null, 
+        'end_time' => null,
     ];
 
     $response = $this
@@ -57,7 +57,7 @@ test('employee can update existing appointment info', function () {
         ->assertRedirect(route('appointments.index'))
         ->assertSessionHas('success', 'Registro de atendimento atualizado com sucesso.');
 
-        $this->assertDatabaseHas('appointments', $dataToUpdate);
+    $this->assertDatabaseHas('appointments', $dataToUpdate);
 });
 
 test('employee cannot update non-existing appointment info', function () {
@@ -65,13 +65,13 @@ test('employee cannot update non-existing appointment info', function () {
     $appointment = Appointment::factory()->for($employee)->create();
 
     $response = $this->actingAs($employee->user, 'web')
-        ->put('/appointments/33',[
-            'pet_id' => $appointment->pet->id, 
+        ->put('/appointments/33', [
+            'pet_id' => $appointment->pet->id,
             'customer_id' => $appointment->customer->id,
             'service_id' => $appointment->service->id,
             'status' => 'pending',
             'start_time' => '2024-08-30 03:54:01',
-            'end_time' => null, 
+            'end_time' => null,
         ]);
 
     $response
@@ -83,18 +83,18 @@ test('employee cannot add an appointment w/ invalid info', function () {
     $appointment = Appointment::factory()->for($employee)->create();
 
     $dataToUpdate = [
-        'pet_id' =>  '1', 
+        'pet_id' => '1',
         'customer_id' => $appointment->customer->id,
         'service_id' => $appointment->service->id,
-        'status' => 'nada', 
-        'start_time' => '2024 03:54:01', 
-        'end_time' => null, 
+        'status' => 'nada',
+        'start_time' => '2024 03:54:01',
+        'end_time' => null,
     ];
-    
+
     $response = $this
         ->actingAs($employee->user, 'web')
         ->put(route('appointments.update', compact('appointment')), $dataToUpdate);
-    
+
     $response->assertInvalid(['pet_id' => 'O campo de pet deve ser preenchido por um id válido.']);
     $response->assertInvalid(['status' => 'O status do atendimento deve ser "pendente", "concluído" ou "cancelado".']);
     $response->assertInvalid(['start_time' => 'O horário para o atendimento deve ter o formato Y-m-d H:i:s.']);
@@ -135,12 +135,12 @@ test('employee can create a new appointment', function () {
 
     $data = [
         'employee_id' => $employee->id,
-        'pet_id' => $pet->id, 
+        'pet_id' => $pet->id,
         'customer_id' => $customer->id,
         'service_id' => $service->id,
         'status' => 'pending',
         'start_time' => '2024-08-30 03:54:01',
-        'end_time' => null, 
+        'end_time' => null,
     ];
 
     $response = $this
@@ -152,7 +152,7 @@ test('employee can create a new appointment', function () {
         ->assertRedirect(route('appointments.index'))
         ->assertSessionHas('success', 'Registro de atendimento criado com sucesso.');
 
-        $this->assertDatabaseHas('appointments', $data);
+    $this->assertDatabaseHas('appointments', $data);
 });
 
 test('employee cannot create appointment w/ invalid info', function () {
@@ -162,25 +162,25 @@ test('employee cannot create appointment w/ invalid info', function () {
 
     $data = [
         'employee_id' => $employee->id,
-        'pet_id' => $pet->id, 
+        'pet_id' => $pet->id,
         'customer_id' => '2',
         'service_id' => $service->id,
         'status' => 'nada',
         'start_time' => null,
-        'end_time' => null, 
+        'end_time' => null,
     ];
 
     $response = $this
         ->actingAs($employee->user, 'web')
         ->post(route('appointments.store'), $data);
 
-        $response->assertInvalid(['customer_id' => 'O campo de cliente deve ser preenchido por um id válido.']);
-        $response->assertInvalid(['status' => 'O status do atendimento deve ser "pendente", "concluído" ou "cancelado".']);
-        $response->assertInvalid(['start_time' => 'O campo de horário do atendimento é obrigatório.']);
+    $response->assertInvalid(['customer_id' => 'O campo de cliente deve ser preenchido por um id válido.']);
+    $response->assertInvalid(['status' => 'O status do atendimento deve ser "pendente", "concluído" ou "cancelado".']);
+    $response->assertInvalid(['start_time' => 'O campo de horário do atendimento é obrigatório.']);
 
-        $this->assertDatabaseMissing('appointments', [
-            'employee_id' => $employee->id,
-            'pet_id' => $pet->id,
-            'service_id' => $service->id,
-        ]);
+    $this->assertDatabaseMissing('appointments', [
+        'employee_id' => $employee->id,
+        'pet_id' => $pet->id,
+        'service_id' => $service->id,
+    ]);
 });
