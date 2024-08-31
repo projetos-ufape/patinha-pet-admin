@@ -8,14 +8,7 @@ use Illuminate\Validation\Rule;
 
 class StoreAppointmentRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    //public function authorize(): bool
-    //{
-     //   return false;
-    //}
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,7 +17,6 @@ class StoreAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'employee_id' => ['required', 'exists:employees,id'],
             'customer_id' => ['required', 'exists:customers,id'],
             'pet_id' => ['required', 'exists:pets,id'],
             'service_id' => ['required', 'exists:services,id'],
@@ -37,8 +29,6 @@ class StoreAppointmentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'employee_id.required' => 'O campo de funcionário é obrigatório.',
-            'employee_id.exists' => 'O campo de funcionário deve ser preenchido por um id válido.',
             'customer_id.required' => 'O campo de cliente é obrigatório.',
             'customer_id.exists' => 'O campo de cliente deve ser preenchido por um id válido.', 
             'pet_id.required' => 'O campo de pet é obrigatório.',
