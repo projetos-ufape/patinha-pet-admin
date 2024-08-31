@@ -8,25 +8,17 @@
     <div class="p-6">
 
         <h1 class="text-2xl mb-4">Funcionário</h1>
-        
+
         <div class="flex justify-between items-center mb-4">
 
-        <div class="flex items-center">
-                <input
-                    type="text"
-                    id="searchInput"
-                    onkeyup="searchTable()"
-                    placeholder="Pesquisar"
-                    class="px-4 py-2 border border-gray-100 rounded-lg mr-2"
-                />
+            <div class="flex items-center">
+                <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Pesquisar"
+                    class="px-4 py-2 border border-gray-100 rounded-lg mr-2" />
 
             </div>
 
-            <a
-                href="{{ route('employees.create') }}"
-                class="add-button"
-            >
-                <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon" >
+            <a href="{{ route('employees.create') }}" class="add-button">
+                <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
                 Cadastrar Funcionário
             </a>
 
@@ -55,9 +47,6 @@
             'editRoute' => 'employees.edit',
             'deleteRoute' => 'employees.destroy',
         ])
-        
+
     </div>
-
 @endsection
-
-
