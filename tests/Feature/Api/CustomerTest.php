@@ -2,7 +2,6 @@
 
 use App\Models\Address;
 use App\Models\User;
-use Illuminate\Testing\Fluent\AssertableJson;
 use Laravel\Sanctum\Sanctum;
 
 it('can update a customer with only one attribute', function () {
@@ -152,9 +151,8 @@ it('fails to update a customer with no attributes provided', function () {
 
   $response = $this->patchJson(route('api.customers.update'), []);
 
-  $response->assertStatus(422); // Expecting a validation error
+  $response->assertStatus(422); 
 
-  // Verifica se não houve mudanças nos dados do usuário
   $this->assertDatabaseHas('users', [
       'id' => $user->id,
       'name' => $user->name,
