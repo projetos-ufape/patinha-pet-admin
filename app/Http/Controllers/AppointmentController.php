@@ -9,6 +9,7 @@ use App\Models\Appointment;
 use App\Models\Customer;
 use App\Models\Pet;
 use App\Models\Service;
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
@@ -40,17 +41,13 @@ class AppointmentController extends Controller
      */
     public function store(StoreAppointmentRequest $request, Appointment $appointment)
     {
-        $appointment->create($request->validated());
+        
+        $validatedData = $request->validated();
+        $validatedData['employee_id'] = Auth::user()->employee->id;
+    
+        $appointment->create($validatedData);
 
         return redirect()->route('appointments.index')->with('success', 'Registro de atendimento criado com sucesso.'); 
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Appointment $appointment)
-    {
-        //    return view('appointment.show', compact('appointment'));
     }
 
     /**
@@ -79,11 +76,9 @@ class AppointmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Appointment $appointment)
     {
-        $appointment = Appointment::find($id);
-
-        $appointment->delete();
+        $appointment->deleteOrFail();
 
         return redirect()->route('appointments.index')->with('success', 'Registro de atendimento removido com sucesso.'); 
     }
