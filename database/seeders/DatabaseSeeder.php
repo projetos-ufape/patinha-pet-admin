@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             AppointmentSeeder::class,
             PermissionsSeeder::class,
-            RolesSeeder::class
+            RolesSeeder::class,
         ]);
 
         $employee = User::factory()
