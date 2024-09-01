@@ -29,6 +29,5 @@ class CustomerUpdateRequest extends FormRequest
             'address.complement' => ['sometimes', 'string', 'max:50'],
             'address.state' => ['sometimes', Rule::enum(AddressState::class)],
         ];
-    
     }
 }

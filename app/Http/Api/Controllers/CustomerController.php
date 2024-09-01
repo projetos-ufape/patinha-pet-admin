@@ -10,11 +10,9 @@ use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
-
-
-    /*
-        Get costumer info
-    */
+    /**
+     * Get info
+     */
     public function index(Request $request)
     {
 
@@ -40,7 +38,9 @@ class CustomerController extends Controller
 
     }
 
-    
+    /**
+     * Update info
+     */
     public function update(CustomerUpdateRequest $request)
     {
         $data = $request->validated();
@@ -60,7 +60,7 @@ class CustomerController extends Controller
             }
 
             if (isset($data['address'])) {
-                if ($user->address != null) {
+                if ($user->address !== null) {
                     $user->address()->update($data['address']);
                 } else {
                     $user->address()->create($data['address']);    
