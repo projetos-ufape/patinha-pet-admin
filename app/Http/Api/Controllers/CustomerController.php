@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
+
+
+    /*
+        Get costumer info
+    */
     public function index(Request $request)
     {
 
@@ -35,6 +40,7 @@ class CustomerController extends Controller
 
     }
 
+    
     public function update(CustomerUpdateRequest $request)
     {
         $data = $request->validated();
@@ -43,23 +49,26 @@ class CustomerController extends Controller
                 'error' => 'Nenhum dado fornecido para atualização.',
             ], 422);
         }
+
         DB::transaction(function () use ($request, $data) {
             $userData = Arr::except($data, ['phone_number', 'address', 'cpf', 'email']);
-            $request->user()->update($userData);
-
-            if (isset($data['address'])) {
-                if ($request->user()->address) {
-                    $request->user()->address()->update($data['address']);
-                } else {
-                    $request->user()->address()->create($data['address']);
-                }
-            }
+            $user = $request->user();
+            $user->update($userData);
 
             if (isset($data['phone_number'])) {
-                $request->user()->customer->update(['phone_number' => $data['phone_number']]);
+                $user->customer->update(['phone_number' => $data['phone_number']]);
+            }
+
+            if (isset($data['address'])) {
+                if ($user->address != null) {
+                    $user->address()->update($data['address']);
+                } else {
+                    $user->address()->create($data['address']);    
+                }
             }
         });
 
         return response()->json(['message' => 'Atualizado com sucesso'], 200);
+
     }
 }

@@ -8,6 +8,8 @@ use Illuminate\Validation\Rule;
 
 class CustomerUpdateRequest extends FormRequest
 {
+
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -27,5 +29,6 @@ class CustomerUpdateRequest extends FormRequest
             'address.complement' => ['sometimes', 'string', 'max:50'],
             'address.state' => ['sometimes', Rule::enum(AddressState::class)],
         ];
+    
     }
 }
