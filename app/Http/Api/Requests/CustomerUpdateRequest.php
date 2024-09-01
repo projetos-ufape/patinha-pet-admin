@@ -8,8 +8,6 @@ use Illuminate\Validation\Rule;
 
 class CustomerUpdateRequest extends FormRequest
 {
-
-
     /**
      * Get the validation rules that apply to the request.
      *
