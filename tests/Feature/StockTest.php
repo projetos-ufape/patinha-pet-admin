@@ -13,7 +13,7 @@ test('stock creation', function () {
     $admin = User::factory()->hasEmployee()->create();
     $admin->assignRole('admin');
     $product = Product::factory()->create();
-    
+
     $response = $this
         ->actingAs($admin, 'web')
         ->post('/stocks', [

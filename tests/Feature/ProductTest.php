@@ -9,7 +9,6 @@ beforeEach(function () {
     Artisan::call('db:seed', ['--class' => 'RolesSeeder']);
 });
 
-
 test('list of products is displayed', function () {
     $admin = User::factory()->hasEmployee()->create();
     $admin->assignRole('admin');

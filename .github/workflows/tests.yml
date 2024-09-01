@@ -30,6 +30,9 @@ jobs:
 
     - name: Execute sail container
       run: ./vendor/bin/sail up -d
+
+    - name: Check MySQL logs
+      run: ./vendor/bin/sail logs mysql
     
     - name: Run Pint
       run: ./vendor/bin/sail pint
@@ -44,4 +47,3 @@ jobs:
 
     - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
       run: ./vendor/bin/sail test
- 
