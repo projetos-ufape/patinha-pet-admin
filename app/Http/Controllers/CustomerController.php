@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\AddressState;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Models\Appointment;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -94,7 +95,7 @@ class CustomerController extends Controller
             ]);
         });
 
-        return Redirect::route('customers.index', [$customer])->with('success', 'Cliente atualizado com sucesso.');
+        return Redirect::route('customers.index')->with('success', 'Cliente atualizado com sucesso.');
     }
 
     /**
@@ -105,5 +106,14 @@ class CustomerController extends Controller
         $customer->user->deleteOrFail();
 
         return Redirect::route('customers.index')->with('success', 'Cliente excluído com sucesso.');
+    }
+
+    public function history(string $id)
+    {
+        $appointments = Appointment::where('customer_id', $id)
+            ->orderByDesc('start_time')
+            ->get();
+
+        return view('customers.history', compact('appointments'));
     }
 }
