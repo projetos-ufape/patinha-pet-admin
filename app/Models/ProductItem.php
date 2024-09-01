@@ -10,18 +10,18 @@ class ProductItem extends Model
 {
     use HasFactory;
 
-	protected $fillable = [
+    protected $fillable = [
         'sale_id',
         'product_id',
-		'quantity',
+        'quantity',
     ];
 
-	public function saleItem(): BelongsTo
+    public function saleItem(): BelongsTo
     {
         return $this->belongsTo(SaleItem::class);
     }
 
-	public function product(): BelongsTo
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }

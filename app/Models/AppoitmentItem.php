@@ -10,17 +10,17 @@ class AppointmentItem extends Model
 {
     use HasFactory;
 
-	protected $fillable = [
+    protected $fillable = [
         'sale_id',
         // 'appointment_id',
     ];
 
-	public function saleItem(): BelongsTo
+    public function saleItem(): BelongsTo
     {
         return $this->belongsTo(SaleItem::class);
     }
 
-	// public function appointment(): BelongsTo
+    // public function appointment(): BelongsTo
     // {
     //     return $this->belongsTo(Appointment::class);
     // }

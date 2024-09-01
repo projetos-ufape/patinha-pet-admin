@@ -11,22 +11,22 @@ class Sale extends Model
 {
     use HasFactory;
 
-	protected $fillable = [
+    protected $fillable = [
         'employee_id',
         'customer_id',
     ];
 
-	public function employee(): BelongsTo
+    public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class);
     }
 
-	public function customer(): BelongsTo
+    public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
     }
 
-	public function saleItem(): HasMany
+    public function saleItem(): HasMany
     {
         return $this->hasMany(SaleItem::class);
     }

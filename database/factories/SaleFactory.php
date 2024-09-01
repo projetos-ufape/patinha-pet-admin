@@ -20,7 +20,7 @@ class SaleFactory extends Factory
     {
         return [
             'employee_id' => Employee::factory(),
-			'customer_id' => Customer::factory(),
+            'customer_id' => Customer::factory(),
         ];
     }
 }

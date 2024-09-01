@@ -15,8 +15,8 @@ return new class extends Migration
         Schema::create('appointment_items', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-			$table->foreignIdFor(SaleItem::class)->constrained()->onDelete('cascade');
-			// $table->foreignIdFor(Appointment::class)->constrained()->nullOnDelete();
+            $table->foreignIdFor(SaleItem::class)->constrained()->onDelete('cascade');
+            // $table->foreignIdFor(Appointment::class)->constrained()->nullOnDelete();
         });
     }
 

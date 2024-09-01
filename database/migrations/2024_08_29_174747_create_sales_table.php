@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-			$table->foreignIdFor(Employee::class)->constrained()->nullOnDelete();
-			$table->foreignIdFor(Customer::class)->constrained()->nullOnDelete();
+            $table->foreignIdFor(Employee::class)->constrained()->nullOnDelete();
+            $table->foreignIdFor(Customer::class)->constrained()->nullOnDelete();
         });
     }
 

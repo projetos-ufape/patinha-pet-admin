@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\StoreSaleRequest;
 use App\Http\Requests\UpdateSaleRequest;
 use App\Models\Customer;
@@ -19,7 +18,7 @@ class SaleController extends Controller
     public function index()
     {
         // $sales = Sale::with(['employee', 'customer', 'saleItem.productItem.product', 'saleItem.appointmentItem.appointment'])->get();
-		$sales = Sale::with(['employee', 'customer', 'saleItem.productItem.product'])->get();
+        $sales = Sale::with(['employee', 'customer', 'saleItem.productItem.product'])->get();
         // return view('sales.index', compact('sales'));
     }
 
@@ -28,7 +27,7 @@ class SaleController extends Controller
      */
     public function create()
     {
-		$customers = Customer::get();
+        $customers = Customer::get();
         // return view('sales.create', ['customers' => $customers]);
     }
 
@@ -37,11 +36,11 @@ class SaleController extends Controller
      */
     public function store(StoreSaleRequest $request)
     {
-		$data = $request->validated();
+        $data = $request->validated();
 
-		$data['employee_id'] = Auth::user()->employee->id;
-		
-		DB::beginTransaction();
+        $data['employee_id'] = Auth::user()->employee->id;
+
+        DB::beginTransaction();
 
         $sale = Sale::create([
             'employee_id' => $data['employee_id'],
@@ -83,12 +82,12 @@ class SaleController extends Controller
      */
     public function edit(Sale $sale)
     {
-		$customers = Customer::get();
+        $customers = Customer::get();
 
         // return view('sales.edit', [
-		// 	'sale' => $sale,
-		// 	'customers' => $customers,
-		// ]);
+        // 	'sale' => $sale,
+        // 	'customers' => $customers,
+        // ]);
     }
 
     /**
@@ -96,7 +95,7 @@ class SaleController extends Controller
      */
     public function update(UpdateSaleRequest $request, Sale $sale)
     {
-		$data = $request->validated();
+        $data = $request->validated();
 
         DB::beginTransaction();
 

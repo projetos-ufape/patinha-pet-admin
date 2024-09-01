@@ -20,7 +20,7 @@ class CustomerFactory extends Factory
         return [
             'user_id' => User::factory(),
             'phone_number' => fake()->unique()->numerify('###########'),
-			'user_id' => User::factory(),
+            'user_id' => User::factory(),
         ];
     }
 }
