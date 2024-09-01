@@ -15,8 +15,8 @@ enum EmployeeType: string
     public function label(): string
     {
         return match ($this) {
-            static::ADMIN => 'Administrador',
-            static::BASIC => 'Regular',
+            self::ADMIN => 'Administrador',
+            self::BASIC => 'Regular',
         };
     }
-}   
+}

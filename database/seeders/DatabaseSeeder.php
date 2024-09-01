@@ -21,15 +21,15 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $employee = User::factory()
-        ->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ])
-        ->employee()
-        ->create([
-            'admission_date' => date('Y-m-d'),
-            'salary' => rand(1000, 5000)
-        ]);
+            ->create([
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+            ])
+            ->employee()
+            ->create([
+                'admission_date' => date('Y-m-d'),
+                'salary' => rand(1000, 5000),
+            ]);
 
         $employee->assignRole('admin');
     }

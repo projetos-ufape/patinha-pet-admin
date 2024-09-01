@@ -20,7 +20,7 @@ class PermissionsSeeder extends Seeder
             'manage pets',
             'manage sales',
             'manage payments',
-            'associate services_sales'
+            'associate services_sales',
         ];
 
         foreach ($permissions as $permission) {

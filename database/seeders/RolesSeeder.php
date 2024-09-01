@@ -25,7 +25,7 @@ class RolesSeeder extends Seeder
             'manage pets',
             'manage sales',
             'associate services_sales',
-            'manage payments'
+            'manage payments',
         ]);
     }
 }

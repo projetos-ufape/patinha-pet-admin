@@ -18,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class,
-            'employeeRole' => EmployeeRole::class
+            'employeeRole' => EmployeeRole::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

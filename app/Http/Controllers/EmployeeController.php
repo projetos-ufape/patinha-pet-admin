@@ -57,7 +57,7 @@ class EmployeeController extends Controller
             'address.complement' => ['string', 'max:50'],
             'address.state' => ['required_with:address', Rule::enum(AddressState::class)],
         ]);
-        
+
         DB::transaction(function () use ($data) {
             $user = User::create([
                 'name' => $data['name'],
@@ -65,12 +65,12 @@ class EmployeeController extends Controller
                 'password' => Hash::make($data['password']),
                 'cpf' => $data['cpf'],
             ]);
-            
+
             $user->employee()->create([
                 'salary' => $data['salary'],
                 'admission_date' => $data['admission_date'],
             ]);
-            
+
             $user->assignRole($data['type']);
 
             if (! empty($data['address'])) {
