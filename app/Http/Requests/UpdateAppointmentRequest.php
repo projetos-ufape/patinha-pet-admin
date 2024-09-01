@@ -8,7 +8,6 @@ use Illuminate\Validation\Rule;
 
 class UpdateAppointmentRequest extends FormRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -28,8 +27,8 @@ class UpdateAppointmentRequest extends FormRequest
 
     public function messages(): array
     {
-        return [ 
-            'customer_id.exists' => 'O campo de cliente deve ser preenchido por um id válido.', 
+        return [
+            'customer_id.exists' => 'O campo de cliente deve ser preenchido por um id válido.',
             'pet_id.exists' => 'O campo de pet deve ser preenchido por um id válido.',
             'service_id.exists' => 'O campo de serviço deve ser preenchido por um id válido.',
             'status' => 'O status do atendimento deve ser "pendente", "concluído" ou "cancelado".',

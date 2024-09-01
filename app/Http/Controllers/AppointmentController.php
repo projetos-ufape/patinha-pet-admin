@@ -41,10 +41,10 @@ class AppointmentController extends Controller
      */
     public function store(StoreAppointmentRequest $request, Appointment $appointment)
     {
-        
+
         $validatedData = $request->validated();
         $validatedData['employee_id'] = Auth::user()->employee->id;
-    
+
         $appointment->create($validatedData);
 
         return redirect()->route('comercial.index')->with('success', 'Registro de atendimento criado com sucesso.');
