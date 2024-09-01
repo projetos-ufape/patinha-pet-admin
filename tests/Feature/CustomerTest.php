@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\User;
+use App\Models\Customer;
+use App\Models\Employee;
+use App\Models\Appointment;
 
 it('can list customers', function () {
     // TODO: Implement test
@@ -35,36 +38,35 @@ it('can create a new customer', function () {
     ]);
 });
 
-// it('can update a customer', function () {
-//     $admin = User::factory()->create();
-//     $user = User::factory()->hasCustomer()->create();
-//     $customer = $user->customer;
-
-//     $data = [
-//         'name' => 'Jane Doe',
-//         'phone_number' => '1234567890',
-//     ];
-
-//     $this->actingAs($admin, 'web')
-//         ->put(route('customers.update', $customer), $data)
-//         ->assertRedirect(route('customers.edit', $customer))
-//         ->assertSessionHas('success', 'Cliente atualizado com sucesso.');
-
-//     $this->assertDatabaseHas('users', [
-//         'id' => $user->id,
-//         'name' => $data['name'],
-//     ]);
-
-//     $this->assertDatabaseHas('customers', [
-//         'id' => $customer->id,
-//         'phone_number' => $data['phone_number'],
-//     ]);
-// });
-
-it('can delete a customer', function () {
+it('can update a customer', function () {
     $admin = User::factory()->create();
     $user = User::factory()->hasCustomer()->create();
     $customer = $user->customer;
+
+    $data = [
+        'name' => 'Jane Doe',
+        'phone_number' => '1234567890',
+    ];
+
+    $this->actingAs($admin, 'web')
+        ->put(route('customers.update', $customer), $data)
+        ->assertRedirect(route('customers.index'))
+        ->assertSessionHas('success', 'Cliente atualizado com sucesso.');
+
+    $this->assertDatabaseHas('users', [
+        'id' => $user->id,
+        'name' => $data['name'],
+    ]);
+
+    $this->assertDatabaseHas('customers', [
+        'id' => $customer->id,
+        'phone_number' => $data['phone_number'],
+    ]);
+});
+
+it('can delete a customer', function () {
+    $admin = User::factory()->create();
+    $customer = Customer::factory()->create();
 
     $this->actingAs($admin, 'web')
         ->delete(route('customers.destroy', $customer))
@@ -72,10 +74,42 @@ it('can delete a customer', function () {
         ->assertSessionHas('success', 'Cliente excluído com sucesso.');
 
     $this->assertDatabaseMissing('users', [
-        'id' => $user->id,
+        'id' => $customer->id,
     ]);
 
     $this->assertDatabaseMissing('customers', [
         'id' => $customer->id,
     ]);
+});
+
+it('employee can retrieve customer history', function () {
+    $employee = Employee::factory()->create();
+    $customer = Customer::factory()->create();
+    $appointments = Appointment::factory()->for($customer)->count(3)->create();
+    
+    $response = $this->actingAs($employee->user, 'web')
+        ->get(route('customers.history', $customer->id));
+
+    $response->assertStatus(200);
+    $response->assertViewIs('customers.history');
+    $response->assertViewHas('appointments');
+    $appointmentsInView = $response->viewData('appointments');
+
+    $this->assertCount($appointments->count(), $appointmentsInView);
+
+    $appointments->each(function ($appointment) use ($appointmentsInView) {
+        $this->assertTrue($appointmentsInView->contains('id', $appointment->id));
+    });
+});
+
+it('displays no results found message when customer has no appointments', function () {
+    $employee = Employee::factory()->create();
+    $customer = Customer::factory()->create();
+    $response = $this->actingAs($employee->user, 'web')
+        ->get(route('customers.history', $customer->id));
+    
+    $response->assertStatus(200);
+    $response->assertViewIs('customers.history');
+    $response->assertSee('Nenhum resultado encontrado.');
+    $this->assertDatabaseCount('appointments', 0);
 });
