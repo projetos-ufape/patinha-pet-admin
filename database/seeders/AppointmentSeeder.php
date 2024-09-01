@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Appointment;
-use Illuminate\Database\Seeder;
 use App\Models\Customer;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class AppointmentSeeder extends Seeder
 {
@@ -20,7 +20,7 @@ class AppointmentSeeder extends Seeder
         ]);
 
         $customer = Customer::factory()->create([
-            'user_id' => $user->id, 
+            'user_id' => $user->id,
             'phone_number' => '87981058110',
         ]);
 

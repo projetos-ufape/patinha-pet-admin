@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\User;
+use App\Models\Appointment;
 use App\Models\Customer;
 use App\Models\Employee;
-use App\Models\Appointment;
+use App\Models\User;
 
 it('can list customers', function () {
     // TODO: Implement test
@@ -86,7 +86,7 @@ it('employee can retrieve customer history', function () {
     $employee = Employee::factory()->create();
     $customer = Customer::factory()->create();
     $appointments = Appointment::factory()->for($customer)->count(3)->create();
-    
+
     $response = $this->actingAs($employee->user, 'web')
         ->get(route('customers.history', $customer->id));
 
@@ -107,7 +107,7 @@ it('displays no results found message when customer has no appointments', functi
     $customer = Customer::factory()->create();
     $response = $this->actingAs($employee->user, 'web')
         ->get(route('customers.history', $customer->id));
-    
+
     $response->assertStatus(200);
     $response->assertViewIs('customers.history');
     $response->assertSee('Nenhum resultado encontrado.');

@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Enums\AddressState;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Models\Appointment;
 use App\Models\Customer;
 use App\Models\User;
-use App\Models\Appointment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
@@ -108,11 +108,12 @@ class CustomerController extends Controller
         return Redirect::route('customers.index')->with('success', 'Cliente excluído com sucesso.');
     }
 
-    public function history(String $id)
+    public function history(string $id)
     {
         $appointments = Appointment::where('customer_id', $id)
             ->orderByDesc('start_time')
             ->get();
+
         return view('customers.history', compact('appointments'));
     }
 }
