@@ -33,7 +33,7 @@
 
         </div>
 
-        @include('components.table', [
+        @include('components.customer-table', [
             'header' => ['ID', 'Nome', 'CPF', 'Celular', 'E-mail'],
             'content' => $customers->map(function($user) {
 
@@ -50,6 +50,7 @@
             }),
             'editRoute' => 'customers.edit',
             'deleteRoute' => 'customers.destroy',
+            'historyRoute' => 'customers.history',
         ])
     </div>
 

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\ComercialController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PetController;
@@ -22,11 +24,14 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('pets', PetController::class);
 
+    Route::resource('appointments', AppointmentController::class);
     Route::resource('employees', EmployeeController::class);
     Route::resource('customers', CustomerController::class);
+    Route::get('/customers/{customer}/history', [CustomerController::class, 'history'])->name('customers.history');
     Route::resource('services', ServiceController::class);
     Route::resource('products', ProductController::class);
     Route::resource('stocks', StockController::class)->only(['index', 'create', 'store']);
+    Route::resource('comercial', ComercialController::class)->only(['index']);
 });
 
 require __DIR__.'/auth.php';
