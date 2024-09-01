@@ -33,7 +33,7 @@ class UpdateSaleRequest extends FormRequest
         ];
     }
 
-	public function messages(): array
+    public function messages(): array
     {
         return [
             'customer_id.exists' => 'O cliente deve existir.',

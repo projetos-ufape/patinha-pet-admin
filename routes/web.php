@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers/{customer}/history', [CustomerController::class, 'history'])->name('customers.history');
     Route::resource('services', ServiceController::class);
     Route::resource('products', ProductController::class);
-	Route::resource('sales', SaleController::class);
+    Route::resource('sales', SaleController::class);
     Route::resource('stocks', StockController::class)->only(['index', 'create', 'store']);
     Route::resource('comercial', ComercialController::class)->only(['index']);
 });

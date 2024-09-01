@@ -32,7 +32,7 @@ class StoreSaleRequest extends FormRequest
         ];
     }
 
-	public function messages(): array
+    public function messages(): array
     {
         return [
             'customer_id.required' => 'O cliente é obrigatório.',

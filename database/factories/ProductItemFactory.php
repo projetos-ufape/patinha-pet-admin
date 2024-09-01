@@ -19,9 +19,9 @@ class ProductItemFactory extends Factory
     public function definition(): array
     {
         return [
-			'sale_item_id' => SaleItem::factory(),
+            'sale_item_id' => SaleItem::factory(),
             'product_id' => Product::factory(),
-			'quantity' => fake()->numberBetween(1, 10),
+            'quantity' => fake()->numberBetween(1, 10),
         ];
     }
 }

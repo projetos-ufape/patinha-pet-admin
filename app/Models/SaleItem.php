@@ -11,17 +11,17 @@ class SaleItem extends Model
 {
     use HasFactory;
 
-	protected $fillable = [
+    protected $fillable = [
         'sale_id',
         'price',
     ];
 
-	public function sale(): BelongsTo
+    public function sale(): BelongsTo
     {
         return $this->belongsTo(Sale::class);
     }
 
-	public function productItem(): HasOne
+    public function productItem(): HasOne
     {
         return $this->hasOne(ProductItem::class);
     }

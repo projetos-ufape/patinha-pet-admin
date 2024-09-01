@@ -19,7 +19,7 @@ class SaleItemFactory extends Factory
     {
         return [
             'sale_id' => Sale::factory(),
-			'price' => fake()->randomFloat(2, 1, 100),
+            'price' => fake()->randomFloat(2, 1, 100),
         ];
     }
 }
