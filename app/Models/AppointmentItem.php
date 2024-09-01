@@ -12,7 +12,7 @@ class AppointmentItem extends Model
 
 	protected $fillable = [
         'sale_id',
-        // 'appointment_id',
+        'appointment_id',
     ];
 
 	public function saleItem(): BelongsTo
@@ -20,8 +20,8 @@ class AppointmentItem extends Model
         return $this->belongsTo(SaleItem::class);
     }
 
-	// public function appointment(): BelongsTo
-    // {
-    //     return $this->belongsTo(Appointment::class);
-    // }
+	public function appointment(): BelongsTo
+    {
+        return $this->belongsTo(Appointment::class);
+    }
 }

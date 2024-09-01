@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Appointment;
 use App\Models\SaleItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,7 +20,7 @@ class AppointmentItemFactory extends Factory
     {
         return [
 			'sale_item_id' => SaleItem::factory(),
-            // 'appointment_id' => Appointment::factory(),
+            'appointment_id' => Appointment::factory(),
         ];
     }
 }

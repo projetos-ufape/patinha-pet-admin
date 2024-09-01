@@ -28,7 +28,7 @@ class StoreSaleRequest extends FormRequest
             'sale_items.*.type' => 'required|in:product,appointment',
             'sale_items.*.product_item.product_id' => 'required_if:sale_items.*.type,product|exists:products,id',
             'sale_items.*.product_item.quantity' => 'required_if:sale_items.*.type,product|integer|min:1',
-            // 'sale_items.*.appointment_item.appointment_id' => 'required_if:sale_items.*.type,appointment|exists:appointments,id',
+            'sale_items.*.appointment_item.appointment_id' => 'required_if:sale_items.*.type,appointment|exists:appointments,id',
         ];
     }
 
@@ -50,8 +50,8 @@ class StoreSaleRequest extends FormRequest
 			'sale_items.*.product_item.quantity.required_if' => 'A quantidade de cada item de venda de produto é obrigatório.',
 			'sale_items.*.product_item.quantity.integer' => 'A quantidade de cada item de venda de produto deve ser um número.',
 			'sale_items.*.product_item.quantity.min' => 'A quantidade de cada item de venda de produto deve ser :min ou mais.',
-			// 'sale_items.*.product_item.appointment_id.required_if' => 'O agendamento de cada item de venda de agendamento é obrigatório.',
-			// 'sale_items.*.product_item.appointment_id.exists' => 'O agendamento de cada item de venda de agendamento deve existir.',
+			'sale_items.*.product_item.appointment_id.required_if' => 'O agendamento de cada item de venda de agendamento é obrigatório.',
+			'sale_items.*.product_item.appointment_id.exists' => 'O agendamento de cada item de venda de agendamento deve existir.',
         ];
     }
 }

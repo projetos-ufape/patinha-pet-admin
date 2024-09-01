@@ -26,8 +26,8 @@ class SaleItem extends Model
         return $this->hasOne(ProductItem::class);
     }
 
-	// public function appointmentItem(): HasOne
-    // {
-    //     return $this->hasOne(AppointmentItem::class);
-    // }
+	public function appointmentItem(): HasOne
+    {
+        return $this->hasOne(AppointmentItem::class);
+    }
 }

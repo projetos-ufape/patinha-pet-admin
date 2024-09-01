@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Appointment;
 use App\Models\SaleItem;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 			$table->foreignIdFor(SaleItem::class)->constrained()->onDelete('cascade');
-			// $table->foreignIdFor(Appointment::class)->constrained()->nullOnDelete();
+			$table->foreignIdFor(Appointment::class)->constrained()->nullOnDelete();
         });
     }
 

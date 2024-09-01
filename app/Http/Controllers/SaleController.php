@@ -18,8 +18,7 @@ class SaleController extends Controller
      */
     public function index()
     {
-        // $sales = Sale::with(['employee', 'customer', 'saleItem.productItem.product', 'saleItem.appointmentItem.appointment'])->get();
-		$sales = Sale::with(['employee', 'customer', 'saleItem.productItem.product'])->get();
+        $sales = Sale::with(['employee', 'customer', 'saleItem.productItem.product', 'saleItem.appointmentItem.appointment'])->get();
         // return view('sales.index', compact('sales'));
     }
 
@@ -59,9 +58,9 @@ class SaleController extends Controller
                     'quantity' => $itemData['product_item']['quantity'],
                 ]);
             } elseif ($itemData['type'] === 'appointment') {
-                // $saleItem->appointmentItem()->create([
-                //     'appointment_id' => $itemData['appointment_item']['appointment_id'],
-                // ]);
+                $saleItem->appointmentItem()->create([
+                    'appointment_id' => $itemData['appointment_item']['appointment_id'],
+                ]);
             }
         }
 
@@ -123,14 +122,14 @@ class SaleController extends Controller
                                     'quantity' => $itemData['product_item']['quantity'],
                                 ]
                             );
-                            // $saleItem->appointmentItem()->delete();
+                            $saleItem->appointmentItem()->delete();
                         } elseif ($itemData['type'] === 'appointment') {
-                            // $saleItem->appointmentItem()->updateOrCreate(
-                            //     [],
-                            //     [
-                            //         'appointment_id' => $itemData['appointment_item']['appointment_id'],
-                            //     ]
-                            // );
+                            $saleItem->appointmentItem()->updateOrCreate(
+                                [],
+                                [
+                                    'appointment_id' => $itemData['appointment_item']['appointment_id'],
+                                ]
+                            );
                             $saleItem->productItem()->delete();
                         }
                     }
@@ -145,9 +144,9 @@ class SaleController extends Controller
                             'quantity' => $itemData['product_item']['quantity'],
                         ]);
                     } elseif ($itemData['type'] === 'appointment') {
-                        // $newSaleItem->appointmentItem()->create([
-                        //     'appointment_id' => $itemData['appointment_item']['appointment_id'],
-                        // ]);
+                        $newSaleItem->appointmentItem()->create([
+                            'appointment_id' => $itemData['appointment_item']['appointment_id'],
+                        ]);
                     }
                 }
             }
