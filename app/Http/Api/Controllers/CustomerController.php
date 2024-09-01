@@ -62,10 +62,11 @@ class CustomerController extends Controller
             if (isset($data['address'])) {
                 if ($user->address !== null) {
                     $user->address()->update($data['address']);
+
                     return;
                 }
                 $user->address()->create($data['address']);
-                
+
             }
         });
 
