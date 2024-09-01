@@ -17,11 +17,21 @@ class DatabaseSeeder extends Seeder
             CustomerSeeder::class,
             ProductSeeder::class,
             AppointmentSeeder::class,
+            PermissionsSeeder::class,
+            RolesSeeder::class
         ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        $employee = User::factory()
+            ->create([
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+            ])
+            ->employee()
+            ->create([
+                'admission_date' => date('Y-m-d'),
+                'salary' => rand(1000, 5000),
+            ]);
+
+        $employee->assignRole('admin');
     }
 }

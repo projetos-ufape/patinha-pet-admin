@@ -4,13 +4,20 @@ use App\Models\Appointment;
 use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
+
+beforeEach(function () {
+    Artisan::call('db:seed', ['--class' => 'PermissionsSeeder']);
+    Artisan::call('db:seed', ['--class' => 'RolesSeeder']);
+});
 
 it('can list customers', function () {
     // TODO: Implement test
 })->skip();
 
 it('can create a new customer', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
 
     $data = [
         'name' => 'Peter Parker',

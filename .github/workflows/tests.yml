@@ -44,4 +44,3 @@ jobs:
 
     - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
       run: ./vendor/bin/sail test
- 
