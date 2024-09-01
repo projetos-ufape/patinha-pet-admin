@@ -20,7 +20,7 @@ class AppointmentController extends Controller
     {
         $appointments = Appointment::paginate(15);
 
-        return view('appointments.index', compact('appointments'));
+        return view('comercial.index', compact('appointments'));
     }
 
     /**
@@ -47,7 +47,7 @@ class AppointmentController extends Controller
     
         $appointment->create($validatedData);
 
-        return redirect()->route('appointments.index')->with('success', 'Registro de atendimento criado com sucesso.');
+        return redirect()->route('comercial.index')->with('success', 'Registro de atendimento criado com sucesso.');
     }
 
     /**
@@ -70,7 +70,7 @@ class AppointmentController extends Controller
     {
         $appointment->update($request->validated());
 
-        return redirect()->route('appointments.index')->with('success', 'Registro de atendimento atualizado com sucesso.');
+        return redirect()->route('comercial.index')->with('success', 'Registro de atendimento atualizado com sucesso.');
     }
 
     /**
@@ -80,6 +80,6 @@ class AppointmentController extends Controller
     {
         $appointment->deleteOrFail();
 
-        return redirect()->route('appointments.index')->with('success', 'Registro de atendimento removido com sucesso.');
+        return redirect()->route('comercial.index')->with('success', 'Registro de atendimento removido com sucesso.');
     }
 }

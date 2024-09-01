@@ -11,7 +11,7 @@ test('list of appointments is displayed', function () {
     $appointments = Appointment::factory()->for($employee)->count(3)->create();
 
     $response = $this->actingAs($employee->user, 'web')
-        ->get(route('appointments.index'));
+        ->get(route('comercial.index'));
 
     foreach ($appointments as $appointment) {
         $this->assertDatabaseHas('appointments', [
@@ -22,7 +22,6 @@ test('list of appointments is displayed', function () {
             'status' => $appointment->status,
             'start_time' => $appointment->start_time,
             'end_time' => $appointment->end_time,
-            'end_time' => $appointment->end_time,
         ]);
     }
     $response->assertStatus(200);
@@ -31,7 +30,7 @@ test('list of appointments is displayed', function () {
 test('list of appointments is empty when no appointments have been created', function () {
     $employee = Employee::factory()->create();
     $this->actingAs($employee->user, 'web')
-        ->get(route('appointments.index'));
+        ->get(route('comercial.index'));
 
     $this->assertDatabaseCount('appointments', 0);
 });
@@ -55,7 +54,7 @@ test('employee can update existing appointment info', function () {
 
     $response
         ->assertStatus(302)
-        ->assertRedirect(route('appointments.index'))
+        ->assertRedirect(route('comercial.index'))
         ->assertSessionHas('success', 'Registro de atendimento atualizado com sucesso.');
 
     $this->assertDatabaseHas('appointments', $updateData + ['employee_id' => $employee->id]);
@@ -183,7 +182,7 @@ test('employee can destroy existing appointment', function () {
 
     $response
         ->assertStatus(302)
-        ->assertRedirect(route('appointments.index'))
+        ->assertRedirect(route('comercial.index'))
         ->assertSessionHas('success', 'Registro de atendimento removido com sucesso.');
 
     $this->assertEquals(null, $createdAppointment);
@@ -219,7 +218,7 @@ test('employee can store a new appointment', function () {
 
     $response
         ->assertStatus(302)
-        ->assertRedirect(route('appointments.index'))
+        ->assertRedirect(route('comercial.index'))
         ->assertSessionHas('success', 'Registro de atendimento criado com sucesso.');
 
         // o id do funcinário que criou o agendamento é o 'employee_id' associado ao agendamento:
@@ -497,7 +496,7 @@ test('employee can update appointment of another employee', function () {
 
     $response
         ->assertStatus(302)
-        ->assertRedirect(route('appointments.index'))
+        ->assertRedirect(route('comercial.index'))
         ->assertSessionHas('success', 'Registro de atendimento atualizado com sucesso.');
 
     // O employee_id associado ao agendamento continua sendo o id do funcionário que criou o agendamento:
