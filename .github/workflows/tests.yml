@@ -30,9 +30,6 @@ jobs:
 
     - name: Execute sail container
       run: ./vendor/bin/sail up -d
-
-    - name: Check MySQL logs
-      run: ./vendor/bin/sail logs mysql
     
     - name: Run Pint
       run: ./vendor/bin/sail pint
