@@ -46,7 +46,8 @@ it('can create a new customer', function () {
 });
 
 it('can update a customer', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $user = User::factory()->hasCustomer()->create();
     $customer = $user->customer;
 
@@ -72,7 +73,8 @@ it('can update a customer', function () {
 });
 
 it('can delete a customer', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $customer = Customer::factory()->create();
 
     $this->actingAs($admin, 'web')
@@ -91,6 +93,7 @@ it('can delete a customer', function () {
 
 it('employee can retrieve customer history', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $customer = Customer::factory()->create();
     $appointments = Appointment::factory()->for($customer)->count(3)->create();
 
@@ -111,6 +114,7 @@ it('employee can retrieve customer history', function () {
 
 it('displays no results found message when customer has no appointments', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $customer = Customer::factory()->create();
     $response = $this->actingAs($employee->user, 'web')
         ->get(route('customers.history', $customer->id));
