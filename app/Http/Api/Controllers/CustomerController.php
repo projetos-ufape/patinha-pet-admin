@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
-
-
     /*
         Get costumer info
     */
@@ -40,7 +38,6 @@ class CustomerController extends Controller
 
     }
 
-    
     public function update(CustomerUpdateRequest $request)
     {
         $data = $request->validated();
@@ -63,7 +60,7 @@ class CustomerController extends Controller
                 if ($user->address != null) {
                     $user->address()->update($data['address']);
                 } else {
-                    $user->address()->create($data['address']);    
+                    $user->address()->create($data['address']);
                 }
             }
         });
