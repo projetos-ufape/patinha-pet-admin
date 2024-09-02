@@ -12,23 +12,27 @@
     <link href="https://fonts.bunny.net/css?family=Quicksand:wght@100;300;400;500;600&display=swap" rel="stylesheet">
 
     <!-- Scripts -->
-     
-    @vite(['resources/css/app.css', 'resources/js/app.js',  'resources/js/searchtable.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
-
 </head>
 
-<body class="font-sans antialiased " style="background:#E4EBED" >
+<body class="font-sans antialiased" style="background:#E4EBED">
     <div class="flex flex-col min-h-screen">
-        @include('layouts.components.navbar')
+        @auth
+            @include('layouts.components.navbar')
+        @endauth
+
         <div class="flex flex-1">
-            @include('layouts.components.sidebar') 
+            @auth
+                @include('layouts.components.sidebar')
+            @endauth
+
             <div class="flex-1 p-6">
-            @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-            @endif
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
                 @yield('content')
             </div>
         </div>

@@ -68,19 +68,19 @@
 
         <div class="flex mb-6 mt-2">
             <div style="display: inline-block; width: 30%;">
-                <input type="text" name="address[cep]" id="cep" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="CEP" value="{{ old('address.cep', $user->address['cep']) }}" required>
+                <input type="text" name="address[cep]" id="cep" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="CEP" value="{{ old('address.cep', $user->address['cep'] ?? null) }}" required>
                 @error('address.cep')
                     <div class="text-red-600 text-sm">{{ $message }}</div>
                 @enderror
             </div>
             <div style="display: inline-block; width: 68%; margin-left: 2%;">
-                <input type="text" name="address[street]" id="address" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Endereço" value="{{ old('address.street', $user->address['street']) }}" required>
+                <input type="text" name="address[street]" id="address" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Endereço" value="{{ old('address.street', $user->address['street'] ?? null) }}" required>
                 @error('address.street')
                     <div class="text-red-600 text-sm">{{ $message }}</div>
                 @enderror
             </div>
             <div style="display: inline-block; width: 68%; margin-left: 2%;">
-                <input type="text" name="address[district]" id="district" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Bairro" value="{{ old('address.district', $user->address['district']) }}" required>
+                <input type="text" name="address[district]" id="district" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Bairro" value="{{ old('address.district', $user->address['district'] ?? null) }}" required>
                 @error('address.district')
                     <div class="text-red-600 text-sm">{{ $message }}</div>
                 @enderror
@@ -89,19 +89,19 @@
 
         <div class="flex mb-6">
             <div style="display: inline-block; width: 24%;">
-                <input type="text" name="address[complement]" id="complement" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Complemento" value="{{ old('address.complement', $user->address['complement']) }}">
+                <input type="text" name="address[complement]" id="complement" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Complemento" value="{{ old('address.complement', $user->address['complement'] ?? null) }}">
                 @error('address.complement')
                     <div class="text-red-600 text-sm">{{ $message }}</div>
                 @enderror
             </div>
             <div style="display: inline-block; width: 24%; margin-left: 2%;">
-                <input type="text" name="address[number]" id="number" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Número" value="{{ old('address.number', $user->address['number']) }}" required>
+                <input type="text" name="address[number]" id="number" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Número" value="{{ old('address.number', $user->address['number'] ?? null) }}" required>
                 @error('address.number')
                     <div class="text-red-600 text-sm">{{ $message }}</div>
                 @enderror
             </div>
             <div style="display: inline-block; width: 24%; margin-left: 2%;">
-                <input type="text" name="address[city]" id="city" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Cidade" value="{{ old('address.city', $user->address['city']) }}" required>
+                <input type="text" name="address[city]" id="city" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Cidade" value="{{ old('address.city', $user->address['city'] ?? null) }}" required>
                 @error('address.city')
                     <div class="text-red-600 text-sm">{{ $message }}</div>
                 @enderror

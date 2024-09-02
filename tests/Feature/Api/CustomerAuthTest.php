@@ -16,7 +16,7 @@ it('can sign up a new customer with address', function () {
     $response = $this->postJson(route('api.customers.signup'), $data);
 
     $response->assertStatus(200)
-        ->assertJsonStructure(['token']);
+        ->assertJsonStructure(['token', 'user']);
 
     $this->assertDatabaseHas('users', [
         'name' => $data['name'],
@@ -40,7 +40,7 @@ it('can sign up a new customer with address', function () {
 });
 
 it('can sign up a new customer without address', function () {
-    $data =  User::factory()->make()->toArray();
+    $data = User::factory()->make()->toArray();
     $data = array_merge($data, Customer::factory()->make()->toArray());
     $data['password'] = 'password123';
     $data['password_confirmation'] = 'password123';
@@ -48,7 +48,7 @@ it('can sign up a new customer without address', function () {
     $response = $this->postJson(route('api.customers.signup'), $data);
 
     $response->assertStatus(200)
-        ->assertJsonStructure(['token']);
+        ->assertJsonStructure(['token', 'user']);
 
     $this->assertDatabaseHas('users', [
         'name' => $data['name'],
@@ -65,7 +65,7 @@ it('can sign up a new customer without address', function () {
     ]);
 });
 
-it('can log in a customer and return a token', function () {
+it('can log in a customer and return a token, email and name', function () {
     $password = 'password123';
     User::factory()->hasCustomer()->create([
         'email' => 'customer@example.com',
@@ -79,7 +79,7 @@ it('can log in a customer and return a token', function () {
 
     $response
         ->assertStatus(200)
-        ->assertJsonStructure(['token']);
+        ->assertJsonStructure(['token', 'user']);
 });
 
 it('fails to log in with invalid credentials', function () {

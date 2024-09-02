@@ -35,7 +35,13 @@ class CustomerAuthController extends Controller
         });
         $token = $user->createToken('customer-api', ['customer'])->plainTextToken;
 
-        return response()->json(compact('token'));
+        return response()->json([
+            'token' => $token,
+            'user' => [
+                'email' => $user->email,
+                'name' => $user->name,
+            ],
+        ]);
     }
 
     public function login(Request $request)
@@ -46,12 +52,18 @@ class CustomerAuthController extends Controller
         ]);
 
         $user = User::where('email', $credentials['email'])->first();
-        if (!$user || !$user->customer || !Hash::check($credentials['password'], $user->password)) {
+        if (! $user || ! $user->customer || ! Hash::check($credentials['password'], $user->password)) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $token = $user->createToken('customer-api', ['customer'])->plainTextToken;
 
-        return response()->json(compact('token'));
+        return response()->json([
+            'token' => $token,
+            'user' => [
+                'email' => $user->email,
+                'name' => $user->name,
+            ],
+        ]);
     }
 
     public function logout(Request $request)

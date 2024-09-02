@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AddressState;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Models\Appointment;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
-use App\Enums\AddressState;
 
 class CustomerController extends Controller
 {
@@ -17,19 +18,19 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::all();
-        $users = User::has('customer')->get();
-        
-        return view("customers.index", ['customers' => $customers, 'users' => $users]);
+        $customers = User::with('customer')->whereHas('customer')->get();
+
+        return view('customers.index', compact('customers'));
     }
-    
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        $states = AddressState::values(); 
-        return view('customers.create', ['states' => $states]); 
+        $states = AddressState::values();
+
+        return view('customers.create', ['states' => $states]);
     }
 
     /**
@@ -65,10 +66,17 @@ class CustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Customer $customer)
+    public function edit(string $id)
     {
         $states = AddressState::values();
-        return view('customers.edit', ['customer' => $customer, 'states' => $states]);
+        $customer = Customer::findOrFail($id);
+        $user = User::with('customer')->findOrFail($customer->user_id);
+
+        return view('customers.edit', [
+            'customer' => $customer,
+            'user' => $user,
+            'states' => $states,
+        ]);
     }
 
     /**
@@ -87,7 +95,7 @@ class CustomerController extends Controller
             ]);
         });
 
-        return Redirect::route('customers.index', [$customer])->with('success', 'Cliente atualizado com sucesso.');
+        return Redirect::route('customers.index')->with('success', 'Cliente atualizado com sucesso.');
     }
 
     /**
@@ -98,5 +106,14 @@ class CustomerController extends Controller
         $customer->user->deleteOrFail();
 
         return Redirect::route('customers.index')->with('success', 'Cliente excluído com sucesso.');
+    }
+
+    public function history(string $id)
+    {
+        $appointments = Appointment::where('customer_id', $id)
+            ->orderByDesc('start_time')
+            ->get();
+
+        return view('customers.history', compact('appointments'));
     }
 }

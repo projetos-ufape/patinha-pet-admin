@@ -1,12 +1,11 @@
 import './bootstrap';
 
 import Alpine from 'alpinejs';
+import Inputmask from 'inputmask';
 
 window.Alpine = Alpine;
 
 Alpine.start();
-
-import Inputmask from 'inputmask';
 
 document.addEventListener('DOMContentLoaded', function() {
     var cpfMask = new Inputmask('999.999.999-99');
@@ -22,4 +21,32 @@ document.addEventListener('DOMContentLoaded', function() {
     salaryMask.mask(document.querySelector("#salary"));
     
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) {
+        searchInput.addEventListener('keyup', searchTable);
+    }
+});
+
+function searchTable() {
+    const input = document.getElementById("searchInput");
+    const filter = input.value.toUpperCase();
+    const table = document.querySelector("table");
+    const trs = table.querySelectorAll("tbody tr");
+
+    trs.forEach((tr) => {
+        let showRow = false;
+        const tds = tr.querySelectorAll("td");
+
+        tds.forEach((td) => {
+            if (td.textContent.toUpperCase().includes(filter)) {
+                showRow = true;
+            }
+        });
+
+        tr.style.display = showRow ? "" : "none";
+    });
+}
+
 

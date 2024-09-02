@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use PHPUnit\Framework\Constraint\IsTrue;
 
 class UpdateCustomerPasswordRequest extends FormRequest
 {
@@ -31,7 +30,7 @@ class UpdateCustomerPasswordRequest extends FormRequest
     {
         return [
             'password.required' => 'O campo senha é obrigatório.',
-            'password.min' => 'A senha deve ter pelo menos :min caracteres.'
+            'password.min' => 'A senha deve ter pelo menos :min caracteres.',
         ];
     }
 }

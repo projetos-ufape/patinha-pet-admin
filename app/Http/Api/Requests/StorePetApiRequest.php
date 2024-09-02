@@ -2,10 +2,11 @@
 
 namespace App\Http\Api\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use App\Enums\Gender;
 use App\Enums\Specie;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 class StorePetApiRequest extends FormRequest
 {
     /**
@@ -31,7 +32,7 @@ class StorePetApiRequest extends FormRequest
             'castrated' => ['nullable', 'boolean'],
             'height' => ['nullable', 'numeric'],
             'weight' => ['nullable', 'numeric'],
-            'birth' => ['nullable', 'date', 'before_or_equal:today']
+            'birth' => ['nullable', 'date', 'before_or_equal:today'],
         ];
     }
 
@@ -60,13 +61,13 @@ class StorePetApiRequest extends FormRequest
     /**
      * Handle a failed validation attempt.
      *
-     * @param \Illuminate\Contracts\Validation\Validator $validator
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
      * @return void
      */
     protected function failedValidation($validator)
     {
         $response = response()->json([
-            'errors' => $validator->errors()
+            'errors' => $validator->errors(),
         ], 422);
 
         throw new \Illuminate\Validation\ValidationException($validator, $response);

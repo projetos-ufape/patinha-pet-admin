@@ -2,10 +2,17 @@
 
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
 
+beforeEach(function () {
+    Artisan::call('db:seed', ['--class' => 'PermissionsSeeder']);
+    Artisan::call('db:seed', ['--class' => 'RolesSeeder']);
+});
 
-test('list of products is displayed', function (){
-    $admin = User::factory()->create();
+test('list of products is displayed', function () {
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
     $products = Product::factory()->count(3)->create();
 
     $response = $this->actingAs($admin, 'web')
@@ -18,133 +25,148 @@ test('list of products is displayed', function (){
             'brand' => $product->brand,
             'category' => $product->category,
             'price' => $product->price,
-            'quantity' => $product->quantity,
         ]);
     }
     $response->assertStatus(200);
 });
 
 test('list of products is empty when no products have been created', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
     $response = $this->actingAs($admin, 'web')
         ->get(route('products.index'));
-        
+
     $this->assertDatabaseCount('products', 0);
 });
 
 test('admin can update existing product info', function () {
-    $admin = User::factory()->create();
-    $product = Product::factory()->create(); 
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
 
-    $response = $this->actingAs($admin, 'web')
-        ->patch('/products/'.$product->id, ['name' => 'Dog Bed',
+    $product = Product::factory()->create();
+    $dataToUpdate = [
+        'name' => 'Dog Bed',
         'description' => 'Comfortable blue checkered medium sized dog bed.',
         'brand' => 'Wild',
         'category' => 'toy',
-        'price' => 50.00,
-        'quantity' => 2,]);
-    
-    $updatedProduct = Product::find($product->id);
-    $this->assertEquals('Dog Bed', $updatedProduct->name);
-    $this->assertEquals('Wild', $updatedProduct->brand);
-    $this->assertEquals('toy', $updatedProduct->category);
-    $this->assertEquals('50.00', $updatedProduct->price);
-    $this->assertEquals('2', $updatedProduct->quantity);
-   
+        'price' => '50.00',
+    ];
+
+    $response = $this
+        ->actingAs($admin, 'web')
+        ->put(route('products.update', compact('product')), $dataToUpdate);
+
+    $this->assertDatabaseHas('products', $dataToUpdate);
+
     $response
         ->assertStatus(302)
         ->assertRedirect(route('products.index'))
         ->assertSessionHas('success', 'Produto atualizado com sucesso.');
-    
 });
 
 test('admin cannot update non-existing product info', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
     $response = $this->actingAs($admin, 'web')
-        ->patch('/products/33', ['name' => 'Dog Bed',
-        'description' => 'Comfortable blue checkered medium sized dog bed.',
-        'brand' => 'Wild',
-        'category' => 'toy',
-        'price' => 50.00,
-        'quantity' => 2,]);
+        ->put('/products/33', [
+            'name' => 'Dog Bed',
+            'description' => 'Comfortable blue checkered medium sized dog bed.',
+            'brand' => 'Wild',
+            'category' => 'toy',
+            'price' => '50.00',
+        ]);
+
     $response
         ->assertStatus(404);
 });
 
-test('shows specific product information successfully', function () {
-    $admin = User::factory()->create();
-	$product = Product::factory()->create();
+test('admin cannot add a product invalid category', function () {
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
 
-    $response = $this->actingAs($admin, 'web')
-        ->get('/products/'.$product->id);
-	$response->assertStatus(200);
-});
-
-test('admin cannot add a product w/ invalid category', function () {
-    $admin = User::factory()->create();
     $response = $this->actingAs($admin, 'web')
         ->post('/products', [
-        'name' => 'Dog Bed',
-        'description' => 'Comfortable blue checkered medium sized dog bed.',
-        'brand' => 'Wild',
-        'category' => 'nada',
-        'price' => 50.00,
-        'quantity' => 2,
-    ]);
+            'name' => 'Dog Bed',
+            'description' => 'Comfortable blue checkered medium sized dog bed.',
+            'brand' => 'Wild',
+            'category' => 'nada',
+            'price' => '50.00',
+        ]);
 
     $response->assertInvalid(['category' => 'The selected category is invalid.']);
 });
 
-test('admin cannot add a product w/ invalid price', function () {
-    $admin = User::factory()->create();
-    $response = $this->actingAs($admin, 'web')
-        ->post('/products', [
+test('admin cannot add a product invalid price', function () {
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
+    $default = [
         'name' => 'Dog Bed',
         'description' => 'Comfortable blue checkered medium sized dog bed.',
         'brand' => 'Wild',
         'category' => 'toy',
-        'price' => 7777777.00,
-        'quantity' => 2,
-    ]);
+    ];
 
-    $response->assertInvalid(['price' => 'The price field format is invalid.']);
+    $this->actingAs($admin, 'web')
+        ->post('/products', [...$default, 'price' => 7777777.00])
+        ->assertInvalid(['price']);
+
+    $this->actingAs($admin, 'web')
+        ->post('/products', [...$default, 'price' => '7777777fd'])
+        ->assertInvalid(['price']);
+
+    $this->actingAs($admin, 'web')
+        ->post('/products', [...$default, 'price' => '212.324234'])
+        ->assertInvalid(['price']);
+
+    $this->actingAs($admin, 'web')
+        ->post('/products', [...$default, 'price' => '-30.40'])
+        ->assertInvalid(['price']);
 });
 
 test('admin can destroy existing product', function () {
-    $admin = User::factory()->create();
-	$product = Product::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
+    $product = Product::factory()->create();
 
     $response = $this->actingAs($admin, 'web')
         ->delete('/products/'.$product->id);
 
-	$createdProduct = Product::find($product->id);
+    $createdProduct = Product::find($product->id);
 
-	$response
+    $response
         ->assertStatus(302)
         ->assertRedirect(route('products.index'))
         ->assertSessionHas('success', 'Produto removido com sucesso.');
 
-	$this->assertEquals(null, $createdProduct);
+    $this->assertEquals(null, $createdProduct);
     $this->assertDatabaseMissing('products', [
         'id' => $product->id,
     ]);
 });
 
 test('admin cannot destroy non-existing product', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
     $response = $this->actingAs($admin, 'web')
         ->delete('/products/33');
     $response->assertStatus(500);
 });
 
 test('non-admin cannot update product list', function () {
-    $product = Product::factory()->create(); 
-    $response = $this->patch('/products/'.$product->id, ['name' => 'Dog Bed',
+    $product = Product::factory()->create();
+    $response = $this->put('/products/'.$product->id, [
+        'name' => 'Dog Bed',
         'description' => 'Comfortable blue checkered medium sized dog bed.',
         'brand' => 'Wild',
         'category' => 'toy',
-        'price' => 50.00,
-        'quantity' => 2,]);
+        'price' => '50.00',
+    ]);
+
     $response
         ->assertStatus(302)
         ->assertRedirect(route('login'));

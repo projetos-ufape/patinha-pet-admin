@@ -1,12 +1,17 @@
 <?php
 
-use App\Models\User;
 use App\Models\Service;
+use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
 
+beforeEach(function () {
+    Artisan::call('db:seed', ['--class' => 'PermissionsSeeder']);
+    Artisan::call('db:seed', ['--class' => 'RolesSeeder']);
+});
 
 it('can list services', function () {
-    $admin = User::factory()->create();
-
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $response = $this->actingAs($admin, 'web')
         ->get(route('services.index'));
 
@@ -14,7 +19,8 @@ it('can list services', function () {
 })->skip();
 
 it('can create a new service', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
 
     $data = [
         'name' => 'Banho e Tosa',
@@ -37,8 +43,9 @@ it('can create a new service', function () {
 });
 
 it('can update a service', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
     $service = Service::factory()->create();
+    $admin->assignRole('admin');
 
     $data = [
         'name' => 'Banho e Tosa Deluxe',
@@ -46,9 +53,12 @@ it('can update a service', function () {
         'price' => 99.90,
     ];
 
-    $response = $this->actingAs($admin, 'web')
-        ->put(route('services.update', $service), $data)
-        ->assertRedirect(route('services.edit', $service))
+    $response = $this
+        ->actingAs($admin, 'web')
+        ->put(route('services.update', $service), $data);
+
+    $response
+        ->assertRedirect(route('services.index', $service))
         ->assertSessionHas('success', 'Serviço atualizado com sucesso.');
 
     $this->assertDatabaseHas('services', [
@@ -60,7 +70,8 @@ it('can update a service', function () {
 });
 
 it('can delete a service', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $service = Service::factory()->create();
 
     $response = $this->actingAs($admin, 'web')
@@ -74,7 +85,8 @@ it('can delete a service', function () {
 });
 
 it('cannot create a service without a name', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $data = [
         'description' => 'Serviço sem nome',
         'price' => 50.00,
@@ -90,7 +102,8 @@ it('cannot create a service without a name', function () {
 });
 
 it('cannot create a service with a non-string name', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $data = [
         'name' => 12345,
         'description' => 'Descrição com nome não-string',
@@ -107,7 +120,8 @@ it('cannot create a service with a non-string name', function () {
 });
 
 it('cannot create a service with a name longer than 255 characters', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $data = [
         'name' => str_repeat('a', 256),
         'description' => 'Descrição com nome muito longo',
@@ -124,7 +138,8 @@ it('cannot create a service with a name longer than 255 characters', function ()
 });
 
 it('cannot create a service without a price', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $data = [
         'name' => 'Serviço Sem Preço',
         'description' => 'Descrição sem preço',
@@ -141,7 +156,8 @@ it('cannot create a service without a price', function () {
 });
 
 it('cannot create a service with a non-numeric price', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $data = [
         'name' => 'Serviço com Preço Não Numérico',
         'description' => 'Descrição com preço inválido',
@@ -158,7 +174,8 @@ it('cannot create a service with a non-numeric price', function () {
 });
 
 it('cannot create a service with a negative price', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $data = [
         'name' => 'Serviço com Preço Negativo',
         'description' => 'Descrição com preço negativo',
@@ -175,7 +192,8 @@ it('cannot create a service with a negative price', function () {
 });
 
 it('cannot update a service without a name', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $service = Service::factory()->create();
 
     $data = [
@@ -193,11 +211,12 @@ it('cannot update a service without a name', function () {
 });
 
 it('cannot update a service with a non-string name', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $service = Service::factory()->create();
 
     $data = [
-        'name' => 12345, 
+        'name' => 12345,
         'description' => 'Descrição com nome não-string',
         'price' => 60.00,
     ];
@@ -212,7 +231,8 @@ it('cannot update a service with a non-string name', function () {
 });
 
 it('cannot update a service with a name longer than 255 characters', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $service = Service::factory()->create();
 
     $data = [
@@ -228,17 +248,17 @@ it('cannot update a service with a name longer than 255 characters', function ()
     $response->assertSessionHas('errors', function ($errors) {
         return $errors->has('name') && $errors->first('name') === 'O nome do serviço não pode ter mais que 255 caracteres.';
     });
-    
 });
 
 it('cannot update a service without a price', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $service = Service::factory()->create();
 
     $data = [
         'name' => 'Serviço Sem Preço',
         'description' => 'Descrição sem preço',
-        
+
     ];
 
     $response = $this->actingAs($admin, 'web')
@@ -251,13 +271,14 @@ it('cannot update a service without a price', function () {
 });
 
 it('cannot update a service with a non-numeric price', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $service = \App\Models\Service::factory()->create();
 
     $data = [
         'name' => 'Serviço com Preço Não Numérico',
         'description' => 'Descrição com preço inválido',
-        'price' => 'not a number', 
+        'price' => 'not a number',
     ];
 
     $response = $this->actingAs($admin, 'web')
@@ -270,7 +291,8 @@ it('cannot update a service with a non-numeric price', function () {
 });
 
 it('cannot update a service with a negative price', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $service = \App\Models\Service::factory()->create();
 
     $data = [
@@ -287,4 +309,3 @@ it('cannot update a service with a negative price', function () {
         return $errors->has('price') && $errors->first('price') === 'O preço do serviço deve ser um valor positivo.';
     });
 });
-

@@ -11,21 +11,22 @@ class StoreCustomerRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-     public function prepareForValidation()
+    public function prepareForValidation()
     {
         $this->merge([
-            'cpf' => preg_replace('/\D/', '', $this->cpf), 
-            'phone_number' => preg_replace('/\D/', '', $this->phone_number), 
+            'cpf' => preg_replace('/\D/', '', $this->cpf),
+            'phone_number' => preg_replace('/\D/', '', $this->phone_number),
         ]);
     }
+
     public function rules(): array
     {
         return [
             'name' => ['required', 'string', 'max:128'],
-            'cpf' => ['required', "size:11", 'string', 'unique:users,cpf'],
+            'cpf' => ['required', 'size:11', 'string', 'unique:users,cpf'],
             'phone_number' => ['required', 'string', 'digits:11'],
             'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'min:4']
+            'password' => ['required', 'min:4'],
         ];
     }
 
