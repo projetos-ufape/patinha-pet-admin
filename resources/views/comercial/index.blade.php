@@ -27,6 +27,7 @@
         .tab-content {
             padding-top: 20px;
         }
+        
     </style>
 @endpush
 
@@ -41,14 +42,15 @@
             </div>
         </div>
 
-
+        
         {{-- Conteúdo da aba de Atendimentos --}}
         <div id="Atendimentos" class="tab-content" style="display:block;">
+
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center">
                     <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Pesquisar"
                         class="px-4 py-2 border border-gray-100 rounded-lg mr-2" />
-                </div>
+                </div>        
                 <a href="{{ route('appointments.create') }}" class="add-button">
                     <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
                     Registrar Atendimento
@@ -103,7 +105,7 @@
                     <input type="text" id="searchSalesInput" onkeyup="searchSalesTable()" placeholder="Pesquisar"
                         class="px-4 py-2 border border-gray-100 rounded-lg mr-2" />
                 </div>
-                <a href="{{ route('sales.create') }}" class="add-button">
+                <a href="{{ route('commercial.scheduling.index') }}" class="add-button">
                     <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
                     Registrar Venda
                 </a>
@@ -132,6 +134,7 @@
 
             @include('components.table', [
                 'header' => ['ID', 'Produtos', 'Serviços', 'Data', 'Valor', 'Cliente'],
+                'withoutActions' => true,
                 'content' => $sales->map(function ($sale) {
                     return [
                         $sale->id,
@@ -140,10 +143,9 @@
                         $sale->date,
                         $sale->value,
                         $sale->customer,
+                        
                     ];
                 }),
-                'editRoute' => 'sales.edit',
-                'deleteRoute' => 'sales.destroy',
             ])
         </div>
 
