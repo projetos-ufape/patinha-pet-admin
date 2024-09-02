@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AddressState;
+use App\Enums\EmployeeType;
 use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -26,11 +27,12 @@ class EmployeeController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create()
     {
         $states = AddressState::values();
+        $types = EmployeeType::cases();
 
-        return view('employees.create', ['states' => $states]);
+        return view('employees.create', ['states' => $states, 'types' => $types]);
     }
 
     /**
@@ -44,6 +46,7 @@ class EmployeeController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'cpf' => ['required', 'string'],
             'salary' => ['required', 'numeric'],
+            'type' => ['required', Rule::enum(EmployeeType::class)],
             'admission_date' => ['required', 'date', 'date_format:Y-m-d'],
             'address' => ['sometimes', 'array'],
             'address.cep' => ['sometimes', 'size:8'],
@@ -67,6 +70,8 @@ class EmployeeController extends Controller
                 'salary' => $data['salary'],
                 'admission_date' => $data['admission_date'],
             ]);
+
+            $user->assignRole($data['type']);
 
             if (! empty($data['address'])) {
                 $user->address()->create($data['address']);
