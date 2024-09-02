@@ -27,7 +27,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('customers', CustomerController::class);
         Route::resource('appointments', AppointmentController::class);
         Route::get('/customers/{customer}/history', [CustomerController::class, 'history'])->name('customers.history');
-        Route::resource('comercial', AppointmentController::class)->only(['index']);
+        Route::resource('comercial', ComercialController::class)->only(['index']);
+        Route::resource('sales', SaleController::class);
         Route::get('commercial/sales/create', [SaleTempController::class, 'create'])->name('commercial.scheduling.index');
     });
     Route::resource('pets', PetController::class);
