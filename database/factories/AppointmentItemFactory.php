@@ -19,7 +19,7 @@ class AppointmentItemFactory extends Factory
     public function definition(): array
     {
         return [
-			'sale_item_id' => SaleItem::factory(),
+            'sale_item_id' => SaleItem::factory(),
             'appointment_id' => Appointment::factory(),
         ];
     }
