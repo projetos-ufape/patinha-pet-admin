@@ -46,7 +46,7 @@
                 <select name="pet_id" id="pet" class="w-full px-4 py-2 border border-gray-300 rounded-md @error('pet') border-red-500 @enderror" required>
                     <option value="" disabled>Pet</option>
                     @foreach($pets as $pet)
-                        <option value="{{ $pet->id }}" {{ $appointment->pet_id == $pet->id ? 'selected' : '' }}>
+                        <option value="{{ $pet->id }}" data-customer-id="{{ $pet->customer_id }}" {{ $appointment->pet_id == $pet->id ? 'selected' : '' }}>
                             {{ $pet->name }}
                         </option>
                     @endforeach
@@ -69,6 +69,7 @@
 
         <div class="flex mb-6">
             <div style="display: inline-block; width: 49%">
+                <label for="end_time" class="block mb-1">Data e Hora do Inicio</label>
                 <input type="datetime-local" name="start_time" id="start_time"
                        class="w-full px-4 py-2 border border-gray-300 rounded-md @error('start_time') border-red-500 @enderror"
                        value="{{$appointment->start}}" required>
@@ -78,6 +79,7 @@
             </div>
         
             <div style="display: inline-block; width: 49%; margin-left: 2%;">
+                <label for="end_time" class="block mb-1">Data e Hora de Fim</label>
                 <input type="datetime-local" name="end_time" id="end_time"
                        class="w-full px-4 py-2 border border-gray-300 rounded-md @error('end_time') border-red-500 @enderror"
                        value="{{ old('end_time', $end_time ?? '') }}">
@@ -93,5 +95,32 @@
         </div>
     </form>
 </div>
-@endsection
+
+<script>
+document.getElementById('customer').addEventListener('change', function () {
+    const selectedCustomerId = this.value;
+    const petSelect = document.getElementById('pet');
     
+    for (let i = 0; i < petSelect.options.length; i++) {
+        const option = petSelect.options[i];
+        const optionCustomerId = option.getAttribute('data-customer-id');
+        option.style.display = (optionCustomerId === selectedCustomerId) ? 'block' : 'none';
+    }
+    
+    petSelect.value = "";
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const customerSelect = document.getElementById('customer');
+    const selectedCustomerId = customerSelect.value;
+    const petSelect = document.getElementById('pet');
+    
+    for (let i = 0; i < petSelect.options.length; i++) {
+        const option = petSelect.options[i];
+        const optionCustomerId = option.getAttribute('data-customer-id');
+        option.style.display = (optionCustomerId === selectedCustomerId) ? 'block' : 'none';
+    }
+});
+</script>
+
+@endsection
