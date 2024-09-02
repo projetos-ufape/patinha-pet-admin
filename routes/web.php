@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('products', ProductController::class);
         Route::resource('stocks', StockController::class)->only(['index', 'create', 'store']);
     });
+
+    Route::resource('comercial', AppointmentController::class)->only(['index']);
 });
 
 require __DIR__.'/auth.php';

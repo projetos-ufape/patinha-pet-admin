@@ -100,28 +100,4 @@
         </form>
     </div>
 
-    <script>
-        document.getElementById('client').addEventListener('change', function() {
-            var customer_id = this.value;
-            var petSelect = document.getElementById('pet');
-
-            petSelect.innerHTML = '<option value="" disabled selected>Carregando...</option>';
-
-            fetch(`/pets/${customer_id}`)
-                .then(response => response.json())
-                .then(data => {
-                    petSelect.innerHTML = '<option value="" disabled selected>Selecione o Pet</option>';
-                    data.forEach(function(pet) {
-                        var option = document.createElement('option');
-                        option.value = pet.id;
-                        option.textContent = pet.name;
-                        petSelect.appendChild(option);
-                    });
-                })
-                .catch(error => {
-                    console.error('Erro ao buscar os pets:', error);
-                    petSelect.innerHTML = '<option value="" disabled selected>Erro ao carregar pets</option>';
-                });
-        });
-    </script>
 @endsection

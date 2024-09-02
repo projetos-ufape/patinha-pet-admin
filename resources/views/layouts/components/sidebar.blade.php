@@ -24,6 +24,9 @@
                 <span class="ml-2">Estoque</span>
             </a>
         </li>
+
+        @endif
+        @if(auth()->user()->hasPermissionTo('manage employees'))
         
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
             <a href="{{ route('comercial.index') }}" class="text-gray-700 hover:text-gray-900 block w-full flex items-center">
