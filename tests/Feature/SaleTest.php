@@ -16,7 +16,7 @@ beforeEach(function () {
 
 test('index sales', function () {
     $user = User::factory()->has(Employee::factory())->create();
-	$user->assignRole('admin');
+    $user->assignRole('admin');
     $sale = Sale::factory()->has(SaleItem::factory()->has(ProductItem::factory()->for(Product::factory())))->for(Employee::factory())->for(Customer::factory())->create();
     $response = $this
         ->actingAs($user, 'web')
@@ -26,7 +26,7 @@ test('index sales', function () {
 
 test('store sale', function () {
     $user = User::factory()->has(Employee::factory())->create();
-	$user->assignRole('admin');
+    $user->assignRole('admin');
     $customer = Customer::factory()->create();
     $product = Product::factory(['quantity' => 5])->create();
     $data = [
@@ -56,14 +56,14 @@ test('store sale', function () {
     $this->assertDatabaseHas('product_items', [
         'quantity' => 5,
     ]);
-	$this->assertDatabaseHas('products', [
+    $this->assertDatabaseHas('products', [
         'quantity' => 0,
     ]);
 });
 
 test('store sale with non-existent customer', function () {
     $user = User::factory()->has(Employee::factory())->create();
-	$user->assignRole('admin');
+    $user->assignRole('admin');
     $product = Product::factory()->create();
     $data = [
         'customer_id' => 1,
@@ -87,7 +87,7 @@ test('store sale with non-existent customer', function () {
 
 test('store sale with non-existent product', function () {
     $user = User::factory()->has(Employee::factory())->create();
-	$user->assignRole('admin');
+    $user->assignRole('admin');
     $customer = Customer::factory()->create();
     $data = [
         'customer_id' => $customer->id,
@@ -111,7 +111,7 @@ test('store sale with non-existent product', function () {
 
 test('store sale with invalid quantity', function () {
     $user = User::factory()->has(Employee::factory())->create();
-	$user->assignRole('admin');
+    $user->assignRole('admin');
     $customer = Customer::factory()->create();
     $product = Product::factory()->create();
     $data = [
@@ -136,7 +136,7 @@ test('store sale with invalid quantity', function () {
 
 test('store sale with no sale items', function () {
     $user = User::factory()->has(Employee::factory())->create();
-	$user->assignRole('admin');
+    $user->assignRole('admin');
     $customer = Customer::factory()->create();
     $data = [
         'customer_id' => $customer->id,
@@ -151,17 +151,17 @@ test('store sale with no sale items', function () {
 
 test('update sale', function () {
     $user = User::factory()->has(Employee::factory())->create();
-	$user->assignRole('admin');
+    $user->assignRole('admin');
     $product = Product::factory(['quantity' => 10])->create();
-	$sale = Sale::factory()->for($user->employee)->for(Customer::factory())->create();
-	$saleItem = SaleItem::factory(['price' => 5*$product->price, 'sale_id' => $sale->id])->has(ProductItem::factory(['quantity' => 5])->for($product))->create();
+    $sale = Sale::factory()->for($user->employee)->for(Customer::factory())->create();
+    $saleItem = SaleItem::factory(['price' => 5 * $product->price, 'sale_id' => $sale->id])->has(ProductItem::factory(['quantity' => 5])->for($product))->create();
     $data = [
-		'id' => $sale->id,
+        'id' => $sale->id,
         'customer_id' => $sale->customer_id,
         'sale_items' => [
             [
-				'id' => $saleItem->id,
-                'price' => 10*$product->price,
+                'id' => $saleItem->id,
+                'price' => 10 * $product->price,
                 'type' => 'product',
                 'product_item' => [
                     'product_id' => $product->id,
@@ -179,23 +179,23 @@ test('update sale', function () {
         'customer_id' => $sale->customer_id,
     ]);
     $this->assertDatabaseHas('sale_items', [
-        'price' => 10*$product->price,
+        'price' => 10 * $product->price,
     ]);
     $this->assertDatabaseHas('product_items', [
         'quantity' => 10,
     ]);
-	$this->assertDatabaseHas('products', [
+    $this->assertDatabaseHas('products', [
         'quantity' => 5,
     ]);
 });
 
 test('update sale with no sale items', function () {
     $user = User::factory()->has(Employee::factory())->create();
-	$user->assignRole('admin');
+    $user->assignRole('admin');
     $product = Product::factory()->create();
     $sale = Sale::factory()->has(SaleItem::factory()->has(ProductItem::factory(['quantity' => 4])->for($product)))->for($user->employee)->for(Customer::factory())->create();
     $data = [
-		'id' => $sale->id,
+        'id' => $sale->id,
         'customer_id' => $sale->customer_id,
         'sale_items' => [],
     ];
@@ -208,22 +208,22 @@ test('update sale with no sale items', function () {
 
 test('destroy sale', function () {
     $user = User::factory()->has(Employee::factory())->create();
-	$user->assignRole('admin');
-	$product = Product::factory(['quantity' => 10])->create();
+    $user->assignRole('admin');
+    $product = Product::factory(['quantity' => 10])->create();
     $sale = Sale::factory()->has(SaleItem::factory()->has(ProductItem::factory(['quantity' => 5])->for($product)))->for(Employee::factory())->for(Customer::factory())->create();
     $response = $this
         ->actingAs($user, 'web')
         ->delete(route('sales.destroy', compact('sale')));
     $response->assertStatus(200);
     $this->assertDatabaseCount('sales', 0);
-	$this->assertDatabaseHas('products', [
+    $this->assertDatabaseHas('products', [
         'quantity' => 15,
     ]);
 });
 
 test('destroy non-existent sale', function () {
     $user = User::factory()->has(Employee::factory())->create();
-	$user->assignRole('admin');
+    $user->assignRole('admin');
     $response = $this
         ->actingAs($user, 'web')
         ->delete('/sales/10');
