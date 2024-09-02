@@ -60,10 +60,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stocks');
+        DB::unprepared('DROP TRIGGER IF EXISTS update_product_quantity_after_insert');
+        DB::unprepared('DROP TRIGGER IF EXISTS update_product_quantity_after_update');
+        DB::unprepared('DROP TRIGGER IF EXISTS update_product_quantity_after_delete');
 
-        DB::unprepared('DROP TRIGGER IF EXISTS update_product_quantity_after_insert ON stocks');
-        DB::unprepared('DROP TRIGGER IF EXISTS update_product_quantity_after_update ON stocks');
-        DB::unprepared('DROP TRIGGER IF EXISTS update_product_quantity_after_delete ON stocks');
+        Schema::dropIfExists('stocks');
     }
 };
