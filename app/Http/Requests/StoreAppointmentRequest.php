@@ -22,6 +22,7 @@ class StoreAppointmentRequest extends FormRequest
             'status' => [Rule::enum(AppointmentStatus::class)],
             'start_time' => ['date_format:Y-m-d\TH:i'],
             'end_time' => ['nullable', 'date_format:Y-m-d\TH:i'],
+
         ];
     }
 
@@ -36,8 +37,8 @@ class StoreAppointmentRequest extends FormRequest
             'service_id.exists' => 'O campo de serviço deve ser preenchido por um id válido.',
             'status' => 'O status do atendimento deve ser "pendente", "concluído" ou "cancelado".',
             'start_time.required' => 'O campo de horário do atendimento é obrigatório.',
-            'start_time' => 'O horário para o atendimento deve ter o formato Y-m-d H:i:s.',
-            'end_time' => 'O horário para conclusão do atendimento deve ter o formato Y-m-d H:i:s.',
+            'start_time.date' => 'O horário para o atendimento deve ser uma data-hora válida.',
+            'end_time.date' => 'O horário de conclusão do atendimento deve ser uma data-hora válida.',
         ];
     }
 }
