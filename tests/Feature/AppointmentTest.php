@@ -168,7 +168,7 @@ test('employee cannot update an appointment w/ invalid start time', function () 
         ->actingAs($employee->user, 'web')
         ->put(route('appointments.update', compact('appointment')), $updateData);
 
-    $response->assertInvalid(['start_time' => 'O horário para o atendimento deve ter o formato Y-m-d H:i:s.']);
+    $response->assertInvalid(['start_time' => 'O horário para o atendimento deve ser uma data-hora válida.']);
 });
 
 test('employee cannot update an appointment w/ invalid end time', function () {
@@ -184,7 +184,7 @@ test('employee cannot update an appointment w/ invalid end time', function () {
         ->actingAs($employee->user, 'web')
         ->put(route('appointments.update', compact('appointment')), $updateData);
 
-    $response->assertInvalid(['end_time' => 'O horário para conclusão do atendimento deve ter o formato Y-m-d H:i:s.']);
+    $response->assertInvalid(['end_time' => 'O horário de conclusão do atendimento deve ser uma data-hora válida.']);
 });
 
 test('employee can destroy existing appointment', function () {
@@ -470,7 +470,7 @@ test('employee cannot store an appointment w/ invalid start time', function () {
         ->actingAs($employee->user, 'web')
         ->post(route('appointments.store'), $data);
 
-    $response->assertInvalid(['start_time' => 'O horário para o atendimento deve ter o formato Y-m-d H:i:s.']);
+    $response->assertInvalid(['start_time' => 'O horário para o atendimento deve ser uma data-hora válida.']);
 
     $this->assertDatabaseMissing('appointments', [
         'employee_id' => $employee->id,
@@ -497,7 +497,7 @@ test('employee cannot store an appointment w/ invalid end time', function () {
         ->actingAs($employee->user, 'web')
         ->post(route('appointments.store'), $data);
 
-    $response->assertInvalid(['end_time' => 'O horário para conclusão do atendimento deve ter o formato Y-m-d H:i:s.']);
+    $response->assertInvalid(['end_time' => 'O horário de conclusão do atendimento deve ser uma data-hora válida.']);
 
     $this->assertDatabaseMissing('appointments', [
         'employee_id' => $employee->id,
