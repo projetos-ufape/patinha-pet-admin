@@ -3,6 +3,12 @@
 use App\Models\Address;
 use App\Models\Employee;
 use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
+
+beforeEach(function () {
+    Artisan::call('db:seed', ['--class' => 'PermissionsSeeder']);
+    Artisan::call('db:seed', ['--class' => 'RolesSeeder']);
+});
 
 function make_employee_without_address()
 {
@@ -11,6 +17,7 @@ function make_employee_without_address()
     $data['name'] = 'Peter Parker';
     $data['admission_date'] = $employee->admission_date->format('Y-m-d');
     $data['salary'] = (float) ($employee['salary']);
+    $data['type'] = 'basic';
     $data['password'] = 'password';
     $data['password_confirmation'] = $data['password'];
 
@@ -18,12 +25,14 @@ function make_employee_without_address()
 }
 
 it('can store a new employee with address', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
 
     $employee = Employee::factory()->make();
     $data = User::factory()->make()->toArray();
     $data['admission_date'] = $employee->admission_date->format('Y-m-d');
     $data['salary'] = $employee->salary;
+    $data['type'] = 'admin';
     $data['password'] = 'password';
     $data['password_confirmation'] = $data['password'];
     $data['address'] = Address::factory()->make()->toArray();
@@ -58,7 +67,8 @@ it('can store a new employee with address', function () {
 });
 
 it('can store a new employee without address', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $data = make_employee_without_address();
 
     $response = $this
@@ -82,7 +92,8 @@ it('can store a new employee without address', function () {
 });
 
 it('can update an existing employee and address', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $user = User::factory()
         ->has(Employee::factory())
         ->has(Address::factory())
@@ -125,7 +136,9 @@ it('can update an existing employee and address', function () {
 });
 
 it('can remove the address from an existing employee', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
     $user = User::factory()
         ->has(Employee::factory())
         ->has(Address::factory())
@@ -163,7 +176,8 @@ it('can remove the address from an existing employee', function () {
 });
 
 it('on update, can create an address for an employee who does not have one', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $data = make_employee_without_address();
     $this->actingAs($admin, 'web')->post(route('employees.store'), $data);
     $user = User::where('email', $data['email'])->first();

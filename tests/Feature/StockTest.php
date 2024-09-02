@@ -2,9 +2,16 @@
 
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
+
+beforeEach(function () {
+    Artisan::call('db:seed', ['--class' => 'PermissionsSeeder']);
+    Artisan::call('db:seed', ['--class' => 'RolesSeeder']);
+});
 
 test('stock creation', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $product = Product::factory()->create();
 
     $response = $this
@@ -21,7 +28,8 @@ test('stock creation', function () {
 });
 
 test('stock creation must have a valid product', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $response = $this
         ->actingAs($admin, 'web')
         ->post('/stocks', [
@@ -34,7 +42,8 @@ test('stock creation must have a valid product', function () {
 });
 
 test('stock creation must have a valid range of quantity', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $product = Product::factory()->create();
 
     $response1 = $this
@@ -58,7 +67,8 @@ test('stock creation must have a valid range of quantity', function () {
 });
 
 test('stock creation must have a valid justification', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $product = Product::factory()->create();
 
     $response = $this
@@ -73,7 +83,8 @@ test('stock creation must have a valid justification', function () {
 });
 
 test('when a stock record is created, the total stock of the product must be updated', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
     $product = Product::factory()->create();
 
     $this
