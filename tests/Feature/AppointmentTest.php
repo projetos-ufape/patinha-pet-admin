@@ -504,7 +504,6 @@ test('employee cannot store an appointment w/ invalid end time', function () {
     ]);
 });
 
-
 test('employee can update appointment of another employee', function () {
     $employee1 = Employee::factory()->create();
     $appointment = Appointment::factory()->for($employee1)->create();
