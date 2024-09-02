@@ -2,9 +2,17 @@
 
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
+
+beforeEach(function () {
+    Artisan::call('db:seed', ['--class' => 'PermissionsSeeder']);
+    Artisan::call('db:seed', ['--class' => 'RolesSeeder']);
+});
 
 test('list of products is displayed', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
     $products = Product::factory()->count(3)->create();
 
     $response = $this->actingAs($admin, 'web')
@@ -23,7 +31,9 @@ test('list of products is displayed', function () {
 });
 
 test('list of products is empty when no products have been created', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
     $response = $this->actingAs($admin, 'web')
         ->get(route('products.index'));
 
@@ -31,7 +41,9 @@ test('list of products is empty when no products have been created', function ()
 });
 
 test('admin can update existing product info', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
     $product = Product::factory()->create();
     $dataToUpdate = [
         'name' => 'Dog Bed',
@@ -54,7 +66,9 @@ test('admin can update existing product info', function () {
 });
 
 test('admin cannot update non-existing product info', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
     $response = $this->actingAs($admin, 'web')
         ->put('/products/33', [
             'name' => 'Dog Bed',
@@ -69,7 +83,9 @@ test('admin cannot update non-existing product info', function () {
 });
 
 test('admin cannot add a product invalid category', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
     $response = $this->actingAs($admin, 'web')
         ->post('/products', [
             'name' => 'Dog Bed',
@@ -83,7 +99,9 @@ test('admin cannot add a product invalid category', function () {
 });
 
 test('admin cannot add a product invalid price', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
     $default = [
         'name' => 'Dog Bed',
         'description' => 'Comfortable blue checkered medium sized dog bed.',
@@ -109,7 +127,9 @@ test('admin cannot add a product invalid price', function () {
 });
 
 test('admin can destroy existing product', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
     $product = Product::factory()->create();
 
     $response = $this->actingAs($admin, 'web')
@@ -129,7 +149,9 @@ test('admin can destroy existing product', function () {
 });
 
 test('admin cannot destroy non-existing product', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->hasEmployee()->create();
+    $admin->assignRole('admin');
+
     $response = $this->actingAs($admin, 'web')
         ->delete('/products/33');
     $response->assertStatus(500);

@@ -5,9 +5,16 @@ use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Pet;
 use App\Models\Service;
+use Illuminate\Support\Facades\Artisan;
+
+beforeEach(function () {
+    Artisan::call('db:seed', ['--class' => 'PermissionsSeeder']);
+    Artisan::call('db:seed', ['--class' => 'RolesSeeder']);
+});
 
 test('list of appointments is displayed', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $appointments = Appointment::factory()->for($employee)->count(3)->create();
 
     $response = $this->actingAs($employee->user, 'web')
@@ -29,6 +36,7 @@ test('list of appointments is displayed', function () {
 
 test('list of appointments is empty when no appointments have been created', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $this->actingAs($employee->user, 'web')
         ->get(route('comercial.index'));
 
@@ -37,6 +45,7 @@ test('list of appointments is empty when no appointments have been created', fun
 
 test('employee can update existing appointment info', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $appointment = Appointment::factory()->for($employee)->create();
 
     $updateData = [
@@ -62,6 +71,7 @@ test('employee can update existing appointment info', function () {
 
 test('employee cannot update non-existing appointment info', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $pet = Pet::factory()->create();
     $customer = Customer::factory()->create();
     $service = Service::factory()->create();
@@ -83,6 +93,7 @@ test('employee cannot update non-existing appointment info', function () {
 
 test('employee cannot update an appointment w/ invalid pet id', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $appointment = Appointment::factory()->for($employee)->create();
 
     $updateData = [
@@ -98,6 +109,7 @@ test('employee cannot update an appointment w/ invalid pet id', function () {
 
 test('employee cannot update an appointment w/ invalid customer id', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $appointment = Appointment::factory()->for($employee)->create();
 
     $updateData = [
@@ -113,6 +125,7 @@ test('employee cannot update an appointment w/ invalid customer id', function ()
 
 test('employee cannot update an appointment w/ invalid service id', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $appointment = Appointment::factory()->for($employee)->create();
 
     $updateData = [
@@ -128,6 +141,7 @@ test('employee cannot update an appointment w/ invalid service id', function () 
 
 test('employee cannot update an appointment w/ invalid status', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $appointment = Appointment::factory()->for($employee)->create();
 
     $updateData = [
@@ -143,6 +157,7 @@ test('employee cannot update an appointment w/ invalid status', function () {
 
 test('employee cannot update an appointment w/ invalid start time', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $appointment = Appointment::factory()->for($employee)->create();
 
     $updateData = [
@@ -158,6 +173,7 @@ test('employee cannot update an appointment w/ invalid start time', function () 
 
 test('employee cannot update an appointment w/ invalid end time', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $appointment = Appointment::factory()->for($employee)->create();
 
     $updateData = [
@@ -173,6 +189,7 @@ test('employee cannot update an appointment w/ invalid end time', function () {
 
 test('employee can destroy existing appointment', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $appointment = Appointment::factory()->create();
 
     $response = $this->actingAs($employee->user, 'web')
@@ -193,6 +210,7 @@ test('employee can destroy existing appointment', function () {
 
 test('employee cannot destroy non-existing appointment', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $response = $this->actingAs($employee->user, 'web')
         ->delete('/appointments/33');
     $response->assertStatus(404);
@@ -200,6 +218,7 @@ test('employee cannot destroy non-existing appointment', function () {
 
 test('employee can store a new appointment', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $service = Service::factory()->create();
     $pet = Pet::factory()->create();
     $customer = Customer::factory()->create();
@@ -227,6 +246,7 @@ test('employee can store a new appointment', function () {
 
 test('employee cannot store an appointment without pet id', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $service = Service::factory()->create();
     $customer = Customer::factory()->create();
 
@@ -251,6 +271,7 @@ test('employee cannot store an appointment without pet id', function () {
 
 test('employee cannot store an appointment w/ invalid pet id', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $service = Service::factory()->create();
     $customer = Customer::factory()->create();
 
@@ -276,6 +297,7 @@ test('employee cannot store an appointment w/ invalid pet id', function () {
 
 test('employee cannot store an appointment without customer id', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $service = Service::factory()->create();
     $pet = Pet::factory()->create();
 
@@ -300,6 +322,7 @@ test('employee cannot store an appointment without customer id', function () {
 
 test('employee cannot store an appointment w/ invalid customer id', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $service = Service::factory()->create();
     $pet = Pet::factory()->create();
 
@@ -325,6 +348,7 @@ test('employee cannot store an appointment w/ invalid customer id', function () 
 
 test('employee cannot store an appointment without service id', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $customer = Service::factory()->create();
     $pet = Pet::factory()->create();
 
@@ -349,6 +373,7 @@ test('employee cannot store an appointment without service id', function () {
 
 test('employee cannot store an appointment w/ invalid service id', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $customer = Service::factory()->create();
     $pet = Pet::factory()->create();
 
@@ -374,6 +399,7 @@ test('employee cannot store an appointment w/ invalid service id', function () {
 
 test('employee cannot store an appointment w/ invalid status', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $customer = Service::factory()->create();
     $service = Service::factory()->create();
     $pet = Pet::factory()->create();
@@ -400,6 +426,7 @@ test('employee cannot store an appointment w/ invalid status', function () {
 
 test('employee cannot store an appointment without start time', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $customer = Service::factory()->create();
     $service = Service::factory()->create();
     $pet = Pet::factory()->create();
@@ -425,6 +452,7 @@ test('employee cannot store an appointment without start time', function () {
 
 test('employee cannot store an appointment w/ invalid start time', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $customer = Service::factory()->create();
     $service = Service::factory()->create();
     $pet = Pet::factory()->create();
@@ -451,6 +479,7 @@ test('employee cannot store an appointment w/ invalid start time', function () {
 
 test('employee cannot store an appointment w/ invalid end time', function () {
     $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
     $customer = Service::factory()->create();
     $service = Service::factory()->create();
     $pet = Pet::factory()->create();
@@ -480,6 +509,7 @@ test('employee can update appointment of another employee', function () {
     $appointment = Appointment::factory()->for($employee1)->create();
 
     $employee2 = Employee::factory()->create();
+    $employee2->assignRole('admin');
 
     $updateData = [
         'pet_id' => $appointment->pet->id,
