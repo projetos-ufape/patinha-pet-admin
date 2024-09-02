@@ -24,9 +24,17 @@
                 <span class="ml-2">Estoque</span>
             </a>
         </li>
-        @endif
 
+        @endif
         @if(auth()->user()->hasPermissionTo('manage employees'))
+        
+        <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
+            <a href="{{ route('comercial.index') }}" class="text-gray-700 hover:text-gray-900 block w-full flex items-center">
+                <img src="{{ asset('icons/sidebar/comercial.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
+                <span class="ml-2">Comercial</span>
+            </a>
+        </li>  
+
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
             <a href="{{ route('employees.index') }}" class="text-gray-700 hover:text-gray-900 block w-full flex items-center">
                 <img src="{{ asset('icons/sidebar/employees.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
