@@ -23,7 +23,15 @@ class SaleTempController extends Controller
                 return [
                     'id' => $customer->id,
                     'name' => $customer->user->name,
-                    'appointments' => $customer->appointments,
+                    'appointments' => $customer->appointments->map(function ($appointment) {
+                        return [
+                            'id' => $appointment->id,
+                            'service_name' => $appointment->service->name, // Carregando o nome do serviço
+                            'date' => $appointment->start_time,
+                            'pet_name' => $appointment->pet->name,
+                            'value' => $appointment->service->price,
+                        ];
+                    }),
                 ];
             });
 

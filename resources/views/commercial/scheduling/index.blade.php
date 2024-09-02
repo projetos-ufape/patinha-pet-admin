@@ -50,7 +50,7 @@
         @endif
         <h1 class="text-2xl font-light mb-4">Registrar venda</h1>
         <div class="flex space-x-4" style="padding-top: 10px;">
-            <select class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+            <select  id="select-clientes" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
                 <option value="" disabled selected hidden>Cliente</option>
                 @foreach ($pendingAppointmentsByCustomer as $customer)
                     <option value="{{ $customer['id'] }}">{{ $customer['name'] }}</option>
@@ -146,15 +146,10 @@
                     </div>
                     <div class="mt-4 space-y-4">
                         <div class="flex items-center space-x-4">
-                            <select id="select-atendimento"
-                                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
-                                <option value="" disabled selected hidden>Selecione um atendimento</option>
-                                @foreach ($pendingAppointmentsByCustomer as $pending)
-                                    @foreach ($pending['appointments'] as $appointment)
-                                        <option value="{{ $appointment['id'] }}">{{ $appointment['id'] }}</option>
-                                    @endforeach
-                                @endforeach
-                            </select>
+                        <select id="select-atendimento"
+                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                            <option value="" disabled selected hidden>Selecione um atendimento</option>
+                        </select>
                         </div>
                     </div>
                 </div>
@@ -168,55 +163,64 @@
         </div>
     </div>
     <script>
-        const pendingAppointmentsByCustomer = @json($pendingAppointmentsByCustomer);
+    document.addEventListener('DOMContentLoaded', function() {
+    const openModalButtonProdutos = document.getElementById('openModalButtonProdutos');
+    const openModalButtonAtendimentos = document.getElementById('openModalButtonAtendimentos');
+    const modal = document.getElementById('modalProdutos');
+    const modalServicos = document.getElementById('modalServicos');
+    const cancelButtonProdutos = document.getElementById('cancelButtonProdutos');
+    const cancelButtonAtendimentos = document.getElementById('cancelButtonAtendimentos');
+    const adicionarProduto = document.getElementById('adicionarProduto');
+    const produtoSelect = document.getElementById('select-produtos');
+    const quantidadeInput = document.getElementById('quantidade-produtos');
+    const adicionarAtendimento = document.getElementById('adicionarAtendimento');
+    const atendimentoSelect = document.getElementById('select-atendimento');
+    const customerSelect = document.getElementById('select-clientes');
+    let linhaParaEditar = null;
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const openModalButtonProdutos = document.getElementById('openModalButtonProdutos');
-            const openModalButtonAtendimentos = document.getElementById('openModalButtonAtendimentos');
-            const modal = document.getElementById('modalProdutos');
-            const modalServicos = document.getElementById('modalServicos');
-            const cancelButtonProdutos = document.getElementById('cancelButtonProdutos');
-            const cancelButtonAtendimentos = document.getElementById('cancelButtonAtendimentos');
-            const adicionarProduto = document.getElementById('adicionarProduto');
-            const produtoSelect = document.getElementById('select-produtos');
-            const quantidadeInput = document.getElementById('quantidade-produtos');
-            const adicionarAtendimento = document.getElementById('adicionarAtendimento');
-            const atendimentoSelect = document.getElementById('select-atendimento');
-            let linhaParaEditar = null;
+    atualizarVisibilidadeTabela('dataTableProdutos');
+    atualizarVisibilidadeTabela('dataTableAtendimentos');
 
-            atualizarVisibilidadeTabela('dataTableProdutos');
-            atualizarVisibilidadeTabela('dataTableAtendimentos');
+    const pendingAppointmentsByCustomer = @json($pendingAppointmentsByCustomer);
 
-            function atualizarVisibilidadeTabela(tableId) {
-                const tabela = document.getElementById(tableId);
-                const tabelaCorpo = tabela.querySelector('tbody');
-                const header = tabela.querySelector('thead');
-                const message = document.getElementById('title-sem-registro');
+    // Função para atualizar a visibilidade da tabela
+    function atualizarVisibilidadeTabela(tableId) {
+        const tabela = document.getElementById(tableId);
+        const tabelaCorpo = tabela.querySelector('tbody');
+        const header = tabela.querySelector('thead');
+        const message = document.getElementById('title-sem-registro');
 
-                if (tabelaCorpo.children.length === 0) {
-                    header.style.display = 'none';
-                    message.classList.remove('hidden');
-                } else {
-                    header.style.display = '';
-                    message.classList.add('hidden');
-                }
-            }
+        if (tabelaCorpo.children.length === 0) {
+            header.style.display = 'none';
+            if (message) message.classList.remove('hidden');
+        } else {
+            header.style.display = '';
+            if (message) message.classList.add('hidden');
+        }
+    }
 
-            function addRowToTable(tableId, rowData, dados) {
-                const tabela = document.getElementById(tableId);
-                const tabelaCorpo = tabela.querySelector('tbody');
-                const novaLinha = document.createElement('tr');
+    function resetarTabelaServicos() {
+        const tabelaServicos = document.getElementById('dataTableAtendimentos').querySelector('tbody');
+        tabelaServicos.innerHTML = ''; 
+        atualizarVisibilidadeTabela('dataTableAtendimentos'); 
+    }
 
-                rowData.forEach(cellData => {
-                    const cell = document.createElement('td');
-                    cell.className = 'px-6 py-4';
-                    cell.textContent = cellData;
-                    novaLinha.appendChild(cell);
-                });
+    // Função para adicionar linha na tabela
+    function addRowToTable(tableId, rowData, dados) {
+        const tabela = document.getElementById(tableId);
+        const tabelaCorpo = tabela.querySelector('tbody');
+        const novaLinha = document.createElement('tr');
 
-                const colunaAcoes = document.createElement('td');
-                colunaAcoes.className = 'px-6 py-4 flex';
-                colunaAcoes.innerHTML = `
+        rowData.forEach(cellData => {
+            const cell = document.createElement('td');
+            cell.className = 'px-6 py-4';
+            cell.textContent = cellData;
+            novaLinha.appendChild(cell);
+        });
+
+        const colunaAcoes = document.createElement('td');
+        colunaAcoes.className = 'px-6 py-4 flex';
+        colunaAcoes.innerHTML = `
             <a href="#" class="text-blue-600 hover:underline editar">
                 <img src="{{ asset('icons/pencil.svg') }}" alt="Editar" tipo-modal='${tableId}' id="editarTable" dados='${dados}' class="h-4 w-4">
             </a>
@@ -224,155 +228,201 @@
                 <img src="{{ asset('icons/trash3.svg') }}" alt="Excluir" class="h-4 w-4">
             </button>
         `;
-                novaLinha.appendChild(colunaAcoes);
-                tabelaCorpo.appendChild(novaLinha);
-                tabela.classList.add('zebra-striping');
+        novaLinha.appendChild(colunaAcoes);
+        tabelaCorpo.appendChild(novaLinha);
+        tabela.classList.add('zebra-striping');
 
-                atualizarVisibilidadeTabela(tableId);
-            }
+        atualizarVisibilidadeTabela(tableId);
+    }
 
-            if (openModalButtonProdutos && modal) {
-                openModalButtonProdutos.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    modal.style.display = 'flex';
-                });
-            }
-
-            if (cancelButtonProdutos && modal) {
-                cancelButtonProdutos.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    modal.style.display = 'none';
-                    resetarFormularioModal('produto');
-                });
-            }
-
-            if (openModalButtonAtendimentos && modalServicos) {
-                openModalButtonAtendimentos.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    modalServicos.style.display = 'flex';
-                });
-            }
-
-            if (cancelButtonAtendimentos && modalServicos) {
-                cancelButtonAtendimentos.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    modalServicos.style.display = 'none';
-                    resetarFormularioModal('atendimento');
-                });
-            }
-
-            if (adicionarProduto) {
-                adicionarProduto.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    const produtoId = produtoSelect.value;
-                    const quantidade = quantidadeInput.value;
-
-                    if (!produtoId || !quantidade || quantidade <= 0) {
-                        alert('Por favor, selecione um produto e insira uma quantidade válida.');
-                        return;
-                    }
-                    const dadosProdutos = @json($products);
-                    const valorUnitario = dadosProdutos.find(produto => produto.id === Number(produtoId))
-                        .price;
-                    const productName = produtoSelect.options[produtoSelect.selectedIndex].text;
-                    const valor = Number(valorUnitario) * Number(quantidade);
-
-                    if (linhaParaEditar) {
-                        linhaParaEditar.children[0].textContent = productName;
-                        linhaParaEditar.children[1].textContent = valorUnitario;
-                        linhaParaEditar.children[2].textContent = quantidade;
-                        linhaParaEditar.children[3].textContent = valor;
-                        linhaParaEditar = null;
-                    } else {
-                        const dados = {
-                            idProduto: produtoId,
-                            quantidade: quantidade,
-                        }
-                        addRowToTable('dataTableProdutos', [productName, valorUnitario, quantidade, valor],
-                            JSON.stringify(dados));
-                    }
-                    resetarFormularioModal('produto');
-                    modal.style.display = 'none';
-                });
-            }
-
-            if (adicionarAtendimento) {
-                adicionarAtendimento.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    const atendimentoId = atendimentoSelect.value;
-
-                    if (!atendimentoId) {
-                        alert('Por favor, selecione um atendimento.');
-                        return;
-                    }
-
-                    const productName = atendimentoSelect.options[atendimentoSelect.selectedIndex].text;
-
-                    if (linhaParaEditar) {
-                        linhaParaEditar.children[0].textContent = productName;
-                        linhaParaEditar = null;
-                    } else {
-                        addRowToTable('dataTableAtendimentos', [productName]), JSON.stringify({
-                            idAtendimento: atendimentoId
-                        });
-                    }
-                    resetarFormularioModal('atendimento');
-                    modalServicos.style.display = 'none';
-                });
-            }
-
-            document.addEventListener('click', function(event) {
-                if (event.target.closest('.excluir')) {
-                    const confirmacao = confirm('Tem certeza que deseja excluir este item?');
-                    if (confirmacao) {
-                        const linha = event.target.closest('tr');
-                        linha.remove();
-                        atualizarVisibilidadeTabela('dataTableProdutos');
-                    }
-                }
-
-                if (event.target.closest('.editar')) {
-                    event.preventDefault();
-                    linhaParaEditar = event.target.closest('tr');
-                    const buttonEditar = document.getElementById('editarTable');
-                    const tipoModal = buttonEditar.getAttribute('tipo-modal');
-
-                    if (tipoModal === 'dataTableProdutos') {
-                        const dados = JSON.parse(buttonEditar.getAttribute('dados'));
-                        const produtoId = dados.idProduto;
-                        const quantidade = dados.quantidade;
-
-                        produtoSelect.value = produtoId;
-                        quantidadeInput.value = quantidade;
-                        adicionarProduto.textContent = 'Editar';
-                        modal.style.display = 'flex';
-                    }
-
-                    if (tipoModal === 'dataTableAtendimentos') {
-                        const dados = JSON.parse(buttonEditar.getAttribute('dados'));
-                        const atendimentoId = dados.idAtendimento;
-
-                        atendimentoSelect.value = atendimentoId;
-                        adicionarAtendimento.textContent = 'Editar';
-                        modalServicos.style.display = 'flex';
-                    }
-                }
-            });
-
-            function resetarFormularioModal(modal) {
-                if (modal === 'produto') {
-                    produtoSelect.value = '';
-                    quantidadeInput.value = '';
-                    adicionarProduto.textContent = 'Adicionar';
-                    linhaParaEditar = null;
-                }
-
-                if (modal === 'atendimento') {
-                    atendimentoSelect.value = '';
-                    adicionarAtendimento.textContent = 'Adicionar';
-                    linhaParaEditar = null;
-                }
-            }
+    // Eventos para abrir e fechar modais de produtos
+    if (openModalButtonProdutos && modal) {
+        openModalButtonProdutos.addEventListener('click', function(event) {
+            event.preventDefault();
+            modal.style.display = 'flex';
         });
+    }
+
+    if (cancelButtonProdutos && modal) {
+        cancelButtonProdutos.addEventListener('click', function(event) {
+            event.preventDefault();
+            modal.style.display = 'none';
+            resetarFormularioModal('produto');
+        });
+    }
+
+    // Eventos para abrir e fechar modais de atendimentos
+    if (openModalButtonAtendimentos && modalServicos) {
+        openModalButtonAtendimentos.addEventListener('click', function(event) {
+            event.preventDefault();
+            modalServicos.style.display = 'flex';
+        });
+    }
+
+    if (cancelButtonAtendimentos && modalServicos) {
+        cancelButtonAtendimentos.addEventListener('click', function(event) {
+            event.preventDefault();
+            modalServicos.style.display = 'none';
+            resetarFormularioModal('atendimento');
+        });
+    }
+
+    // Adicionar Produto à Tabela
+    if (adicionarProduto) {
+        adicionarProduto.addEventListener('click', function(event) {
+            event.preventDefault();
+            const produtoId = produtoSelect.value;
+            const quantidade = quantidadeInput.value;
+
+            if (!produtoId || !quantidade || quantidade <= 0) {
+                alert('Por favor, selecione um produto e insira uma quantidade válida.');
+                return;
+            }
+            const dadosProdutos = @json($products);
+            const valorUnitario = dadosProdutos.find(produto => produto.id === Number(produtoId)).price;
+            const productName = produtoSelect.options[produtoSelect.selectedIndex].text;
+            const valor = Number(valorUnitario) * Number(quantidade);
+
+            if (linhaParaEditar) {
+                linhaParaEditar.children[0].textContent = productName;
+                linhaParaEditar.children[1].textContent = valorUnitario;
+                linhaParaEditar.children[2].textContent = quantidade;
+                linhaParaEditar.children[3].textContent = valor;
+                linhaParaEditar = null;
+            } else {
+                const dados = {
+                    idProduto: produtoId,
+                    quantidade: quantidade,
+                }
+                addRowToTable('dataTableProdutos', [productName, valorUnitario, quantidade, valor], JSON.stringify(dados));
+            }
+            resetarFormularioModal('produto');
+            modal.style.display = 'none';
+        });
+    }
+
+    // Adicionar Atendimento à Tabela
+    if (adicionarAtendimento) {
+    adicionarAtendimento.addEventListener('click', function(event) {
+        event.preventDefault();
+        const atendimentoId = atendimentoSelect.value;
+
+        if (!atendimentoId) {
+            alert('Por favor, selecione um atendimento.');
+            return;
+        }
+
+        // Recupera a opção selecionada
+        const selectedOption = atendimentoSelect.options[atendimentoSelect.selectedIndex];
+        
+        // Verifica se os atributos estão presentes na opção
+        const serviceName = selectedOption.getAttribute('data-service-name') || 'N/A';
+        const date = selectedOption.getAttribute('data-date') || 'N/A';
+        const petName = selectedOption.getAttribute('data-pet-name') || 'N/A';
+        const value = selectedOption.getAttribute('data-value') || 'N/A';
+
+        // Adiciona a linha ou edita a linha existente
+        if (linhaParaEditar) {
+            linhaParaEditar.children[0].textContent = serviceName;
+            linhaParaEditar.children[1].textContent = date;
+            linhaParaEditar.children[2].textContent = petName;
+            linhaParaEditar.children[3].textContent = value;
+            linhaParaEditar = null;
+        } else {
+            const dados = {
+                idAtendimento: atendimentoId,
+                serviceName: serviceName,
+                date: date,
+                petName: petName,
+                value: value
+            };
+            addRowToTable('dataTableAtendimentos', [serviceName, date, petName, value], JSON.stringify(dados));
+        }
+
+        // Reseta o formulário do modal
+        resetarFormularioModal('atendimento');
+        modalServicos.style.display = 'none';
+    });
+}
+
+
+    // Função para resetar formulário modal
+    function resetarFormularioModal(modal) {
+        if (modal === 'produto') {
+            produtoSelect.value = '';
+            quantidadeInput.value = '';
+            adicionarProduto.textContent = 'Adicionar';
+            linhaParaEditar = null;
+        }
+
+        if (modal === 'atendimento') {
+            atendimentoSelect.value = '';
+            adicionarAtendimento.textContent = 'Adicionar';
+            linhaParaEditar = null;
+        }
+    }
+
+    // Evento de Exclusão e Edição
+    document.addEventListener('click', function(event) {
+        if (event.target.closest('.excluir')) {
+            const confirmacao = confirm('Tem certeza que deseja excluir este item?');
+            if (confirmacao) {
+                const linha = event.target.closest('tr');
+                linha.remove();
+                atualizarVisibilidadeTabela('dataTableProdutos');
+            }
+        }
+
+        if (event.target.closest('.editar')) {
+            event.preventDefault();
+            linhaParaEditar = event.target.closest('tr');
+            const buttonEditar = event.target.closest('#editarTable');
+            const tipoModal = buttonEditar.getAttribute('tipo-modal');
+
+            if (tipoModal === 'dataTableProdutos') {
+                const dados = JSON.parse(buttonEditar.getAttribute('dados'));
+                const produtoId = dados.idProduto;
+                const quantidade = dados.quantidade;
+
+                produtoSelect.value = produtoId;
+                quantidadeInput.value = quantidade;
+                adicionarProduto.textContent = 'Editar';
+                modal.style.display = 'flex';
+            }
+
+            if (tipoModal === 'dataTableAtendimentos') {
+                const dados = JSON.parse(buttonEditar.getAttribute('dados'));
+                const atendimentoId = dados.idAtendimento;
+
+                atendimentoSelect.value = atendimentoId;
+                adicionarAtendimento.textContent = 'Editar';
+                modalServicos.style.display = 'flex';
+            }
+        }
+    });
+
+    customerSelect.addEventListener('change', function() {
+        resetarTabelaServicos(); 
+        const selectedCustomerId = this.value;
+        atendimentoSelect.innerHTML = '<option value="" disabled selected hidden>Selecione um atendimento</option>';
+
+        const selectedCustomer = pendingAppointmentsByCustomer.find(customer => customer.id == selectedCustomerId);
+
+        if (selectedCustomer) {
+            selectedCustomer.appointments.forEach(appointment => {
+                const option = document.createElement('option');
+                option.value = appointment.id;
+                option.textContent = `Atendimento ${appointment.id} - Serviço ${appointment.service_name}`;
+                option.setAttribute('data-service-name', appointment.service_name);
+                option.setAttribute('data-date', appointment.date);
+                option.setAttribute('data-pet-name', appointment.pet_name);
+                option.setAttribute('data-value', appointment.value);
+                atendimentoSelect.appendChild(option);
+            });
+        }
+    });
+});
+
+
     </script>
 @endsection
