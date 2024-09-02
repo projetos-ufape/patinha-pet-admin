@@ -11,7 +11,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StockController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn() => redirect()->route('login'));
+Route::get('/', fn () => redirect()->route('login'));
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('appointments', AppointmentController::class);
         Route::get('/customers/{customer}/history', [CustomerController::class, 'history'])->name('customers.history');
         Route::resource('comercial', AppointmentController::class)->only(['index']);
-        Route::get("commercial/sales/create", [SaleTempController::class, 'create'])->name('commercial.scheduling.index');
+        Route::get('commercial/sales/create', [SaleTempController::class, 'create'])->name('commercial.scheduling.index');
     });
     Route::resource('pets', PetController::class);
 
@@ -40,4 +40,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
