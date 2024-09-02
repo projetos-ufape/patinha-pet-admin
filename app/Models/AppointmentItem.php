@@ -20,7 +20,7 @@ class AppointmentItem extends Model
         return $this->belongsTo(SaleItem::class);
     }
 
-	public function appointment(): BelongsTo
+    public function appointment(): BelongsTo
     {
         return $this->belongsTo(Appointment::class);
     }
