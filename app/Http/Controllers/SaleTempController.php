@@ -12,7 +12,7 @@ class SaleTempController extends Controller
     {
         $products = Product::all();
         $filter = function ($query) {
-            $query->where('status', "!=", AppointmentStatus::Canceled);
+            $query->where('status', '!=', AppointmentStatus::Canceled);
             // TODO: adicionar filtro de "ainda não foi registrado a venda"
         };
         $pendingAppointmentsByCustomer = Customer::select('id', 'user_id')
@@ -23,9 +23,10 @@ class SaleTempController extends Controller
                 return [
                     'id' => $customer->id,
                     'name' => $customer->user->name,
-                    'appointments' => $customer->appointments
+                    'appointments' => $customer->appointments,
                 ];
             });
+
         return view('commercial.scheduling.index', compact('products', 'pendingAppointmentsByCustomer'));
     }
 }
