@@ -187,21 +187,6 @@ test('employee cannot update an appointment w/ invalid end time', function () {
     $response->assertInvalid(['end_time' => 'O horário de conclusão do atendimento deve ser uma data-hora válida.']);
 });
 
-/*test('employee cannot update an appointment w/ end time earlier than start time', function () {
-    $employee = Employee::factory()->create();
-    $appointment = Appointment::factory()->for($employee)->state(['start_time' => '2024-08-30 03:55:00'])->create();
-
-    $updateData = [
-        'end_time' => '2023-08-29 08:30:00',
-    ];
-
-    $response = $this
-        ->actingAs($employee->user, 'web')
-        ->put(route('appointments.update', compact('appointment')), $updateData);
-
-    $response->assertInvalid(['end_time' => 'O horário de conclusão do atendimento não pode ser anterior ao de início.']);
-});*/
-
 test('employee can destroy existing appointment', function () {
     $employee = Employee::factory()->create();
     $employee->assignRole('admin');
@@ -519,31 +504,6 @@ test('employee cannot store an appointment w/ invalid end time', function () {
     ]);
 });
 
-test('employee cannot store an appointment w/ time earlier than start time', function () {
-    $employee = Employee::factory()->create();
-    $customer = Service::factory()->create();
-    $service = Service::factory()->create();
-    $pet = Pet::factory()->create();
-
-    $data = [
-        'pet_id' => $pet->id,
-        'customer_id' => $customer->id,
-        'service_id' => $service->id,
-        'status' => 'pending',
-        'start_time' => '2024-08-30 03:55:00',
-        'end_time' => '2024-08-30 02:10:00',
-    ];
-
-    $response = $this
-        ->actingAs($employee->user, 'web')
-        ->post(route('appointments.store'), $data);
-
-    $response->assertInvalid(['end_time' => 'O horário de conclusão do atendimento não pode ser anterior ao de início.']);
-
-    $this->assertDatabaseMissing('appointments', [
-        'employee_id' => $employee->id,
-    ]);
-});
 
 test('employee can update appointment of another employee', function () {
     $employee1 = Employee::factory()->create();

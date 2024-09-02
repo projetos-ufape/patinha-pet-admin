@@ -21,7 +21,7 @@ class UpdateAppointmentRequest extends FormRequest
             'service_id' => ['exists:services,id'],
             'status' => [Rule::enum(AppointmentStatus::class)],
             'start_time' => ['date'],
-            'end_time' => ['nullable', 'date', 'after:start_time'],
+            'end_time' => ['nullable', 'date'],
         ];
     }
 
@@ -34,7 +34,6 @@ class UpdateAppointmentRequest extends FormRequest
             'status' => 'O status do atendimento deve ser "pendente", "concluído" ou "cancelado".',
             'start_time.date' => 'O horário para o atendimento deve ser uma data-hora válida.',
             'end_time.date' => 'O horário de conclusão do atendimento deve ser uma data-hora válida.',
-            'end_time.after' => 'O horário de conclusão do atendimento não pode ser anterior ao de início.',
         ];
     }
 }
