@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\ComercialController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PetController;
@@ -28,7 +27,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('customers', CustomerController::class);
         Route::resource('appointments', AppointmentController::class);
         Route::get('/customers/{customer}/history', [CustomerController::class, 'history'])->name('customers.history');
-        Route::resource('comercial', ComercialController::class)->only(['index']);
+        Route::resource('comercial', AppointmentController::class)->only(['index']);
         Route::get('commercial/sales/create', [SaleTempController::class, 'create'])->name('commercial.scheduling.index');
     });
     Route::resource('pets', PetController::class);
@@ -40,7 +39,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('stocks', StockController::class)->only(['index', 'create', 'store']);
     });
 
-    Route::resource('comercial', AppointmentController::class)->only(['index']);
 });
 
 require __DIR__.'/auth.php';
