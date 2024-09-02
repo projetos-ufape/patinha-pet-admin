@@ -16,14 +16,14 @@
         </li>
 
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
-            <a href="{{ route('comercial.index') }}" class="text-gray-700 hover:text-gray-900 block w-full flex items-center">
+            <a href="{{ route('stocks.index') }}" class="text-gray-700 hover:text-gray-900 block w-full flex items-center">
                 <img src="{{ asset('icons/sidebar/stock.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
                 <span class="ml-2">Estoque</span>
             </a>
         </li>
         
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
-            <a href="{{ route('stocks.index') }}" class="text-gray-700 hover:text-gray-900 block w-full flex items-center">
+            <a href="{{ route('comercial.index') }}" class="text-gray-700 hover:text-gray-900 block w-full flex items-center">
                 <img src="{{ asset('icons/sidebar/comercial.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
                 <span class="ml-2">Comercial</span>
             </a>
