@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\ComercialController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PetController;
