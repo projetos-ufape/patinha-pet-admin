@@ -27,5 +27,19 @@ class AppointmentSeeder extends Seeder
         Appointment::factory()->count(10)->create([
             'customer_id' => $customer->id,
         ]);
+
+        $user2 = User::factory()->create([
+            'name' => 'Test Appointment 2',
+            'email' => 'test2@appointment.com',
+        ]);
+
+        $customer2 = Customer::factory()->create([
+            'user_id' => $user2->id,
+            'phone_number' => '87981058112',
+        ]);
+
+        Appointment::factory()->count(10)->create([
+            'customer_id' => $customer2->id,
+        ]);
     }
 }
