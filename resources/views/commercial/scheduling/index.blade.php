@@ -40,7 +40,6 @@
         }
     </style>
 @endpush
-
 @section('content')
     <div class="p-6">
         @if (session('error'))
@@ -49,52 +48,56 @@
             </div>
         @endif
         <h1 class="text-2xl font-light mb-4">Registrar venda</h1>
-        <div class="flex space-x-4" style="padding-top: 10px;">
-            <select  id="select-clientes" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
-                <option value="" disabled selected hidden>Cliente</option>
-                @foreach ($pendingAppointmentsByCustomer as $customer)
-                    <option value="{{ $customer['id'] }}">{{ $customer['name'] }}</option>
-                @endforeach
-            </select>
-            <select class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
-                style="margin-left: 20px; background-color: #ebe8e8;" disabled>
-                <option value="" disabled selected hidden>{{ auth()->user()->name }}</option>
-            </select>
-        </div>
-        <div class="flex justify-between items-center p-4 rounded-lg"
-            style="margin-top: 20px; padding-left: 0px; padding-right: 0px;">
-            <span class="text-lg font-medium">Lista de produtos</span>
-            <a href="#" id="openModalButtonProdutos" class="add-button">
-                <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
-                Adicionar Produto
-            </a>
-        </div>
-        <div class="table-container" id="produtosTableContainer">
-            @include('components.table', [
-                'tableId' => 'dataTableProdutos',
-                'header' => ['Produto', 'Valor unitário', 'Quantidade', 'Valor'],
-                'content' => [],
-            ])
-        </div>
-        <div class="flex justify-between items-center p-4 rounded-lg"
-            style="margin-top: 20px; padding-left: 0px; padding-right: 0px;">
-            <span class="text-lg font-medium">Lista de serviços</span>
-            <a href="#" id="openModalButtonAtendimentos" class="add-button">
-                <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
-                Adicionar Atendimento
-            </a>
-        </div>
-        <div class="table-container" id="atendimentosTableContainer">
-            @include('components.table', [
-                'tableId' => 'dataTableAtendimentos',
-                'header' => ['Serviço', 'Data', 'Pet', 'Valor'],
-                'content' => [],
-            ])
-        </div>
-        <div class="flex justify-between">
-            <a href="{{ route('employees.index') }}" class="cancel-button">Cancelar</a>
-            <button type="" class="add-button" style="border-radius: 20px;">Registrar</button>
-        </div>
+        <form method="POST" action="{{ route('sales.store') }}">
+            @csrf
+            <div class="flex space-x-4" style="padding-top: 10px;">
+                <select id="select-clientes" name="customer_id" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <option value="" disabled selected hidden>Cliente</option>
+                    @foreach ($pendingAppointmentsByCustomer as $customer)
+                        <option value="{{ $customer['id'] }}">{{ $customer['name'] }}</option>
+                    @endforeach
+                </select>
+                <select class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
+                    style="margin-left: 20px; background-color: #ebe8e8;" disabled>
+                    <option value="" disabled selected hidden>{{ auth()->user()->name }}</option>
+                </select>
+            </div>
+            <div class="flex justify-between items-center p-4 rounded-lg"
+                style="margin-top: 20px; padding-left: 0px; padding-right: 0px;">
+                <span class="text-lg font-medium">Lista de produtos</span>
+                <a href="#" id="openModalButtonProdutos" class="add-button">
+                    <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
+                    Adicionar Produto
+                </a>
+            </div>
+            <div class="table-container" id="produtosTableContainer">
+                @include('components.table', [
+                    'tableId' => 'dataTableProdutos',
+                    'header' => ['Produto', 'Valor unitário', 'Quantidade', 'Valor'],
+                    'content' => [],
+                ])
+            </div>
+            <div class="flex justify-between items-center p-4 rounded-lg"
+                style="margin-top: 20px; padding-left: 0px; padding-right: 0px;">
+                <span class="text-lg font-medium">Lista de serviços</span>
+                <a href="#" id="openModalButtonAtendimentos" class="add-button">
+                    <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
+                    Adicionar Atendimento
+                </a>
+            </div>
+            <div class="table-container" id="atendimentosTableContainer">
+                @include('components.table', [
+                    'tableId' => 'dataTableAtendimentos',
+                    'header' => ['Serviço', 'Data', 'Pet', 'Valor'],
+                    'content' => [],
+                ])
+            </div>
+            <input type="hidden" name="sale_items" id="saleItems">
+            <div class="flex justify-between">
+                <a href="{{ route('employees.index') }}" class="cancel-button">Cancelar</a>
+                <button type="submit" class="add-button" style="border-radius: 20px;">Registrar</button>
+            </div>
+        </form>
     </div>
 
     <!-- Modal produtos -->
@@ -156,13 +159,15 @@
                 <div class="flex justify-between"
                     style="padding-left: 20px; padding-right: 20px; padding-top: 12px; padding-bottom: 12px;">
                     <a href="#" id="cancelButtonAtendimentos" class="cancel-button" style="color: gray;">Cancelar</a>
-                    <button type="" id="adicionarAtendimento" class="add-button"
+                    <button type="submit" id="adicionarAtendimento" class="add-button"
                         style="border-radius: 20px;">Adicionar</button>
                 </div>
             </div>
         </div>
+        </form>
     </div>
     <script>
+        
     document.addEventListener('DOMContentLoaded', function() {
     const openModalButtonProdutos = document.getElementById('openModalButtonProdutos');
     const openModalButtonAtendimentos = document.getElementById('openModalButtonAtendimentos');
@@ -402,6 +407,7 @@
     });
 
     customerSelect.addEventListener('change', function() {
+        
         resetarTabelaServicos(); 
         const selectedCustomerId = this.value;
         atendimentoSelect.innerHTML = '<option value="" disabled selected hidden>Selecione um atendimento</option>';

@@ -105,7 +105,7 @@
                     <input type="text" id="searchSalesInput" onkeyup="searchSalesTable()" placeholder="Pesquisar"
                         class="px-4 py-2 border border-gray-100 rounded-lg mr-2" />
                 </div>
-                <a href="{{ route('commercial.scheduling.index') }}" class="add-button">
+                <a href="{{ route('sales.create') }}" class="add-button">
                     <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
                     Registrar Venda
                 </a>

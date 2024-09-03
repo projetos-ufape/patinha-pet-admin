@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleItem;
+use App\Enums\AppointmentStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -22,13 +23,34 @@ class SaleController extends Controller
         // return view('sales.index', compact('sales'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $customers = Customer::get();
-        // return view('sales.create', ['customers' => $customers]);
+        $products = Product::all();
+        $filter = function ($query) {
+            $query->where('status', '!=', AppointmentStatus::Canceled);
+            // TODO: adicionar filtro de "ainda não foi registrado a venda"
+        };
+        $pendingAppointmentsByCustomer = Customer::select('id', 'user_id')
+            ->with(['user:id,name', 'appointments' => $filter])
+            ->whereHas('appointments', $filter)
+            ->get()
+            ->map(function ($customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->user->name,
+                    'appointments' => $customer->appointments->map(function ($appointment) {
+                        return [
+                            'id' => $appointment->id,
+                            'service_name' => $appointment->service->name, 
+                            'date' => $appointment->start_time,
+                            'pet_name' => $appointment->pet->name,
+                            'value' => $appointment->service->price,
+                        ];
+                    }),
+                ];
+            });
+
+        return view('commercial.scheduling.index', compact('products', 'pendingAppointmentsByCustomer'));
     }
 
     /**
@@ -83,7 +105,7 @@ class SaleController extends Controller
 
         DB::commit();
 
-        // return redirect()->route('sale.index')->with('success', 'Venda adicionada com sucesso.');
+        return redirect()->route('comercial.index')->with('success', 'Venda adicionada com sucesso.');
     }
 
     /**
