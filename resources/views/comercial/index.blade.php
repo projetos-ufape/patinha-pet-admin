@@ -120,7 +120,7 @@
                         $sale->service,
                         $sale->date,
                         $sale->value,
-                        $sale->customer,
+                        $sale->customer->name,
                     ];
                 }),
                 'editRoute' => 'sales.edit',

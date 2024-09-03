@@ -21,7 +21,12 @@ class SaleController extends Controller
     public function index()
     {
         $appointments = Appointment::paginate(15);
-        $sales = Sale::with(['employee', 'customer', 'saleItem.productItem.product', 'saleItem.appointmentItem.appointment'])->get();
+        $sales = Sale::with([
+            'employee', 
+            'customer.user', 
+            'saleItem.productItem.product',
+            'saleItem.appointmentItem.appointment' 
+        ])->get();
         return view('comercial.index', compact('sales', 'appointments'));
     }
 
@@ -60,56 +65,63 @@ class SaleController extends Controller
      */
     public function store(StoreSaleRequest $request)
     {
-        dd($request->all());
+        // Verificar os dados recebidos
         $data = $request->validated();
         $data['employee_id'] = Auth::user()->employee->id;
-
-        foreach ($data['sale_items'] as $itemData) {
-            if ($itemData['type'] === 'product') {
-                $product = Product::find($itemData['product_item']['product_id']);
-                if ($product->quantity < $itemData['product_item']['quantity']) {
-                    return;
-                }
-            }
-        }
-
-        DB::beginTransaction();
-
-        $sale = Sale::create([
-            'employee_id' => $data['employee_id'],
-            'customer_id' => $data['customer_id'],
-        ]);
-
-        foreach ($data['sale_items'] as $itemData) {
-            $saleItem = $sale->saleItem()->create([
-                'price' => $itemData['price'],
+    
+        try {
+    
+            DB::beginTransaction();
+    
+            $sale = Sale::create([
+                'employee_id' => $data['employee_id'],
+                'customer_id' => $data['customer_id'],
             ]);
-
-            if ($itemData['type'] === 'product') {
-                $saleItem->productItem()->create([
-                    'product_id' => $itemData['product_item']['product_id'],
-                    'quantity' => $itemData['product_item']['quantity'],
+    
+            foreach ($data['sale_items'] as $itemData) {
+                $saleItem = $sale->saleItem()->create([
+                    'price' => $itemData['price'],
                 ]);
-                $product = Product::find($itemData['product_item']['product_id']);
-                if ($product->quantity < $itemData['product_item']['quantity']) {
-                    DB::rollBack();
-
-                    return;
-                } else {
-                    $product->quantity = $product->quantity - $itemData['product_item']['quantity'];
+    
+                if ($itemData['type'] === 'product') {
+                  
+                    $product = Product::find($itemData['product_item']['product_id']);
+                    if (!$product) {
+                        throw new \Exception('Produto não encontrado.');
+                    }
+    
+                    if ($product->quantity < $itemData['product_item']['quantity']) {
+                        throw new \Exception('Estoque insuficiente para o produto: ' . $product->name);
+                    }
+    
+                    $saleItem->productItem()->create([
+                        'product_id' => $itemData['product_item']['product_id'],
+                        'quantity' => $itemData['product_item']['quantity'],
+                    ]);
+    
+                    $product->quantity -= $itemData['product_item']['quantity'];
                     $product->save();
+                } elseif ($itemData['type'] === 'appointment') {
+                    $saleItem->appointmentItem()->create([
+                        'appointment_id' => $itemData['appointment_item']['appointment_id'],
+                    ]);
                 }
-            } elseif ($itemData['type'] === 'appointment') {
-                $saleItem->appointmentItem()->create([
-                    'appointment_id' => $itemData['appointment_item']['appointment_id'],
-                ]);
             }
+    
+            DB::commit();
+    
+            return redirect()->route('comercial.index')->with('success', 'Venda adicionada com sucesso.');
+    
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            \Log::error('Erro ao registrar venda: ' . $e->getMessage());
+    
+            return redirect()->back()->with('error', 'Ocorreu um erro ao registrar a venda. ' . $e->getMessage());
         }
-
-        DB::commit();
-
-        return redirect()->route('comercial.index')->with('success', 'Venda adicionada com sucesso.');
     }
+    
 
     /**
      * Display the specified resource.

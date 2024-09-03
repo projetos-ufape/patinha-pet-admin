@@ -12,7 +12,7 @@ class StoreSaleRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
-    }
+    }    
 
     /**
      * Get the validation rules that apply to the request.
@@ -30,6 +30,13 @@ class StoreSaleRequest extends FormRequest
             'sale_items.*.product_item.quantity' => 'required_if:sale_items.*.type,product|integer|min:1',
             'sale_items.*.appointment_item.appointment_id' => 'required_if:sale_items.*.type,appointment|exists:appointments,id',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        if (is_string($this->get('sale_items'))) {
+            $this->merge(['sale_items' => json_decode($this->get('sale_items'), true)]);
+        }
     }
 
     public function messages(): array
