@@ -11,7 +11,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StockController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn() => redirect()->route('login'));
+Route::get('/', fn () => redirect()->route('login'));
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -41,4 +41,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
