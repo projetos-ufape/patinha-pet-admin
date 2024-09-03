@@ -23,8 +23,8 @@ class PetFactory extends Factory
             'gender' => fake()->randomElement(['female', 'male']),
             'specie' => fake()->randomElement(['cat', 'dog']),
             'race' => fake()->word,
-            'height' => fake()->randomFloat(2, 0.5, 1.5),
-            'weight' => fake()->randomFloat(2, 1.0, 10.0),
+            'height' => (float) fake()->randomFloat(2, 0.5, 1.5),
+            'weight' => (float) fake()->randomFloat(2, 1.0, 10.0),
             'castrated' => fake()->boolean(),
             'birth' => fake()->date,
         ];
