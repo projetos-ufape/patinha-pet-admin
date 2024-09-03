@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Enums\AppointmentStatus;
 use App\Http\Requests\StoreSaleRequest;
 use App\Http\Requests\UpdateSaleRequest;
+use App\Models\Appointment;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleItem;
-use App\Models\Appointment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -22,6 +22,7 @@ class SaleController extends Controller
     {
         $appointments = Appointment::paginate(15);
         $sales = Sale::with(['employee', 'customer', 'saleItem.productItem.product', 'saleItem.appointmentItem.appointment'])->get();
+
         return view('comercial.index', compact('sales', 'appointments'));
     }
 
