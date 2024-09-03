@@ -48,53 +48,71 @@
                 {{ session('error') }}
             </div>
         @endif
-        <h1 class="text-2xl font-light mb-4">Registrar venda</h1>
-        <div class="flex space-x-4" style="padding-top: 10px;">
-            <select class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
-                <option value="" disabled selected hidden>Cliente</option>
-                @foreach ($pendingAppointmentsByCustomer as $customer)
-                    <option value="{{ $customer['id'] }}">{{ $customer['name'] }}</option>
-                @endforeach
-            </select>
-            <select class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
-                style="margin-left: 20px; background-color: #ebe8e8;" disabled>
-                <option value="" disabled selected hidden>{{ auth()->user()->name }}</option>
-            </select>
-        </div>
-        <div class="flex justify-between items-center p-4 rounded-lg"
-            style="margin-top: 20px; padding-left: 0px; padding-right: 0px;">
-            <span class="text-lg font-medium">Lista de produtos</span>
-            <a href="#" id="openModalButtonProdutos" class="add-button">
-                <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
-                Adicionar Produto
-            </a>
-        </div>
-        <div class="table-container" id="produtosTableContainer">
-            @include('components.table', [
-                'tableId' => 'dataTableProdutos',
-                'header' => ['Produto', 'Valor unitário', 'Quantidade', 'Valor'],
-                'content' => [],
-            ])
-        </div>
-        <div class="flex justify-between items-center p-4 rounded-lg"
-            style="margin-top: 20px; padding-left: 0px; padding-right: 0px;">
-            <span class="text-lg font-medium">Lista de serviços</span>
-            <a href="#" id="openModalButtonAtendimentos" class="add-button">
-                <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
-                Adicionar Atendimento
-            </a>
-        </div>
-        <div class="table-container" id="atendimentosTableContainer">
-            @include('components.table', [
-                'tableId' => 'dataTableAtendimentos',
-                'header' => ['Serviço', 'Data', 'Pet', 'Valor'],
-                'content' => [],
-            ])
-        </div>
-        <div class="flex justify-between">
-            <a href="{{ route('employees.index') }}" class="cancel-button">Cancelar</a>
-            <button type="" class="add-button" style="border-radius: 20px;">Registrar</button>
-        </div>
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
+        <form id="form" action="{{ route("sales.store") }}" method="POST">
+            @csrf
+            <input hidden name="sale_items" id="sales">
+
+            <h1 class="text-2xl font-light mb-4">Registrar venda</h1>
+            <div class="flex space-x-4" style="padding-top: 10px;">
+                <select class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" name="customer_id">
+                    <option value="" disabled selected hidden>Cliente</option>
+                    @foreach ($pendingAppointmentsByCustomer as $customer)
+                        <option value="{{ $customer['id'] }}">{{ $customer['name'] }}</option>
+                    @endforeach
+                </select>
+                <select class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
+                    style="margin-left: 20px; background-color: #ebe8e8;" disabled>
+                    <option value="" disabled selected hidden>{{ auth()->user()->name }}</option>
+                </select>
+            </div>
+            <div class="flex justify-between items-center p-4 rounded-lg"
+                style="margin-top: 20px; padding-left: 0px; padding-right: 0px;">
+                <span class="text-lg font-medium">Lista de produtos</span>
+                <a href="#" id="openModalButtonProdutos" class="add-button">
+                    <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
+                    Adicionar Produto
+                </a>
+            </div>
+            <div class="table-container" id="produtosTableContainer">
+                @include('components.table', [
+                    'tableId' => 'dataTableProdutos',
+                    'header' => ['Produto', 'Valor unitário', 'Quantidade', 'Valor'],
+                    'content' => [],
+                ])
+            </div>
+
+            <div class="flex justify-between items-center p-4 rounded-lg"
+                style="margin-top: 20px; padding-left: 0px; padding-right: 0px;">
+                <span class="text-lg font-medium">Lista de serviços</span>
+                <a href="#" id="openModalButtonAtendimentos" class="add-button">
+                    <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
+                    Adicionar Atendimento
+                </a>
+            </div>
+            <div class="table-container" id="atendimentosTableContainer">
+                @include('components.table', [
+                    'tableId' => 'dataTableAtendimentos',
+                    'header' => ['Serviço', 'Data', 'Pet', 'Valor'],
+                    'content' => [],
+                ])
+            </div>
+            <div class="flex justify-between">
+                <a href="{{ route('employees.index') }}" class="cancel-button">Cancelar</a>
+                <button id="btnForm" type="submit" for="form" class="add-button" style="border-radius: 20px;">Registrar</button>
+            </div>
+        </form>
     </div>
 
     <!-- Modal produtos -->
@@ -169,6 +187,7 @@
     </div>
     <script>
         const pendingAppointmentsByCustomer = @json($pendingAppointmentsByCustomer);
+        const products = @json($products);
 
         document.addEventListener('DOMContentLoaded', function() {
             const openModalButtonProdutos = document.getElementById('openModalButtonProdutos');
@@ -220,10 +239,10 @@
             <a href="#" class="text-blue-600 hover:underline editar">
                 <img src="{{ asset('icons/pencil.svg') }}" alt="Editar" tipo-modal='${tableId}' id="editarTable" dados='${dados}' class="h-4 w-4">
             </a>
-            <button class="text-red-600 hover:underline ml-4 excluir">
-                <img src="{{ asset('icons/trash3.svg') }}" alt="Excluir" class="h-4 w-4">
-            </button>
-        `;
+                    <button class="text-red-600 hover:underline ml-4 excluir">
+                        <img src="{{ asset('icons/trash3.svg') }}" alt="Excluir" class="h-4 w-4">
+                    </button>
+                `;
                 novaLinha.appendChild(colunaAcoes);
                 tabelaCorpo.appendChild(novaLinha);
                 tabela.classList.add('zebra-striping');
@@ -373,6 +392,55 @@
                     linhaParaEditar = null;
                 }
             }
+
+            const form = document.querySelector('form');
+            const formBtn = document.getElementById('btnForm');
+            const saleItemsInput = document.getElementById('sales');
+            const productsTable = document.getElementById('dataTableProdutos');
+            const servicesTable = document.getElementById('dataTableAtendimentos');
+
+            formBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                const produtos = [];
+                const produtosRows = productsTable.querySelectorAll('tbody tr');
+                produtosRows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    const product = {
+                        type: 'product',
+                        price: parseFloat(cells[1].textContent), // Preço unitário
+                        product_item: {
+                            product_id: products.find(p => cells[0].textContent == p.name && cells[1].textContent == p.price)?.id, // TODO: melhorar obter Id do produto
+                            quantity: parseInt(cells[2].textContent), // Quantidade
+                        }
+                    };
+                    produtos.push(product);
+                });
+
+                const atendimentos = [];
+                const atendimentosRows = servicesTable.querySelectorAll('tbody tr');
+                atendimentosRows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    const service = {
+                        type: 'appointment',
+                        appointment_item: {
+                            appointment_id: cells[0].getAttribute('data-appointment-id'), // Id do atendimento
+                            price: parseFloat(cells[3].textContent) // Preço do atendimento
+                        }
+                    };
+                    atendimentos.push(service);
+                });
+
+                const saleItems = [...produtos, ...atendimentos];
+
+                if (saleItems.length === 0) {
+                    alert('Por favor, adicione ao menos um produto ou atendimento.');
+                    return;
+                }
+
+                saleItemsInput.value = JSON.stringify(saleItems);
+                event.target.closest('form').submit();
+            });
         });
     </script>
 @endsection

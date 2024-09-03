@@ -32,6 +32,13 @@ class StoreSaleRequest extends FormRequest
         ];
     }
 
+    protected function prepareForValidation()
+    {
+        if (is_string($this->get('sale_items'))) {
+            $this->merge(['sale_items' => json_decode($this->get('sale_items'), true)]);
+        }
+    }
+
     public function messages(): array
     {
         return [

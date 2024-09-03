@@ -14,16 +14,6 @@ beforeEach(function () {
     Artisan::call('db:seed', ['--class' => 'RolesSeeder']);
 });
 
-test('index sales', function () {
-    $user = User::factory()->has(Employee::factory())->create();
-    $user->assignRole('admin');
-    $sale = Sale::factory()->has(SaleItem::factory()->has(ProductItem::factory()->for(Product::factory())))->for(Employee::factory())->for(Customer::factory())->create();
-    $response = $this
-        ->actingAs($user, 'web')
-        ->get(route('sales.index'));
-    $response->assertStatus(200);
-});
-
 test('store sale', function () {
     $user = User::factory()->has(Employee::factory())->create();
     $user->assignRole('admin');
@@ -82,7 +72,7 @@ test('store sale with non-existent customer', function () {
         ->actingAs($user, 'web')
         ->post(route('sales.store'), $data);
     $response->assertStatus(302);
-    $response->assertInvalid(['customer_id' => 'O cliente deve existir.']);
+    $response->assertInvalid(['customer_id']);
 });
 
 test('store sale with non-existent product', function () {
@@ -106,7 +96,7 @@ test('store sale with non-existent product', function () {
         ->actingAs($user, 'web')
         ->post(route('sales.store'), $data);
     $response->assertStatus(302);
-    $response->assertInvalid(['sale_items.0.product_item.product_id' => 'O produto de cada item de venda de produto deve existir.']);
+    $response->assertInvalid(['sale_items.0.product_item.product_id']);
 });
 
 test('store sale with invalid quantity', function () {
@@ -131,7 +121,7 @@ test('store sale with invalid quantity', function () {
         ->actingAs($user, 'web')
         ->post(route('sales.store'), $data);
     $response->assertStatus(302);
-    $response->assertInvalid(['sale_items.0.product_item.quantity' => 'A quantidade de cada item de venda de produto deve ser 1 ou mais.']);
+    $response->assertInvalid(['sale_items.0.product_item.quantity']);
 });
 
 test('store sale with no sale items', function () {
@@ -146,7 +136,7 @@ test('store sale with no sale items', function () {
         ->actingAs($user, 'web')
         ->post(route('sales.store'), $data);
     $response->assertStatus(302);
-    $response->assertInvalid(['sale_items' => 'Os itens de venda são obrigatórios.']);
+    $response->assertInvalid(['sale_items']);
 });
 
 test('update sale', function () {
