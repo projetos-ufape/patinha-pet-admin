@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Enums\AppointmentStatus;
+use App\Models\Appointment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -19,8 +20,9 @@ class SaleController extends Controller
      */
     public function index()
     {
+        $appointments = Appointment::paginate(15);
         $sales = Sale::with(['employee', 'customer', 'saleItem.productItem.product', 'saleItem.appointmentItem.appointment'])->get();
-        // return view('sales.index', compact('sales'));
+        return view('comercial.index', compact('sales', 'appointments'));
     }
 
     public function create()
@@ -58,6 +60,7 @@ class SaleController extends Controller
      */
     public function store(StoreSaleRequest $request)
     {
+        dd($request->all());
         $data = $request->validated();
         $data['employee_id'] = Auth::user()->employee->id;
 

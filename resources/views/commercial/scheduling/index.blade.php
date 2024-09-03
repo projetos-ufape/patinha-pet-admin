@@ -181,6 +181,10 @@
     const adicionarAtendimento = document.getElementById('adicionarAtendimento');
     const atendimentoSelect = document.getElementById('select-atendimento');
     const customerSelect = document.getElementById('select-clientes');
+    const form = document.querySelector('form');
+    const saleItemsInput = document.getElementById('saleItems');
+    const productsTable = document.getElementById('dataTableProdutos');
+    const servicesTable = document.getElementById('dataTableAtendimentos');
     let linhaParaEditar = null;
 
     atualizarVisibilidadeTabela('dataTableProdutos');
@@ -188,7 +192,7 @@
 
     const pendingAppointmentsByCustomer = @json($pendingAppointmentsByCustomer);
 
-    // Função para atualizar a visibilidade da tabela
+    // Função para atualizar a visibilidade da tabela e do cabeçalho
     function atualizarVisibilidadeTabela(tableId) {
         const tabela = document.getElementById(tableId);
         const tabelaCorpo = tabela.querySelector('tbody');
@@ -206,8 +210,8 @@
 
     function resetarTabelaServicos() {
         const tabelaServicos = document.getElementById('dataTableAtendimentos').querySelector('tbody');
-        tabelaServicos.innerHTML = ''; 
-        atualizarVisibilidadeTabela('dataTableAtendimentos'); 
+        tabelaServicos.innerHTML = '';
+        atualizarVisibilidadeTabela('dataTableAtendimentos');
     }
 
     // Função para adicionar linha na tabela
@@ -308,50 +312,43 @@
 
     // Adicionar Atendimento à Tabela
     if (adicionarAtendimento) {
-    adicionarAtendimento.addEventListener('click', function(event) {
-        event.preventDefault();
-        const atendimentoId = atendimentoSelect.value;
+        adicionarAtendimento.addEventListener('click', function(event) {
+            event.preventDefault();
+            const atendimentoId = atendimentoSelect.value;
 
-        if (!atendimentoId) {
-            alert('Por favor, selecione um atendimento.');
-            return;
-        }
+            if (!atendimentoId) {
+                alert('Por favor, selecione um atendimento.');
+                return;
+            }
 
-        // Recupera a opção selecionada
-        const selectedOption = atendimentoSelect.options[atendimentoSelect.selectedIndex];
-        
-        // Verifica se os atributos estão presentes na opção
-        const serviceName = selectedOption.getAttribute('data-service-name') || 'N/A';
-        const date = selectedOption.getAttribute('data-date') || 'N/A';
-        const petName = selectedOption.getAttribute('data-pet-name') || 'N/A';
-        const value = selectedOption.getAttribute('data-value') || 'N/A';
+            const selectedOption = atendimentoSelect.options[atendimentoSelect.selectedIndex];
+            const serviceName = selectedOption.getAttribute('data-service-name') || 'N/A';
+            const date = selectedOption.getAttribute('data-date') || 'N/A';
+            const petName = selectedOption.getAttribute('data-pet-name') || 'N/A';
+            const value = selectedOption.getAttribute('data-value') || 'N/A';
 
-        // Adiciona a linha ou edita a linha existente
-        if (linhaParaEditar) {
-            linhaParaEditar.children[0].textContent = serviceName;
-            linhaParaEditar.children[1].textContent = date;
-            linhaParaEditar.children[2].textContent = petName;
-            linhaParaEditar.children[3].textContent = value;
-            linhaParaEditar = null;
-        } else {
-            const dados = {
-                idAtendimento: atendimentoId,
-                serviceName: serviceName,
-                date: date,
-                petName: petName,
-                value: value
-            };
-            addRowToTable('dataTableAtendimentos', [serviceName, date, petName, value], JSON.stringify(dados));
-        }
+            if (linhaParaEditar) {
+                linhaParaEditar.children[0].textContent = serviceName;
+                linhaParaEditar.children[1].textContent = date;
+                linhaParaEditar.children[2].textContent = petName;
+                linhaParaEditar.children[3].textContent = value;
+                linhaParaEditar = null;
+            } else {
+                const dados = {
+                    idAtendimento: atendimentoId,
+                    serviceName: serviceName,
+                    date: date,
+                    petName: petName,
+                    value: value
+                };
+                addRowToTable('dataTableAtendimentos', [serviceName, date, petName, value], JSON.stringify(dados));
+            }
 
-        // Reseta o formulário do modal
-        resetarFormularioModal('atendimento');
-        modalServicos.style.display = 'none';
-    });
-}
+            resetarFormularioModal('atendimento');
+            modalServicos.style.display = 'none';
+        });
+    }
 
-
-    // Função para resetar formulário modal
     function resetarFormularioModal(modal) {
         if (modal === 'produto') {
             produtoSelect.value = '';
@@ -367,7 +364,6 @@
         }
     }
 
-    // Evento de Exclusão e Edição
     document.addEventListener('click', function(event) {
         if (event.target.closest('.excluir')) {
             const confirmacao = confirm('Tem certeza que deseja excluir este item?');
@@ -407,8 +403,7 @@
     });
 
     customerSelect.addEventListener('change', function() {
-        
-        resetarTabelaServicos(); 
+        resetarTabelaServicos();
         const selectedCustomerId = this.value;
         atendimentoSelect.innerHTML = '<option value="" disabled selected hidden>Selecione um atendimento</option>';
 
@@ -427,8 +422,60 @@
             });
         }
     });
+
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevenir o envio padrão do formulário
+
+        // Capturar os dados de produtos
+        const produtos = [];
+        const produtosRows = productsTable.querySelectorAll('tbody tr');
+        produtosRows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const product = {
+                type: 'product',
+                product_item: {
+                    product_id: cells[0].getAttribute('data-product-id'), // Id do produto
+                    quantity: parseInt(cells[2].textContent, 10), // Quantidade
+                    price: parseFloat(cells[1].textContent) // Preço unitário
+                }
+            };
+            produtos.push(product);
+        });
+
+        // Capturar os dados de atendimentos
+        const atendimentos = [];
+        const atendimentosRows = servicesTable.querySelectorAll('tbody tr');
+        atendimentosRows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const service = {
+                type: 'appointment',
+                appointment_item: {
+                    appointment_id: cells[0].getAttribute('data-appointment-id'), // Id do atendimento
+                    price: parseFloat(cells[3].textContent) // Preço do atendimento
+                }
+            };
+            atendimentos.push(service);
+        });
+
+        // Montar o array sale_items
+        const saleItems = [...produtos, ...atendimentos];
+
+        // Verificar se existem itens de venda
+        if (saleItems.length === 0) {
+            alert('Por favor, adicione ao menos um produto ou atendimento.');
+            return;
+        }
+
+        // Atualizar o campo hidden com os dados de sale_items
+        saleItemsInput.value = JSON.stringify(saleItems);
+
+        // Enviar o formulário com os dados
+        form.submit();
+    });
 });
 
 
-    </script>
+</script>
+
 @endsection

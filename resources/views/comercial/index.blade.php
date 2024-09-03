@@ -111,30 +111,8 @@
                 </a>
             </div>
 
-            @php
-                $sales = collect([
-                    (object) [
-                        'id' => 24,
-                        'products' => 'Ração Premium 2x, Sache...',
-                        'service' => 'Banho e Tosa',
-                        'date' => '28/08/2024',
-                        'value' => 'R$ 150,00',
-                        'customer' => 'Ana Paula Oliveira',
-                    ],
-                    (object) [
-                        'id' => 51,
-                        'products' => 'Ração Premium',
-                        'service' => 'Atendimento Veterinário',
-                        'date' => '23/08/2024',
-                        'value' => 'R$ 180,00',
-                        'customer' => 'Ricardo Peixoto',
-                    ],
-                ]);
-            @endphp
-
             @include('components.table', [
                 'header' => ['ID', 'Produtos', 'Serviços', 'Data', 'Valor', 'Cliente'],
-                'withoutActions' => true,
                 'content' => $sales->map(function ($sale) {
                     return [
                         $sale->id,
@@ -143,9 +121,10 @@
                         $sale->date,
                         $sale->value,
                         $sale->customer,
-                        
                     ];
                 }),
+                'editRoute' => 'sales.edit',
+                'deleteRoute' => 'sales.destroy',
             ])
         </div>
 
