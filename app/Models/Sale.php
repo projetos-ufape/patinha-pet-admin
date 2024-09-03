@@ -7,18 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Appointment extends Model
+class Sale extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'employee_id',
         'customer_id',
-        'pet_id',
-        'service_id',
-        'status',
-        'start_time',
-        'end_time',
     ];
 
     public function employee(): BelongsTo
@@ -31,18 +26,8 @@ class Appointment extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function pet(): BelongsTo
+    public function saleItem(): HasMany
     {
-        return $this->belongsTo(Pet::class);
-    }
-
-    public function service(): BelongsTo
-    {
-        return $this->belongsTo(Service::class);
-    }
-
-    public function appointmentItems(): HasMany
-    {
-        return $this->hasMany(AppointmentItem::class);
+        return $this->hasMany(SaleItem::class);
     }
 }

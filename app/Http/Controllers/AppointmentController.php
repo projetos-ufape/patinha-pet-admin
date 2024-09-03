@@ -60,7 +60,7 @@ class AppointmentController extends Controller
         $services = Service::all();
         $status = AppointmentStatus::values();
 
-        return view('appointments.create', compact('appointment', 'customers', 'pets', 'services', 'status'));
+        return view('appointments.edit', compact('appointment', 'customers', 'pets', 'services', 'status'));
     }
 
     /**

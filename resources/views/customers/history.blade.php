@@ -5,13 +5,13 @@
 @endpush
 
 @section('content')
+
     <div class="p-6">
 
         <h1 class="text-2xl mb-4">Histórico de Atendimentos</h1>
         
         <div class="flex justify-between items-center mb-4">
-
-        <div class="flex items-center">
+            <div class="flex items-center">
                 <input
                     type="text"
                     id="searchInput"
@@ -19,19 +19,21 @@
                     placeholder="Pesquisar"
                     class="px-4 py-2 border border-gray-100 rounded-lg mr-2"
                 />
-
             </div>
-
         </div>
+            
         @include('components.table', [
             'header' => ['ID', 'Serviço', 'Funcionário', 'Cliente', 'Pet', 'Horário Atendimento', 'Horário Conclusão', 'Status'],
             'content' => $appointments->map(function($appointment) {
 
                 $appointmentStatusTranslations = [
-                    'Pending' => 'Pendente',
-                    'Completed' => 'Concluído',
-                    'Canceled' => 'Cancelado',
+                    'pending' => 'Pendente',
+                    'completed' => 'Concluído',
+                    'canceled' => 'Cancelado',
                 ];
+
+                $start_time = $appointment->start_time ? \Carbon\Carbon::parse($appointment->start_time)->format('d/m/Y H:i') : null;
+                $end_time = $appointment->end_time ? \Carbon\Carbon::parse($appointment->end_time)->format('d/m/Y H:i') : null;
 
                 return [
                     $appointment->id, 
@@ -39,8 +41,8 @@
                     $appointment->employee->user->name,
                     $appointment->customer->user->name,
                     $appointment->pet->name,
-                    $appointment->start_time,
-                    $appointment->end_time,
+                    $start_time,
+                    $end_time,
                     $appointmentStatusTranslations[$appointment->status] ?? $appointment->status,
                 ];
             }),

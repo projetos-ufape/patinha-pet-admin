@@ -20,8 +20,8 @@ class UpdateAppointmentRequest extends FormRequest
             'pet_id' => ['exists:pets,id'],
             'service_id' => ['exists:services,id'],
             'status' => [Rule::enum(AppointmentStatus::class)],
-            'start_time' => ['date_format:Y-m-d H:i:s'],
-            'end_time' => ['nullable', 'date_format:Y-m-d H:i:s'],
+            'start_time' => ['date'],
+            'end_time' => ['nullable', 'date'],
         ];
     }
 
@@ -32,8 +32,8 @@ class UpdateAppointmentRequest extends FormRequest
             'pet_id.exists' => 'O campo de pet deve ser preenchido por um id válido.',
             'service_id.exists' => 'O campo de serviço deve ser preenchido por um id válido.',
             'status' => 'O status do atendimento deve ser "pendente", "concluído" ou "cancelado".',
-            'start_time' => 'O horário para o atendimento deve ter o formato Y-m-d H:i:s.',
-            'end_time' => 'O horário para conclusão do atendimento deve ter o formato Y-m-d H:i:s.',
+            'start_time.date' => 'O horário para o atendimento deve ser uma data-hora válida.',
+            'end_time.date' => 'O horário de conclusão do atendimento deve ser uma data-hora válida.',
         ];
     }
 }
