@@ -22,11 +22,12 @@ class SaleController extends Controller
     {
         $appointments = Appointment::paginate(15);
         $sales = Sale::with([
-            'employee', 
-            'customer.user', 
+            'employee',
+            'customer.user',
             'saleItem.productItem.product',
-            'saleItem.appointmentItem.appointment' 
+            'saleItem.appointmentItem.appointment',
         ])->get();
+
         return view('comercial.index', compact('sales', 'appointments'));
     }
 
@@ -68,37 +69,37 @@ class SaleController extends Controller
         // Verificar os dados recebidos
         $data = $request->validated();
         $data['employee_id'] = Auth::user()->employee->id;
-    
+
         try {
-    
+
             DB::beginTransaction();
-    
+
             $sale = Sale::create([
                 'employee_id' => $data['employee_id'],
                 'customer_id' => $data['customer_id'],
             ]);
-    
+
             foreach ($data['sale_items'] as $itemData) {
                 $saleItem = $sale->saleItem()->create([
                     'price' => $itemData['price'],
                 ]);
-    
+
                 if ($itemData['type'] === 'product') {
-                  
+
                     $product = Product::find($itemData['product_item']['product_id']);
-                    if (!$product) {
+                    if (! $product) {
                         throw new \Exception('Produto não encontrado.');
                     }
-    
+
                     if ($product->quantity < $itemData['product_item']['quantity']) {
-                        throw new \Exception('Estoque insuficiente para o produto: ' . $product->name);
+                        throw new \Exception('Estoque insuficiente para o produto: '.$product->name);
                     }
-    
+
                     $saleItem->productItem()->create([
                         'product_id' => $itemData['product_item']['product_id'],
                         'quantity' => $itemData['product_item']['quantity'],
                     ]);
-    
+
                     $product->quantity -= $itemData['product_item']['quantity'];
                     $product->save();
                 } elseif ($itemData['type'] === 'appointment') {
@@ -107,21 +108,20 @@ class SaleController extends Controller
                     ]);
                 }
             }
-    
+
             DB::commit();
-    
+
             return redirect()->route('comercial.index')->with('success', 'Venda adicionada com sucesso.');
-    
+
         } catch (\Exception $e) {
 
             DB::rollBack();
 
-            \Log::error('Erro ao registrar venda: ' . $e->getMessage());
-    
-            return redirect()->back()->with('error', 'Ocorreu um erro ao registrar a venda. ' . $e->getMessage());
+            \Log::error('Erro ao registrar venda: '.$e->getMessage());
+
+            return redirect()->back()->with('error', 'Ocorreu um erro ao registrar a venda. '.$e->getMessage());
         }
     }
-    
 
     /**
      * Display the specified resource.
