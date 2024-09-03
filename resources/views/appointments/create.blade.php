@@ -33,24 +33,21 @@
                         @foreach ($customers as $customer)
                             <option value="{{ $customer->id }}">{{ $customer->user->name ?? 'No Name' }}</option>
                         @endforeach
-
                     </select>
                     @error('customer_id')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
-
                 </div>
             </div>
 
             <div class="flex mb-6">
-
                 <div style="display: inline-block; width: 49%">
-                    <select name="pet_id" id="pet"
+                    <select name="pet_id" id="pet" onchange="showCustomerId(this)"
                         class="w-full px-4 py-2 border border-gray-300 rounded-md @error('pet') border-red-500 @enderror"
                         required>
                         <option value="" disabled selected>Pet</option>
-                        @foreach ($pets as $pets)
-                            <option value="{{ $pets->id }}">{{ $pets->name }}</option>
+                        @foreach ($pets as $pet)
+                            <option value="{{ $pet->id }}" data-customer-id="{{ $pet->customer_id }}">{{ $pet->name }}</option>
                         @endforeach
                     </select>
                     @error('pet_id')
@@ -70,11 +67,11 @@
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
-
             </div>
 
             <div class="flex mb-6">
                 <div style="display: inline-block; width: 49%">
+                    <label for="start_time" class="block mb-1">Data e Hora de Início</label>
                     <input type="datetime-local" name="start_time" id="start_time"
                         class="w-full px-4 py-2 border border-gray-300 rounded-md @error('start_time') border-red-500 @enderror"
                         required>
@@ -84,6 +81,7 @@
                 </div>
 
                 <div style="display: inline-block; width: 49%; margin-left: 2%;">
+                    <label for="end_time" class="block mb-1">Data e Hora de Fim</label>
                     <input type="datetime-local" name="end_time" id="end_time"
                         class="w-full px-4 py-2 border border-gray-300 rounded-md @error('end_time') border-red-500 @enderror">
                     @error('end_time')
@@ -92,12 +90,26 @@
                 </div>
             </div>
 
-
             <div class="flex justify-between">
                 <a href="{{ route('comercial.index') }}" class="cancel-button">Cancelar</a>
                 <button type="submit" class="add-button">Registrar</button>
             </div>
         </form>
     </div>
+
+    <script>
+        document.getElementById('customer').addEventListener('change', function () {
+            const selectedCustomerId = this.value;
+            const petSelect = document.getElementById('pet');
+            for (let i = 0; i < petSelect.options.length; i++) {
+                const option = petSelect.options[i];
+                if (option.value) { 
+                    const optionCustomerId = option.getAttribute('data-customer-id');
+                    option.style.display = (optionCustomerId === selectedCustomerId) ? 'block' : 'none';
+                }
+            }
+            petSelect.selectedIndex = 0;
+        });
+    </script>
 
 @endsection

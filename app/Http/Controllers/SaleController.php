@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AppointmentStatus;
 use App\Http\Requests\StoreSaleRequest;
 use App\Http\Requests\UpdateSaleRequest;
+use App\Models\Appointment;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Sale;
@@ -18,17 +20,45 @@ class SaleController extends Controller
      */
     public function index()
     {
-        $sales = Sale::with(['employee', 'customer', 'saleItem.productItem.product', 'saleItem.appointmentItem.appointment'])->get();
-        // return view('sales.index', compact('sales'));
+        $appointments = Appointment::paginate(15);
+        $sales = Sale::with([
+            'employee',
+            'customer.user',
+            'saleItem.productItem.product',
+            'saleItem.appointmentItem.appointment',
+        ])->get();
+
+        return view('comercial.index', compact('sales', 'appointments'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $customers = Customer::get();
-        // return view('sales.create', ['customers' => $customers]);
+        $products = Product::all();
+        $filter = function ($query) {
+            $query->where('status', '!=', AppointmentStatus::Canceled);
+            // TODO: adicionar filtro de "ainda não foi registrado a venda"
+        };
+        $pendingAppointmentsByCustomer = Customer::select('id', 'user_id')
+            ->with(['user:id,name', 'appointments' => $filter])
+            ->whereHas('appointments', $filter)
+            ->get()
+            ->map(function ($customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->user->name,
+                    'appointments' => $customer->appointments->map(function ($appointment) {
+                        return [
+                            'id' => $appointment->id,
+                            'service_name' => $appointment->service->name,
+                            'date' => $appointment->start_time,
+                            'pet_name' => $appointment->pet->name,
+                            'value' => $appointment->service->price,
+                        ];
+                    }),
+                ];
+            });
+
+        return view('commercial.scheduling.index', compact('products', 'pendingAppointmentsByCustomer'));
     }
 
     /**
@@ -36,54 +66,61 @@ class SaleController extends Controller
      */
     public function store(StoreSaleRequest $request)
     {
+        // Verificar os dados recebidos
         $data = $request->validated();
         $data['employee_id'] = Auth::user()->employee->id;
 
-        foreach ($data['sale_items'] as $itemData) {
-            if ($itemData['type'] === 'product') {
-                $product = Product::find($itemData['product_item']['product_id']);
-                if ($product->quantity < $itemData['product_item']['quantity']) {
-                    return;
-                }
-            }
-        }
+        try {
 
-        DB::beginTransaction();
+            DB::beginTransaction();
 
-        $sale = Sale::create([
-            'employee_id' => $data['employee_id'],
-            'customer_id' => $data['customer_id'],
-        ]);
-
-        foreach ($data['sale_items'] as $itemData) {
-            $saleItem = $sale->saleItem()->create([
-                'price' => $itemData['price'],
+            $sale = Sale::create([
+                'employee_id' => $data['employee_id'],
+                'customer_id' => $data['customer_id'],
             ]);
 
-            if ($itemData['type'] === 'product') {
-                $saleItem->productItem()->create([
-                    'product_id' => $itemData['product_item']['product_id'],
-                    'quantity' => $itemData['product_item']['quantity'],
+            foreach ($data['sale_items'] as $itemData) {
+                $saleItem = $sale->saleItem()->create([
+                    'price' => $itemData['price'],
                 ]);
-                $product = Product::find($itemData['product_item']['product_id']);
-                if ($product->quantity < $itemData['product_item']['quantity']) {
-                    DB::rollBack();
 
-                    return;
-                } else {
-                    $product->quantity = $product->quantity - $itemData['product_item']['quantity'];
+                if ($itemData['type'] === 'product') {
+
+                    $product = Product::find($itemData['product_item']['product_id']);
+                    if (! $product) {
+                        throw new \Exception('Produto não encontrado.');
+                    }
+
+                    if ($product->quantity < $itemData['product_item']['quantity']) {
+                        throw new \Exception('Estoque insuficiente para o produto: '.$product->name);
+                    }
+
+                    $saleItem->productItem()->create([
+                        'product_id' => $itemData['product_item']['product_id'],
+                        'quantity' => $itemData['product_item']['quantity'],
+                    ]);
+
+                    $product->quantity -= $itemData['product_item']['quantity'];
                     $product->save();
+                } elseif ($itemData['type'] === 'appointment') {
+                    $saleItem->appointmentItem()->create([
+                        'appointment_id' => $itemData['appointment_item']['appointment_id'],
+                    ]);
                 }
-            } elseif ($itemData['type'] === 'appointment') {
-                $saleItem->appointmentItem()->create([
-                    'appointment_id' => $itemData['appointment_item']['appointment_id'],
-                ]);
             }
+
+            DB::commit();
+
+            return redirect()->route('comercial.index')->with('success', 'Venda adicionada com sucesso.');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            \Log::error('Erro ao registrar venda: '.$e->getMessage());
+
+            return redirect()->back()->with('error', 'Ocorreu um erro ao registrar a venda. '.$e->getMessage());
         }
-
-        DB::commit();
-
-        // return redirect()->route('sale.index')->with('success', 'Venda adicionada com sucesso.');
     }
 
     /**

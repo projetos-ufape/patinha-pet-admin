@@ -20,8 +20,9 @@ class UpdateAppointmentRequest extends FormRequest
             'pet_id' => ['exists:pets,id'],
             'service_id' => ['exists:services,id'],
             'status' => [Rule::enum(AppointmentStatus::class)],
-            'start_time' => ['date'],
-            'end_time' => ['nullable', 'date'],
+            'start_time' => ['date_format:Y-m-d\TH:i'],
+            'end_time' => ['nullable', 'date_format:Y-m-d\TH:i'],
+
         ];
     }
 

@@ -27,6 +27,7 @@
         .tab-content {
             padding-top: 20px;
         }
+        
     </style>
 @endpush
 
@@ -41,14 +42,15 @@
             </div>
         </div>
 
-
+        
         {{-- Conteúdo da aba de Atendimentos --}}
         <div id="Atendimentos" class="tab-content" style="display:block;">
+
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center">
                     <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Pesquisar"
                         class="px-4 py-2 border border-gray-100 rounded-lg mr-2" />
-                </div>
+                </div>        
                 <a href="{{ route('appointments.create') }}" class="add-button">
                     <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
                     Registrar Atendimento
@@ -103,32 +105,11 @@
                     <input type="text" id="searchSalesInput" onkeyup="searchSalesTable()" placeholder="Pesquisar"
                         class="px-4 py-2 border border-gray-100 rounded-lg mr-2" />
                 </div>
-                <a href="{{ route('commercial.scheduling.index') }}" class="add-button">
+                <a href="{{ route('sales.create') }}" class="add-button">
                     <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
                     Registrar Venda
                 </a>
             </div>
-
-            @php
-                $sales = collect([
-                    (object) [
-                        'id' => 24,
-                        'products' => 'Ração Premium 2x, Sache...',
-                        'service' => 'Banho e Tosa',
-                        'date' => '28/08/2024',
-                        'value' => 'R$ 150,00',
-                        'customer' => 'Ana Paula Oliveira',
-                    ],
-                    (object) [
-                        'id' => 51,
-                        'products' => 'Ração Premium',
-                        'service' => 'Atendimento Veterinário',
-                        'date' => '23/08/2024',
-                        'value' => 'R$ 180,00',
-                        'customer' => 'Ricardo Peixoto',
-                    ],
-                ]);
-            @endphp
 
             @include('components.table', [
                 'header' => ['ID', 'Produtos', 'Serviços', 'Data', 'Valor', 'Cliente'],
@@ -139,11 +120,11 @@
                         $sale->service,
                         $sale->date,
                         $sale->value,
-                        $sale->customer,
+                        $sale->customer->name,
                     ];
                 }),
-                'editRoute' => 'commercial.scheduling.index', // temporariamente, enquanto não é criada a rota
-                'deleteRoute' => 'commercial.scheduling.index',  // temporariamente, enquanto não é criada a rota
+                'editRoute' => 'sales.edit',
+                'deleteRoute' => 'sales.destroy',
             ])
         </div>
 
