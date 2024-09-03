@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AppointmentStatus;
 use App\Http\Requests\StoreSaleRequest;
 use App\Http\Requests\UpdateSaleRequest;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleItem;
-use App\Enums\AppointmentStatus;
 use App\Models\Appointment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -43,7 +43,7 @@ class SaleController extends Controller
                     'appointments' => $customer->appointments->map(function ($appointment) {
                         return [
                             'id' => $appointment->id,
-                            'service_name' => $appointment->service->name, 
+                            'service_name' => $appointment->service->name,
                             'date' => $appointment->start_time,
                             'pet_name' => $appointment->pet->name,
                             'value' => $appointment->service->price,
