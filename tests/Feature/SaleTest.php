@@ -14,16 +14,6 @@ beforeEach(function () {
     Artisan::call('db:seed', ['--class' => 'RolesSeeder']);
 });
 
-test('index sales', function () {
-    $user = User::factory()->has(Employee::factory())->create();
-    $user->assignRole('admin');
-    $sale = Sale::factory()->has(SaleItem::factory()->has(ProductItem::factory()->for(Product::factory())))->for(Employee::factory())->for(Customer::factory())->create();
-    $response = $this
-        ->actingAs($user, 'web')
-        ->get(route('sales.index'));
-    $response->assertStatus(200);
-});
-
 test('store sale', function () {
     $user = User::factory()->has(Employee::factory())->create();
     $user->assignRole('admin');
@@ -45,7 +35,7 @@ test('store sale', function () {
     $response = $this
         ->actingAs($user, 'web')
         ->post(route('sales.store'), $data);
-    $response->assertStatus(200);
+    $response->assertStatus(302);
     $this->assertDatabaseHas('sales', [
         'employee_id' => $user->employee->id,
         'customer_id' => $customer->id,

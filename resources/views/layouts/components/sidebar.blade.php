@@ -1,7 +1,7 @@
 <div id="sidebar" class="shadow-lg border-gray-200 p-4 hidden transition-opacity opacity-0" style="background: var(--Container, #F2F6F7); width: 250px;">
     <ul class="space-y-6">
 
-        @if(auth()->user()->hasPermissionTo('manage customers'))
+        @if(auth()->user()->hasAnyRole(["admin", "basic"]))
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
             <a href="{{ route('customers.index') }}" class="text-gray-700 hover:text-gray-900 block w-full flex items-center">
                 <img src="{{ asset('icons/sidebar/customer.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
@@ -10,31 +10,34 @@
         </li>
         @endcan
 
-        @if(auth()->user()->hasPermissionTo('manage products'))
+        @if(auth()->user()->hasAnyRole(["admin"]))
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
             <a href="{{ route('products.index') }}" class="text-gray-700 hover:text-gray-900 block w-full flex items-center">
                 <img src="{{ asset('icons/sidebar/products.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
                 <span class="ml-2">Produtos</span>
             </a>
         </li>
+        @endif
 
+        @if(auth()->user()->hasAnyRole(["admin"]))
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
             <a href="{{ route('stocks.index') }}" class="text-gray-700 hover:text-gray-900 block w-full flex items-center">
                 <img src="{{ asset('icons/sidebar/stock.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
                 <span class="ml-2">Estoque</span>
             </a>
         </li>
-
         @endif
-        @if(auth()->user()->hasPermissionTo('manage employees'))
         
+        @if(auth()->user()->hasAnyRole(["admin", "basic"]))
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
             <a href="{{ route('comercial.index') }}" class="text-gray-700 hover:text-gray-900 block w-full flex items-center">
                 <img src="{{ asset('icons/sidebar/comercial.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
                 <span class="ml-2">Comercial</span>
             </a>
         </li>  
+        @endif
 
+        @if(auth()->user()->hasAnyRole(["admin"]))
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
             <a href="{{ route('employees.index') }}" class="text-gray-700 hover:text-gray-900 block w-full flex items-center">
                 <img src="{{ asset('icons/sidebar/employees.svg') }}" alt="Dashboard Icon" class="h-5 w-5">
@@ -43,7 +46,7 @@
         </li>
         @endif
 
-        @if(auth()->user()->hasPermissionTo('manage services'))
+        @if(auth()->user()->hasAnyRole(["admin"]))
         <li class="hover:bg-gray-200 rounded-lg flex items-center p-2">
             <a href="{{ route('services.index') }}" class="text-gray-700 hover:text-gray-900 block w-full flex items-center">
                 <img src="{{ asset('icons/sidebar/services.svg') }}" alt="Dashboard Icon" class="h-5 w-5">

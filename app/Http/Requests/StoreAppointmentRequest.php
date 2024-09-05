@@ -20,7 +20,7 @@ class StoreAppointmentRequest extends FormRequest
             'pet_id' => ['required', 'exists:pets,id'],
             'service_id' => ['required', 'exists:services,id'],
             'status' => [Rule::enum(AppointmentStatus::class)],
-            'start_time' => ['date_format:Y-m-d\TH:i'],
+            'start_time' => ['required', 'date_format:Y-m-d\TH:i'],
             'end_time' => ['nullable', 'date_format:Y-m-d\TH:i'],
 
         ];
