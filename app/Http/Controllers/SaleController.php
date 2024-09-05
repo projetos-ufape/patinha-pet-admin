@@ -25,10 +25,9 @@ class SaleController extends Controller
     
         return view('comercial.index', [
             'sales' => $sales,
-            'appointments' => $appointments
+            'appointments' => $appointments,
         ]);
     }
-    
 
     public function create()
     {
