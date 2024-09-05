@@ -22,7 +22,7 @@ class SaleController extends Controller
     {
         $appointments = Appointment::paginate(15);
         $sales = Sale::with(['employee.user', 'customer.user', 'saleItem.productItem.product', 'saleItem.appointmentItem.appointment'])->paginate(15);
-    
+
         return view('comercial.index', [
             'sales' => $sales,
             'appointments' => $appointments,
