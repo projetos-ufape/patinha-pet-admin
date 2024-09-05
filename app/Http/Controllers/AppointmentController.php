@@ -16,16 +16,6 @@ class AppointmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $appointments = Appointment::paginate(15);
-
-        return view('comercial.index', compact('appointments'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $customers = Customer::all();

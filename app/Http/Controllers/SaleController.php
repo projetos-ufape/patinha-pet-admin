@@ -21,14 +21,14 @@ class SaleController extends Controller
     public function index()
     {
         $appointments = Appointment::paginate(15);
-        $sales = Sale::with([
-            'employee', 
-            'customer.user', 
-            'saleItem.productItem.product',
-            'saleItem.appointmentItem.appointment' 
-        ])->get();
-        return view('comercial.index', compact('sales', 'appointments'));
+        $sales = Sale::with(['employee.user', 'customer.user', 'saleItem.productItem.product', 'saleItem.appointmentItem.appointment'])->get();
+    
+        return view('comercial.index', [
+            'sales' => $sales,
+            'appointments' => $appointments
+        ]);
     }
+    
 
     public function create()
     {

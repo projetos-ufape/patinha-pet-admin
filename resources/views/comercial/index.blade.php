@@ -27,7 +27,6 @@
         .tab-content {
             padding-top: 20px;
         }
-        
     </style>
 @endpush
 
@@ -42,10 +41,8 @@
             </div>
         </div>
 
-        
         {{-- Conteúdo da aba de Atendimentos --}}
         <div id="Atendimentos" class="tab-content" style="display:block;">
-
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center">
                     <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Pesquisar"
@@ -74,14 +71,14 @@
                         'completed' => 'Concluído',
                         'canceled' => 'Cancelado',
                     ];
-            
+
                     $start_time = $appointment->start_time
                         ? \Carbon\Carbon::parse($appointment->start_time)->format('d/m/Y H:i')
                         : null;
                     $end_time = $appointment->end_time
                         ? \Carbon\Carbon::parse($appointment->end_time)->format('d/m/Y H:i')
                         : null;
-            
+
                     return [
                         $appointment->id,
                         $appointment->service->name,
@@ -112,22 +109,49 @@
             </div>
 
             @include('components.table', [
-                'header' => ['ID', 'Produtos', 'Serviços', 'Data', 'Valor', 'Cliente'],
+                'header' => [
+                    'ID',
+                    'Funcionário', 
+                    'Produto',                    
+                    'Serviço', 
+                    'Preço',
+                    'Cliente',
+
+                ],
                 'content' => $sales->map(function ($sale) {
+                    $products = [];
+                    $services = [];
+                    $totalPrice = 0;
+
+                    foreach ($sale->saleItem as $item) {
+                        if ($item->productItem) {
+                            $products[] = $item->productItem->product->name ?? 'Produto não especificado';
+                        }
+
+                        if ($item->appointmentItem) {
+                            $services[] = $item->appointmentItem->appointment->service->name ?? 'Serviço não especificado';
+                        }
+
+                        $totalPrice += $item->price ?? 0;
+                    }
+
+                    $productNames = implode(', ', $products) ?: 'Nenhum produto';
+                    $serviceNames = implode(', ', $services) ?: 'Nenhum serviço';
+
                     return [
                         $sale->id,
-                        $sale->products,
-                        $sale->service,
-                        $sale->date,
-                        $sale->value,
-                        $sale->customer->name,
+                        $sale->employee->user->name ?? 'N/A',
+                        $productNames,
+                        $serviceNames,
+                        number_format($totalPrice, 2, ',', '.'), 
+                        $sale->customer->user->name ?? 'Cliente não especificado',
                     ];
                 }),
                 'editRoute' => 'sales.edit',
                 'deleteRoute' => 'sales.destroy',
             ])
+ 
         </div>
-
     </div>
 
     <script>
@@ -144,10 +168,7 @@
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
         }
-    </script>
 
-    <script>
-        // Função para filtrar Atendimentos
         function searchTable() {
             var input = document.getElementById("searchInput");
             var filter = input.value.toUpperCase();
@@ -170,7 +191,6 @@
             }
         }
 
-        // Função para filtrar Vendas
         function searchSalesTable() {
             var input = document.getElementById("searchSalesInput");
             var filter = input.value.toUpperCase();
