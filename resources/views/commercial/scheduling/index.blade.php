@@ -389,56 +389,72 @@
             }
         }
 
-        // Processamento final do formulário
-        const form = document.querySelector('form');
-        const formBtn = document.getElementById('btnForm');
-        const saleItemsInput = document.getElementById('sales');
-        const productsTable = document.getElementById('dataTableProdutos');
-        const servicesTable = document.getElementById('dataTableAtendimentos');
+    // Processamento final do formulário
+    const formBtn = document.getElementById('btnForm');
+    const saleItemsInput = document.getElementById('sales');
+    const productsTable = document.getElementById('dataTableProdutos');
+    const servicesTable = document.getElementById('dataTableAtendimentos');
 
-        formBtn.addEventListener('click', function(event) {
-            event.preventDefault();
+    formBtn.addEventListener('click', function(event) {
+        event.preventDefault();
 
-            const produtos = [];
-            const produtosRows = productsTable.querySelectorAll('tbody tr');
-            produtosRows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                const product = {
-                    type: 'product',
-                    price: parseFloat(cells[1].textContent),
-                    product_item: {
-                        product_id: products.find(p => cells[0].textContent == p.name && cells[1].textContent == p.price)?.id,
-                        quantity: parseInt(cells[2].textContent),
-                    }
-                };
-                produtos.push(product);
-            });
+        const produtos = coletarProdutosDaTabela(productsTable, products);
+        const atendimentos = coletarAtendimentosDaTabela(servicesTable);
 
-            const atendimentos = [];
-            const atendimentosRows = servicesTable.querySelectorAll('tbody tr');
-            atendimentosRows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                const service = {
-                    type: 'appointment',
-                    price: parseFloat(cells[4].textContent),
-                    appointment_item: {
-                        appointment_id: parseInt(cells[0].textContent),
-                    }
-                };
-                atendimentos.push(service);
-            });
+        if (!validarItens(produtos, atendimentos)) {
+            alert('Por favor, adicione ao menos um produto ou atendimento.');
+            return;
+        }
 
-            const saleItems = [...produtos, ...atendimentos];
-
-            if (saleItems.length === 0) {
-                alert('Por favor, adicione ao menos um produto ou atendimento.');
-                return;
-            }
-
-            saleItemsInput.value = JSON.stringify(saleItems);
-            event.target.closest('form').submit();
-        });
+        processarFormulario(produtos, atendimentos, saleItemsInput);
+        event.target.closest('form').submit();
     });
+
+    function coletarProdutosDaTabela(productsTable, products) {
+        const produtos = [];
+        const produtosRows = productsTable.querySelectorAll('tbody tr');
+        produtosRows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const product = {
+                type: 'product',
+                price: parseFloat(cells[1].textContent),
+                product_item: {
+                    product_id: products.find(p => cells[0].textContent == p.name && cells[1].textContent == p.price)?.id,
+                    quantity: parseInt(cells[2].textContent),
+                }
+            };
+            produtos.push(product);
+        });
+        return produtos;
+    }
+
+    function coletarAtendimentosDaTabela(servicesTable) {
+        const atendimentos = [];
+        const atendimentosRows = servicesTable.querySelectorAll('tbody tr');
+        atendimentosRows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const service = {
+                type: 'appointment',
+                price: parseFloat(cells[4].textContent),
+                appointment_item: {
+                    appointment_id: parseInt(cells[0].textContent),
+                }
+            };
+            atendimentos.push(service);
+        });
+        return atendimentos;
+    }
+
+    function validarItens(produtos, atendimentos) {
+        return produtos.length > 0 || atendimentos.length > 0;
+    }
+
+    function processarFormulario(produtos, atendimentos, saleItemsInput) {
+        const saleItems = [...produtos, ...atendimentos];
+        saleItemsInput.value = JSON.stringify(saleItems);
+    }
+    });
+    
 </script>
 
 @endsection
