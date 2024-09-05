@@ -398,22 +398,22 @@
     formBtn.addEventListener('click', function(event) {
         event.preventDefault();
 
-        const produtos = coletarProdutosDaTabela(productsTable, products);
-        const atendimentos = coletarAtendimentosDaTabela(servicesTable);
+        const productsList = collectProductsFromTable(productsTable, products);
+        const serviceList  = collectServicesFromTable(servicesTable);
 
-        if (!validarItens(produtos, atendimentos)) {
+        if (!validateItens(productsList, serviceList )) {
             alert('Por favor, adicione ao menos um produto ou atendimento.');
             return;
         }
 
-        processarFormulario(produtos, atendimentos, saleItemsInput);
+        processForm(productsList, serviceList , saleItemsInput);
         event.target.closest('form').submit();
     });
 
-    function coletarProdutosDaTabela(productsTable, products) {
-        const produtos = [];
-        const produtosRows = productsTable.querySelectorAll('tbody tr');
-        produtosRows.forEach(row => {
+    function collectProductsFromTable(productsTable, products) {
+        const productsList = [];
+        const productsRows = productsTable.querySelectorAll('tbody tr');
+        productsRows.forEach(row => {
             const cells = row.querySelectorAll('td');
             const product = {
                 type: 'product',
@@ -423,15 +423,15 @@
                     quantity: parseInt(cells[2].textContent),
                 }
             };
-            produtos.push(product);
+            productsList.push(product);
         });
-        return produtos;
+        return productsList;
     }
 
-    function coletarAtendimentosDaTabela(servicesTable) {
-        const atendimentos = [];
-        const atendimentosRows = servicesTable.querySelectorAll('tbody tr');
-        atendimentosRows.forEach(row => {
+    function collectServicesFromTable(servicesTable) {
+        const serviceList  = [];
+        const serviceRows = servicesTable.querySelectorAll('tbody tr');
+        serviceRows.forEach(row => {
             const cells = row.querySelectorAll('td');
             const service = {
                 type: 'appointment',
@@ -440,17 +440,17 @@
                     appointment_id: parseInt(cells[0].textContent),
                 }
             };
-            atendimentos.push(service);
+            serviceList.push(service);
         });
-        return atendimentos;
+        return serviceList ;
     }
 
-    function validarItens(produtos, atendimentos) {
-        return produtos.length > 0 || atendimentos.length > 0;
+    function validateItens(productsList, serviceList ) {
+        return productsList.length > 0 || serviceList .length > 0;
     }
 
-    function processarFormulario(produtos, atendimentos, saleItemsInput) {
-        const saleItems = [...produtos, ...atendimentos];
+    function processForm(productsList, serviceList , saleItemsInput) {
+        const saleItems = [...productsList, ...serviceList ];
         saleItemsInput.value = JSON.stringify(saleItems);
     }
     });
