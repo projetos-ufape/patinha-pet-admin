@@ -3,7 +3,7 @@
 namespace App\Http\Api\Requests;
 
 use App\Enums\Gender;
-use App\Enums\Specie;
+use App\Enums\Species;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,7 +27,7 @@ class UpdatePetApiRequest extends FormRequest
         return [
             'name' => ['string', 'min:2', 'max:255'],
             'gender' => [Rule::enum(Gender::class)],
-            'specie' => [Rule::enum(Specie::class)],
+            'species' => [Rule::enum(Species::class)],
             'race' => ['string', 'min:2', 'max:255'],
             'castrated' => ['boolean'],
             'height' => ['numeric'],
@@ -44,8 +44,8 @@ class UpdatePetApiRequest extends FormRequest
             'name.min' => 'O nome do pet precisa ter pelo menos 2 caracteres.',
             'gender.enum' => 'O gênero do pet deve ser "female" ou "male".',
             'gender.invalid' => 'O gênero do pet é inválido.',
-            'specie.enum' => 'A espécie do pet deve ser "cat" ou "dog".',
-            'specie.invalid' => 'A espécie do pet é inválido.',
+            'species.enum' => 'A espécie do pet deve ser "cat" ou "dog".',
+            'species.invalid' => 'A espécie do pet é inválido.',
             'race.string' => 'A raça do pet deve ser uma string.',
             'race.max' => 'A raça do pet não pode ter mais de 255 caracteres.',
             'race.min' => 'A raça do pet precisa ter pelo menos 2 caracteres.',

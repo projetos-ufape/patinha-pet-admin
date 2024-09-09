@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\Gender;
-use App\Enums\Specie;
+use App\Enums\Species;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,7 +27,7 @@ class StorePetRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'gender' => ['required', Rule::enum(Gender::class)],
-            'specie' => ['required', Rule::enum(Specie::class)],
+            'species' => ['required', Rule::enum(Species::class)],
             'race' => ['required', 'string', 'max:255'],
             'castrated' => ['nullable', 'boolean'],
             'height' => ['nullable', 'numeric'],
@@ -44,8 +44,8 @@ class StorePetRequest extends FormRequest
             'name.max' => 'O nome do pet não pode ter mais de 255 caracteres.',
             'gender.required' => 'O gênero do pet é obrigatório.',
             'gender.enum' => 'O gênero do pet deve ser "female" ou "male".',
-            'specie.required' => 'A espécie do pet é obrigatória.',
-            'specie.enum' => 'A espécie do pet deve ser "cat" ou "dog".',
+            'species.required' => 'A espécie do pet é obrigatória.',
+            'species.enum' => 'A espécie do pet deve ser "cat" ou "dog".',
             'race.required' => 'A raça do pet é obrigatória.',
             'race.string' => 'A raça do pet deve ser uma string.',
             'race.max' => 'A raça do pet não pode ter mais de 255 caracteres.',

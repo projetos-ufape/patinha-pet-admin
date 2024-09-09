@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum Specie: string
+enum Species: string
 {
     case CAT = 'cat';
     case DOG = 'dog';

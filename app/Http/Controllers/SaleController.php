@@ -114,7 +114,7 @@ class SaleController extends Controller
         } catch (\Exception $e) {
 
             DB::rollBack();
-            \Log::error('Erro ao registrar venda: '.$e->getMessage());
+            //\Log::error('Erro ao registrar venda: '.$e->getMessage());
 
             return redirect()->back()->with('error', 'Ocorreu um erro ao registrar a venda. '.$e->getMessage());
         }

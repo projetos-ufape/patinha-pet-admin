@@ -39,7 +39,7 @@
                         <td>{{ $pet->id }}</td>
                         <td>{{ $pet->name }} | <a href="{{route('pets.edit', ['pet'=> $pet->id])}}">EDITAR</a> | <a href="{{route('pets.show', ['pet'=> $pet->id])}}">SHOW</a> </td>
                         <td>{{ $pet->gender }}</td>
-                        <td>{{ $pet->specie }}</td>
+                        <td>{{ $pet->species }}</td>
                         <td>{{ $pet->race }}</td>
                         <td>{{ $pet->height }}</td>
                         <td>{{ $pet->weight }}</td>

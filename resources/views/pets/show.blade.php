@@ -32,7 +32,7 @@
                         <td>{{ $pet->id }}</td>
                         <td>{{ $pet->name }} </td>
                         <td>{{ $pet->gender }}</td>
-                        <td>{{ $pet->specie }}</td>
+                        <td>{{ $pet->species }}</td>
                         <td>{{ $pet->race }}</td>
                         <td>{{ $pet->height }}</td>
                         <td>{{ $pet->weight }}</td>
