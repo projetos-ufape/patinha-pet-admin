@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Enums\Gender;
-use App\Enums\Species;
+use App\Enums\PetGender;
+use App\Enums\PetSpecies;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,8 +25,8 @@ class Pet extends Model
     ];
 
     protected $casts = [
-        'gender' => Gender::class,
-        'species' => Species::class,
+        'gender' => PetGender::class,
+        'species' => PetSpecies::class,
     ];
 
     public function customer(): BelongsTo

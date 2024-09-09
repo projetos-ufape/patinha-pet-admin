@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\Gender;
-use App\Enums\Species;
+use App\Enums\PetGender;
+use App\Enums\PetSpecies;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -26,8 +26,8 @@ class UpdatePetRequest extends FormRequest
     {
         return [
             'name' => ['nullable', 'string', 'max:255'],
-            'gender' => ['nullable', Rule::enum(Gender::class)],
-            'species' => ['nullable', Rule::enum(Species::class)],
+            'gender' => ['nullable', Rule::enum(PetGender::class)],
+            'species' => ['nullable', Rule::enum(PetSpecies::class)],
             'race' => ['nullable', 'string', 'max:255'],
             'castrated' => ['nullable', 'boolean'],
             'height' => ['nullable', 'numeric'],

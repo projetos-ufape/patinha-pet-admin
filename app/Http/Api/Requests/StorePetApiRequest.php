@@ -2,8 +2,8 @@
 
 namespace App\Http\Api\Requests;
 
-use App\Enums\Gender;
-use App\Enums\Species;
+use App\Enums\PetGender;
+use App\Enums\PetSpecies;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -26,8 +26,8 @@ class StorePetApiRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'min:2', 'max:255'],
-            'gender' => ['required', Rule::enum(Gender::class)],
-            'species' => ['required', Rule::enum(Species::class)],
+            'gender' => ['required', Rule::enum(PetGender::class)],
+            'species' => ['required', Rule::enum(PetSpecies::class)],
             'race' => ['required', 'string', 'min:2', 'max:255'],
             'castrated' => ['nullable', 'boolean'],
             'height' => ['nullable', 'numeric'],
