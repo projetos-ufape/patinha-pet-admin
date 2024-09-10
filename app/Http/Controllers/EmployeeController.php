@@ -9,8 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules;
+use App\Http\Requests\StoreEmployeeRequest;
+use App\Http\Requests\UpdateEmployeeRequest;
 
 class EmployeeController extends Controller
 {
@@ -38,43 +38,27 @@ class EmployeeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreEmployeeRequest $request)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'cpf' => ['required', 'string'],
-            'salary' => ['required', 'numeric'],
-            'type' => ['required', Rule::enum(EmployeeType::class)],
-            'admission_date' => ['required', 'date', 'date_format:Y-m-d'],
-            'address' => ['sometimes', 'array'],
-            'address.cep' => ['sometimes', 'size:8'],
-            'address.street' => ['required_with:address', 'min:3', 'max:50'],
-            'address.number' => ['required_with:address', 'string', 'min:1', 'max:10'],
-            'address.district' => ['required_with:address', 'min:3', 'max:50'],
-            'address.city' => ['required_with:address', 'min:3', 'max:50'],
-            'address.complement' => ['string', 'max:50'],
-            'address.state' => ['required_with:address', Rule::enum(AddressState::class)],
-        ]);
+        $validatedData = $request->validated();
 
-        DB::transaction(function () use ($data) {
+        DB::transaction(function () use ($validatedData) {
             $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-                'cpf' => $data['cpf'],
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'password' => Hash::make($validatedData['password']),
+                'cpf' => $validatedData['cpf'],
             ]);
 
             $user->employee()->create([
-                'salary' => $data['salary'],
-                'admission_date' => $data['admission_date'],
+                'salary' => $validatedData['salary'],
+                'admission_date' => $validatedData['admission_date'],
             ]);
 
-            $user->assignRole($data['type']);
+            $user->assignRole($validatedData['type']);
 
-            if (! empty($data['address'])) {
-                $user->address()->create($data['address']);
+            if (! empty($validatedData['address'])) {
+                $user->address()->create($validatedData['address']);
             }
         });
 
@@ -105,49 +89,34 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Employee $employee)
+    public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
         $employee->load('user.address');
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class.',email,'.$employee->user->id],
-            'password' => ['sometimes', 'confirmed', Rules\Password::defaults()],
-            'cpf' => ['required', 'string'],
-            'salary' => ['required', 'numeric'],
-            'admission_date' => ['required', 'date', 'date_format:Y-m-d'],
-            'address' => ['nullable', 'array'],
-            'address.cep' => ['sometimes', 'size:8'],
-            'address.street' => ['required_with:address', 'min:3', 'max:50'],
-            'address.number' => ['required_with:address', 'string', 'min:1', 'max:10'],
-            'address.district' => ['required_with:address', 'min:3', 'max:50'],
-            'address.city' => ['required_with:address', 'min:3', 'max:50'],
-            'address.complement' => ['string', 'max:50'],
-            'address.state' => ['required_with:address', Rule::enum(AddressState::class)],
-        ]);
+        $validatedData = $request->validated();
 
-        DB::transaction(function () use ($data, $employee) {
-            $userData = [
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'cpf' => $data['cpf'],
+        DB::transaction(function () use ($validatedData, $employee) {
+            $userValidatedData = [
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'cpf' => $validatedData['cpf'],
             ];
 
-            if (isset($data['password'])) {
-                $userData['password'] = Hash::make($data['password']);
+            if (isset($validatedData['password'])) {
+                $uservalidatedData['password'] = Hash::make($validatedData['password']);
             }
-            $employee->user->update($userData);
+            $employee->user->update($userValidatedData);
 
             $employee->update([
-                'salary' => $data['salary'],
-                'admission_date' => $data['admission_date'],
+                'salary' => $validatedData['salary'],
+                'admission_date' => $validatedData['admission_date'],
             ]);
 
-            if (is_null($data['address'])) {
+            if (is_null($validatedData['address'])) {
                 $employee->user->address->delete();
-            } elseif (isset($data['address'])) {
+            } elseif (isset($validatedData['address'])) {
                 $employee->user->address()->updateOrCreate(
                     ['user_id' => $employee->user->id],
-                    $data['address']
+                    $validatedData['address']
                 );
             }
         });
