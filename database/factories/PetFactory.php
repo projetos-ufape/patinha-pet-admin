@@ -21,7 +21,7 @@ class PetFactory extends Factory
             'customer_id' => Customer::factory(),
             'name' => fake()->firstName,
             'gender' => fake()->randomElement(['female', 'male']),
-            'specie' => fake()->randomElement(['cat', 'dog']),
+            'species' => fake()->randomElement(['cat', 'dog']),
             'race' => fake()->word,
             'height' => (float) fake()->randomFloat(2, 0.5, 1.5),
             'weight' => (float) fake()->randomFloat(2, 1.0, 10.0),
