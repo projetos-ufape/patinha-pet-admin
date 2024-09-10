@@ -3,10 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Enums\AddressState;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
-use App\Models\User;
 
 class UpdateEmployeeRequest extends FormRequest
 {

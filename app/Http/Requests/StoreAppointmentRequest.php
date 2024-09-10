@@ -21,7 +21,7 @@ class StoreAppointmentRequest extends FormRequest
             'service_id' => ['required', 'exists:services,id'],
             'status' => [Rule::enum(AppointmentStatus::class)],
             'start_time' => ['required', 'date_format:Y-m-d\TH:i'],
-            'end_time' => ['nullable', 'date_format:Y-m-d\TH:i', 'required_if:status,' . AppointmentStatus::Completed->value],
+            'end_time' => ['nullable', 'date_format:Y-m-d\TH:i', 'required_if:status,'.AppointmentStatus::Completed->value],
         ];
     }
 
@@ -38,7 +38,7 @@ class StoreAppointmentRequest extends FormRequest
             'start_time.required' => 'O campo de horário do atendimento é obrigatório.',
             'start_time.date_format' => 'O horário para o atendimento deve ser uma data-hora válida.',
             'end_time.date_format' => 'O horário de conclusão do atendimento deve ser uma data-hora válida.',
-            'end_time.required_if' => 'O campo horário de conclusão do atendimento é obrigatório quando o status é "concluído".'
+            'end_time.required_if' => 'O campo horário de conclusão do atendimento é obrigatório quando o status é "concluído".',
         ];
     }
 }
