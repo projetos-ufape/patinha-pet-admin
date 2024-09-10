@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 class StoreSaleAction
 {
+    const TYPE_PRODUCT = 'product';
+    const TYPE_APPOINTMENT = 'appointment';
+
     public static function execute(array $data)
     {
         try {
@@ -35,9 +38,9 @@ class StoreSaleAction
             'price' => $itemData['price'],
         ]);
 
-        if ($itemData['type'] === 'product') {
+        if ($itemData['type'] === self::TYPE_PRODUCT) {
             self::createProductSaleItem($saleItem, $itemData['product_item']);
-        } elseif ($itemData['type'] === 'appointment') {
+        } elseif ($itemData['type'] === self::TYPE_APPOINTMENT) {
             self::createAppointmentSaleItem($saleItem, $itemData['appointment_item']);
         }
     }
