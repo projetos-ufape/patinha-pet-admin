@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class StoreSaleAction
 {
-    public static function execute(array $data): bool
+    public static function execute(array $data)
     {
         try {
             DB::beginTransaction();
@@ -23,11 +23,9 @@ class StoreSaleAction
             }
 
             DB::commit();
-            return true;
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error('Erro ao registrar venda: ' . $e->getMessage());
-            return false;
         }
     }
 
@@ -38,26 +36,36 @@ class StoreSaleAction
         ]);
 
         if ($itemData['type'] === 'product') {
-            $product = Product::find($itemData['product_item']['product_id']);
-            if (! $product) {
-                throw new \Exception('Produto não encontrado.');
-            }
-
-            if ($product->quantity < $itemData['product_item']['quantity']) {
-                throw new \Exception('Estoque insuficiente para o produto: ' . $product->name);
-            }
-
-            $saleItem->productItem()->create([
-                'product_id' => $itemData['product_item']['product_id'],
-                'quantity' => $itemData['product_item']['quantity'],
-            ]);
-
-            $product->quantity -= $itemData['product_item']['quantity'];
-            $product->save();
+            self::createProductSaleItem($saleItem, $itemData['product_item']);
         } elseif ($itemData['type'] === 'appointment') {
-            $saleItem->appointmentItem()->create([
-                'appointment_id' => $itemData['appointment_item']['appointment_id'],
-            ]);
+            self::createAppointmentSaleItem($saleItem, $itemData['appointment_item']);
         }
+    }
+
+    private static function createProductSaleItem($saleItem, $productItem)
+    {
+        $product = Product::find($productItem['product_id']);
+        if (! $product) {
+            throw new \Exception('Produto não encontrado.');
+        }
+
+        if ($product->quantity < $productItem['quantity']) {
+            throw new \Exception('Estoque insuficiente para o produto: ' . $product->name);
+        }
+
+        $saleItem->productItem()->create([
+            'product_id' => $productItem['product_id'],
+            'quantity' => $productItem['quantity'],
+        ]);
+
+        $product->quantity -= $productItem['quantity'];
+        $product->save();
+    }
+
+    private static function createAppointmentSaleItem($saleItem, $appointmentItem)
+    {
+        $saleItem->appointmentItem()->create([
+            'appointment_id' => $appointmentItem['appointment_id'],
+        ]);
     }
 }
