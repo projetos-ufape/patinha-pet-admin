@@ -187,7 +187,6 @@ test('employee cannot update an appointment w/ invalid end time', function () {
     $response->assertInvalid(['end_time' => 'O horário de conclusão do atendimento deve ser uma data-hora válida.']);
 });
 
-
 test('employee cannot update an appointment without end time when status is completed', function () {
     $employee = Employee::factory()->create();
     $employee->assignRole('admin');

@@ -2,10 +2,10 @@
 
 namespace App\Enums;
 
-enum Gender: string
+enum PetSpecies: string
 {
-    case FEMALE = 'female';
-    case MALE = 'male';
+    case CAT = 'cat';
+    case DOG = 'dog';
 
     public static function values(): array
     {

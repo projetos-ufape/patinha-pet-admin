@@ -22,7 +22,7 @@
         <td>{{ $pet->id }}</td>
         <td>{{ $pet->name }} </td>
         <td>{{ $pet->gender }}</td>
-        <td>{{ $pet->specie }}</td>
+        <td>{{ $pet->species }}</td>
         <td>{{ $pet->race }}</td>
         <td>{{ $pet->height }}</td>
         <td>{{ $pet->weight }}</td>
@@ -37,11 +37,11 @@
             <option value="male">Macho</option>
           </select>
 
-          <select name="specie">
+          <select name="species">
             <option value="cat">Gato</option>
             <option value="dog">Cachorro</option>
           </select>
-          <input type="specie" name="specie" value="{{$pet->specie}}" />
+          <input type="species" name="species" value="{{$pet->species}}" />
           <input type="gender" name="gender" value="{{$pet->gender}}" /> -->
           <input type="text" name="race" value="{{$pet->race}}" />
           <input type="number" name="height" value="{{$pet->height}}" />

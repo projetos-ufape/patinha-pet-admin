@@ -26,7 +26,7 @@
             <option value="male">Macho</option>
           </select>
 
-          <select name="specie">
+          <select name="species">
             <option value="cat">Gato</option>
             <option value="dog">Cachorro</option>
           </select>
