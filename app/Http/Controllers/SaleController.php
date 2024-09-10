@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\StoreSaleAction;
 use App\Enums\AppointmentStatus;
 use App\Http\Requests\StoreSaleRequest;
 use App\Http\Requests\UpdateSaleRequest;
@@ -64,60 +65,13 @@ class SaleController extends Controller
      */
     public function store(StoreSaleRequest $request)
     {
-        // Verificar os dados recebidos
         $data = $request->validated();
         $data['employee_id'] = Auth::user()->employee->id;
-
-        try {
-
-            DB::beginTransaction();
-
-            $sale = Sale::create([
-                'employee_id' => $data['employee_id'],
-                'customer_id' => $data['customer_id'],
-            ]);
-
-            foreach ($data['sale_items'] as $itemData) {
-                $saleItem = $sale->saleItem()->create([
-                    'price' => $itemData['price'],
-                ]);
-
-                if ($itemData['type'] === 'product') {
-
-                    $product = Product::find($itemData['product_item']['product_id']);
-                    if (! $product) {
-                        throw new \Exception('Produto não encontrado.');
-                    }
-
-                    if ($product->quantity < $itemData['product_item']['quantity']) {
-                        throw new \Exception('Estoque insuficiente para o produto: '.$product->name);
-                    }
-
-                    $saleItem->productItem()->create([
-                        'product_id' => $itemData['product_item']['product_id'],
-                        'quantity' => $itemData['product_item']['quantity'],
-                    ]);
-
-                    $product->quantity -= $itemData['product_item']['quantity'];
-                    $product->save();
-                } elseif ($itemData['type'] === 'appointment') {
-                    $saleItem->appointmentItem()->create([
-                        'appointment_id' => $itemData['appointment_item']['appointment_id'],
-                    ]);
-                }
-            }
-
-            DB::commit();
-
+        if (StoreSaleAction::execute($data)) {
             return redirect()->route('comercial.index')->with('success', 'Venda adicionada com sucesso.');
-
-        } catch (\Exception $e) {
-
-            DB::rollBack();
-            //\Log::error('Erro ao registrar venda: '.$e->getMessage());
-
-            return redirect()->back()->with('error', 'Ocorreu um erro ao registrar a venda. '.$e->getMessage());
         }
+
+        return redirect()->back()->with('error', 'Ocorreu um erro não esperado ao registrar a venda.');
     }
 
     /**
