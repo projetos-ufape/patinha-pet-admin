@@ -85,7 +85,6 @@ test('employee cannot update non-existing appointment info', function () {
             'status' => 'canceled',
             'start_time' => '2024-08-30T03:54',
             'end_time' => null,
-            'end_time' => null,
         ]);
 
     $response
@@ -169,7 +168,7 @@ test('employee cannot update an appointment w/ invalid start time', function () 
         ->actingAs($employee->user, 'web')
         ->put(route('appointments.update', compact('appointment')), $updateData);
 
-    $response->assertInvalid(['start_time']);
+    $response->assertInvalid(['start_time' => 'O horário para o atendimento deve ser uma data-hora válida.']);
 });
 
 test('employee cannot update an appointment w/ invalid end time', function () {
@@ -185,7 +184,29 @@ test('employee cannot update an appointment w/ invalid end time', function () {
         ->actingAs($employee->user, 'web')
         ->put(route('appointments.update', compact('appointment')), $updateData);
 
-    $response->assertInvalid(['end_time']);
+    $response->assertInvalid(['end_time' => 'O horário de conclusão do atendimento deve ser uma data-hora válida.']);
+});
+
+
+test('employee cannot update an appointment without end time when status is completed', function () {
+    $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
+    $appointment = Appointment::factory()->for($employee)->create();
+
+    $updateData = [
+        'pet_id' => $appointment->pet->id,
+        'customer_id' => $appointment->customer->id,
+        'service_id' => $appointment->service->id,
+        'status' => 'completed',
+        'start_time' => '2024-08-30T03:30',
+        'end_time' => null,
+    ];
+
+    $response = $this
+        ->actingAs($employee->user, 'web')
+        ->put(route('appointments.update', compact('appointment')), $updateData);
+
+    $response->assertInvalid(['end_time' => 'O campo horário de conclusão do atendimento é obrigatório quando o status é "concluído".']);
 });
 
 test('employee can destroy existing appointment', function () {
@@ -444,7 +465,34 @@ test('employee cannot store an appointment without start time', function () {
         ->actingAs($employee->user, 'web')
         ->post(route('appointments.store'), $data);
 
-    $response->assertInvalid(['start_time']);
+    $response->assertInvalid(['start_time' => 'O campo de horário do atendimento é obrigatório.']);
+
+    $this->assertDatabaseMissing('appointments', [
+        'employee_id' => $employee->id,
+    ]);
+});
+
+test('employee cannot store an appointment without end time when status is completed', function () {
+    $employee = Employee::factory()->create();
+    $employee->assignRole('admin');
+    $customer = User::factory()->hasCustomer()->create()->customer;
+    $service = Service::factory()->create();
+    $pet = Pet::factory()->create();
+
+    $data = [
+        'pet_id' => $pet->id,
+        'customer_id' => $customer->id,
+        'service_id' => $service->id,
+        'status' => 'completed',
+        'start_time' => '2024-08-30T03:55',
+        'end_time' => null,
+    ];
+
+    $response = $this
+        ->actingAs($employee->user, 'web')
+        ->post(route('appointments.store'), $data);
+
+    $response->assertInvalid(['end_time' => 'O campo horário de conclusão do atendimento é obrigatório quando o status é "concluído".']);
 
     $this->assertDatabaseMissing('appointments', [
         'employee_id' => $employee->id,
@@ -471,7 +519,7 @@ test('employee cannot store an appointment w/ invalid start time', function () {
         ->actingAs($employee->user, 'web')
         ->post(route('appointments.store'), $data);
 
-    $response->assertInvalid(['start_time']);
+    $response->assertInvalid(['start_time' => 'O horário para o atendimento deve ser uma data-hora válida.']);
 
     $this->assertDatabaseMissing('appointments', [
         'employee_id' => $employee->id,
@@ -498,7 +546,7 @@ test('employee cannot store an appointment w/ invalid end time', function () {
         ->actingAs($employee->user, 'web')
         ->post(route('appointments.store'), $data);
 
-    $response->assertInvalid(['end_time']);
+    $response->assertInvalid(['end_time' => 'O horário de conclusão do atendimento deve ser uma data-hora válida.']);
 
     $this->assertDatabaseMissing('appointments', [
         'employee_id' => $employee->id,
