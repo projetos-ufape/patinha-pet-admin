@@ -37,7 +37,7 @@ class StoreSaleAction
                     }
 
                     if ($product->quantity < $itemData['product_item']['quantity']) {
-                        throw new \Exception('Estoque insuficiente para o produto: ' . $product->name);
+                        throw new \Exception('Estoque insuficiente para o produto: '.$product->name);
                     }
 
                     $saleItem->productItem()->create([
@@ -57,7 +57,7 @@ class StoreSaleAction
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Erro ao registrar venda: ' . $e->getMessage());
+            logger()->error('Erro ao registrar venda: '.$e->getMessage());
         }
     }
 }
