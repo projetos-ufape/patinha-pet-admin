@@ -21,8 +21,7 @@ class UpdateAppointmentRequest extends FormRequest
             'service_id' => ['exists:services,id'],
             'status' => [Rule::enum(AppointmentStatus::class)],
             'start_time' => ['date_format:Y-m-d\TH:i'],
-            'end_time' => ['nullable', 'date_format:Y-m-d\TH:i'],
-
+            'end_time' => ['nullable', 'date_format:Y-m-d\TH:i', 'required_if:status,'.AppointmentStatus::Completed->value],
         ];
     }
 
@@ -33,8 +32,9 @@ class UpdateAppointmentRequest extends FormRequest
             'pet_id.exists' => 'O campo de pet deve ser preenchido por um id válido.',
             'service_id.exists' => 'O campo de serviço deve ser preenchido por um id válido.',
             'status' => 'O status do atendimento deve ser "pendente", "concluído" ou "cancelado".',
-            'start_time.date' => 'O horário para o atendimento deve ser uma data-hora válida.',
-            'end_time.date' => 'O horário de conclusão do atendimento deve ser uma data-hora válida.',
+            'start_time.date_format' => 'O horário para o atendimento deve ser uma data-hora válida.',
+            'end_time.date_format' => 'O horário de conclusão do atendimento deve ser uma data-hora válida.',
+            'end_time.required_if' => 'O campo horário de conclusão do atendimento é obrigatório quando o status é "concluído".',
         ];
     }
 }
