@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 class StoreSaleAction
 {
     const TYPE_PRODUCT = 'product';
+
     const TYPE_APPOINTMENT = 'appointment';
 
     public static function execute(array $data)
@@ -28,7 +29,7 @@ class StoreSaleAction
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Erro ao registrar venda: ' . $e->getMessage());
+            logger()->error('Erro ao registrar venda: '.$e->getMessage());
         }
     }
 
@@ -53,7 +54,7 @@ class StoreSaleAction
         }
 
         if ($product->quantity < $productItem['quantity']) {
-            throw new \Exception('Estoque insuficiente para o produto: ' . $product->name);
+            throw new \Exception('Estoque insuficiente para o produto: '.$product->name);
         }
 
         $saleItem->productItem()->create([
