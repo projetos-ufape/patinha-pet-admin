@@ -35,7 +35,7 @@ test('store sale', function () {
     $response = $this
         ->actingAs($user, 'web')
         ->post(route('sales.store'), $data);
-    $response->assertStatus(200);
+    $response->assertStatus(302);
     $this->assertDatabaseHas('sales', [
         'employee_id' => $user->employee->id,
         'customer_id' => $customer->id,

@@ -43,5 +43,39 @@
     border-radius: 0.25rem;
     margin-bottom: 1rem;
 }
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
 
+.pagination-container a,
+.pagination-container span {
+    display: inline-flex;
+    align-items: center; 
+    justify-content: center; 
+    padding: 8px 12px;
+    border-radius: 5px;
+    background-color: transparent;
+    color: #004a69;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
 
+.pagination-container a:hover {
+    background-color: #ffffff96;
+    color: #004a69;
+}
+
+.pagination-container .active span {
+    background-color: #ffffff96;
+    color: #004a69;
+    font-weight: bold;
+}
+
+.pagination-container .disabled span {
+    background-color: #ccc;
+    color: #004a69;
+    cursor: not-allowed;
+    border: 1px solid #ccc;
+}

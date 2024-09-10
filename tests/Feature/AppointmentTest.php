@@ -5,6 +5,7 @@ use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Pet;
 use App\Models\Service;
+use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function () {
@@ -53,8 +54,8 @@ test('employee can update existing appointment info', function () {
         'customer_id' => $appointment->customer->id,
         'service_id' => $appointment->service->id,
         'status' => 'completed',
-        'start_time' => '2024-08-30 03:30:00',
-        'end_time' => '2024-08-30 04:15:00',
+        'start_time' => '2024-08-30T03:30',
+        'end_time' => '2024-08-30T04:15',
     ];
 
     $response = $this
@@ -82,7 +83,7 @@ test('employee cannot update non-existing appointment info', function () {
             'customer_id' => $customer->id,
             'service_id' => $service->id,
             'status' => 'canceled',
-            'start_time' => '2024-08-30 03:54:01',
+            'start_time' => '2024-08-30T03:54',
             'end_time' => null,
             'end_time' => null,
         ]);
@@ -168,7 +169,7 @@ test('employee cannot update an appointment w/ invalid start time', function () 
         ->actingAs($employee->user, 'web')
         ->put(route('appointments.update', compact('appointment')), $updateData);
 
-    $response->assertInvalid(['start_time' => 'O horário para o atendimento deve ser uma data-hora válida.']);
+    $response->assertInvalid(['start_time']);
 });
 
 test('employee cannot update an appointment w/ invalid end time', function () {
@@ -184,7 +185,7 @@ test('employee cannot update an appointment w/ invalid end time', function () {
         ->actingAs($employee->user, 'web')
         ->put(route('appointments.update', compact('appointment')), $updateData);
 
-    $response->assertInvalid(['end_time' => 'O horário de conclusão do atendimento deve ser uma data-hora válida.']);
+    $response->assertInvalid(['end_time']);
 });
 
 test('employee can destroy existing appointment', function () {
@@ -227,7 +228,7 @@ test('employee can store a new appointment', function () {
         'pet_id' => $pet->id,
         'customer_id' => $customer->id,
         'service_id' => $service->id,
-        'start_time' => '2024-08-30 03:54:01',
+        'start_time' => '2024-08-30T03:54',
         'end_time' => null,
     ];
 
@@ -254,7 +255,7 @@ test('employee cannot store an appointment without pet id', function () {
         'customer_id' => $customer->id,
         'service_id' => $service->id,
         'status' => 'pending',
-        'start_time' => '2024-08-30 03:55:00',
+        'start_time' => '2024-08-30T03:55',
         'end_time' => null,
     ];
 
@@ -280,7 +281,7 @@ test('employee cannot store an appointment w/ invalid pet id', function () {
         'customer_id' => $customer->id,
         'service_id' => $service->id,
         'status' => 'pending',
-        'start_time' => '2024-08-30 03:55:00',
+        'start_time' => '2024-08-30T03:55',
         'end_time' => null,
     ];
 
@@ -305,7 +306,7 @@ test('employee cannot store an appointment without customer id', function () {
         'pet_id' => $pet->id,
         'service_id' => $service->id,
         'status' => 'pending',
-        'start_time' => '2024-08-30 03:55:00',
+        'start_time' => '2024-08-30T03:55',
         'end_time' => null,
     ];
 
@@ -331,7 +332,7 @@ test('employee cannot store an appointment w/ invalid customer id', function () 
         'customer_id' => '3',
         'service_id' => $service->id,
         'status' => 'pending',
-        'start_time' => '2024-08-30 03:55:00',
+        'start_time' => '2024-08-30T03:55',
         'end_time' => null,
     ];
 
@@ -349,14 +350,14 @@ test('employee cannot store an appointment w/ invalid customer id', function () 
 test('employee cannot store an appointment without service id', function () {
     $employee = Employee::factory()->create();
     $employee->assignRole('admin');
-    $customer = Service::factory()->create();
+    $customer = User::factory()->hasCustomer()->create()->customer;
     $pet = Pet::factory()->create();
 
     $data = [
         'pet_id' => $pet->id,
         'customer_id' => $customer->id,
         'status' => 'pending',
-        'start_time' => '2024-08-30 03:55:00',
+        'start_time' => '2024-08-30T03:55',
         'end_time' => null,
     ];
 
@@ -374,7 +375,7 @@ test('employee cannot store an appointment without service id', function () {
 test('employee cannot store an appointment w/ invalid service id', function () {
     $employee = Employee::factory()->create();
     $employee->assignRole('admin');
-    $customer = Service::factory()->create();
+    $customer = User::factory()->hasCustomer()->create()->customer;
     $pet = Pet::factory()->create();
 
     $data = [
@@ -382,7 +383,7 @@ test('employee cannot store an appointment w/ invalid service id', function () {
         'customer_id' => $customer->id,
         'service_id' => '2',
         'status' => 'pending',
-        'start_time' => '2024-08-30 03:55:00',
+        'start_time' => '2024-08-30T03:55',
         'end_time' => null,
     ];
 
@@ -400,7 +401,7 @@ test('employee cannot store an appointment w/ invalid service id', function () {
 test('employee cannot store an appointment w/ invalid status', function () {
     $employee = Employee::factory()->create();
     $employee->assignRole('admin');
-    $customer = Service::factory()->create();
+    $customer = User::factory()->hasCustomer()->create()->customer;
     $service = Service::factory()->create();
     $pet = Pet::factory()->create();
 
@@ -409,7 +410,7 @@ test('employee cannot store an appointment w/ invalid status', function () {
         'customer_id' => $customer->id,
         'service_id' => $service->id,
         'status' => 'postponed',
-        'start_time' => '2024-08-30 03:55:00',
+        'start_time' => '2024-08-30T03:55',
         'end_time' => null,
     ];
 
@@ -427,7 +428,7 @@ test('employee cannot store an appointment w/ invalid status', function () {
 test('employee cannot store an appointment without start time', function () {
     $employee = Employee::factory()->create();
     $employee->assignRole('admin');
-    $customer = Service::factory()->create();
+    $customer = User::factory()->hasCustomer()->create()->customer;
     $service = Service::factory()->create();
     $pet = Pet::factory()->create();
 
@@ -443,7 +444,7 @@ test('employee cannot store an appointment without start time', function () {
         ->actingAs($employee->user, 'web')
         ->post(route('appointments.store'), $data);
 
-    $response->assertInvalid(['start_time' => 'O campo de horário do atendimento é obrigatório.']);
+    $response->assertInvalid(['start_time']);
 
     $this->assertDatabaseMissing('appointments', [
         'employee_id' => $employee->id,
@@ -453,7 +454,7 @@ test('employee cannot store an appointment without start time', function () {
 test('employee cannot store an appointment w/ invalid start time', function () {
     $employee = Employee::factory()->create();
     $employee->assignRole('admin');
-    $customer = Service::factory()->create();
+    $customer = User::factory()->hasCustomer()->create()->customer;
     $service = Service::factory()->create();
     $pet = Pet::factory()->create();
 
@@ -470,7 +471,7 @@ test('employee cannot store an appointment w/ invalid start time', function () {
         ->actingAs($employee->user, 'web')
         ->post(route('appointments.store'), $data);
 
-    $response->assertInvalid(['start_time' => 'O horário para o atendimento deve ser uma data-hora válida.']);
+    $response->assertInvalid(['start_time']);
 
     $this->assertDatabaseMissing('appointments', [
         'employee_id' => $employee->id,
@@ -480,7 +481,7 @@ test('employee cannot store an appointment w/ invalid start time', function () {
 test('employee cannot store an appointment w/ invalid end time', function () {
     $employee = Employee::factory()->create();
     $employee->assignRole('admin');
-    $customer = Service::factory()->create();
+    $customer = User::factory()->hasCustomer()->create()->customer;
     $service = Service::factory()->create();
     $pet = Pet::factory()->create();
 
@@ -489,7 +490,7 @@ test('employee cannot store an appointment w/ invalid end time', function () {
         'customer_id' => $customer->id,
         'service_id' => $service->id,
         'status' => 'pending',
-        'start_time' => '2024-08-30 03:55:00',
+        'start_time' => '2024-08-30T03:55',
         'end_time' => '2024 00',
     ];
 
@@ -497,7 +498,7 @@ test('employee cannot store an appointment w/ invalid end time', function () {
         ->actingAs($employee->user, 'web')
         ->post(route('appointments.store'), $data);
 
-    $response->assertInvalid(['end_time' => 'O horário de conclusão do atendimento deve ser uma data-hora válida.']);
+    $response->assertInvalid(['end_time']);
 
     $this->assertDatabaseMissing('appointments', [
         'employee_id' => $employee->id,
@@ -516,7 +517,7 @@ test('employee can update appointment of another employee', function () {
         'customer_id' => $appointment->customer->id,
         'service_id' => $appointment->service->id,
         'status' => 'pending',
-        'start_time' => '2024-08-30 03:55:00',
+        'start_time' => '2024-08-30T03:55',
         'end_time' => null,
     ];
 

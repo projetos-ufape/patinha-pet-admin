@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\Gender;
-use App\Enums\Specie;
+use App\Enums\PetGender;
+use App\Enums\PetSpecies;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -26,8 +26,8 @@ class UpdatePetRequest extends FormRequest
     {
         return [
             'name' => ['nullable', 'string', 'max:255'],
-            'gender' => ['nullable', Rule::enum(Gender::class)],
-            'specie' => ['nullable', Rule::enum(Specie::class)],
+            'gender' => ['nullable', Rule::enum(PetGender::class)],
+            'species' => ['nullable', Rule::enum(PetSpecies::class)],
             'race' => ['nullable', 'string', 'max:255'],
             'castrated' => ['nullable', 'boolean'],
             'height' => ['nullable', 'numeric'],
@@ -42,7 +42,7 @@ class UpdatePetRequest extends FormRequest
             'name.string' => 'O nome do pet deve ser uma string.',
             'name.max' => 'O nome do pet não pode ter mais de 255 caracteres.',
             'gender.enum' => 'O gênero do pet deve ser "female" ou "male".',
-            'specie.enum' => 'A espécie do pet deve ser "cat" ou "dog".',
+            'species.enum' => 'A espécie do pet deve ser "cat" ou "dog".',
             'race.string' => 'A raça do pet deve ser uma string.',
             'race.max' => 'A raça do pet não pode ter mais de 255 caracteres.',
             'height.numeric' => 'A altura do pet deve ser um número.',

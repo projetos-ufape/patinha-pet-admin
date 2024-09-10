@@ -66,7 +66,7 @@
 
             <h1 class="text-2xl font-light mb-4">Registrar venda</h1>
             <div class="flex space-x-4" style="padding-top: 10px;">
-                <select class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" name="customer_id">
+                <select id="customerSelect" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" name="customer_id">
                     <option value="" disabled selected hidden>Cliente</option>
                     @foreach ($pendingAppointmentsByCustomer as $customer)
                         <option value="{{ $customer['id'] }}">{{ $customer['name'] }}</option>
@@ -104,7 +104,7 @@
             <div class="table-container" id="atendimentosTableContainer">
                 @include('components.table', [
                     'tableId' => 'dataTableAtendimentos',
-                    'header' => ['Serviço', 'Data', 'Pet', 'Valor'],
+                    'header' => ['Id','Serviço', 'Data', 'Pet', 'Valor'],
                     'content' => [],
                 ])
             </div>
@@ -169,7 +169,6 @@
                                 <option value="" disabled selected hidden>Selecione um atendimento</option>
                                 @foreach ($pendingAppointmentsByCustomer as $pending)
                                     @foreach ($pending['appointments'] as $appointment)
-                                        <option value="{{ $appointment['id'] }}">{{ $appointment['id'] }}</option>
                                     @endforeach
                                 @endforeach
                             </select>
@@ -185,262 +184,277 @@
             </div>
         </div>
     </div>
-    <script>
-        const pendingAppointmentsByCustomer = @json($pendingAppointmentsByCustomer);
-        const products = @json($products);
+<script>
+    const pendingAppointmentsByCustomer = @json($pendingAppointmentsByCustomer);
+    const products = @json($products);
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const openModalButtonProdutos = document.getElementById('openModalButtonProdutos');
-            const openModalButtonAtendimentos = document.getElementById('openModalButtonAtendimentos');
-            const modal = document.getElementById('modalProdutos');
-            const modalServicos = document.getElementById('modalServicos');
-            const cancelButtonProdutos = document.getElementById('cancelButtonProdutos');
-            const cancelButtonAtendimentos = document.getElementById('cancelButtonAtendimentos');
-            const adicionarProduto = document.getElementById('adicionarProduto');
-            const produtoSelect = document.getElementById('select-produtos');
-            const quantidadeInput = document.getElementById('quantidade-produtos');
-            const adicionarAtendimento = document.getElementById('adicionarAtendimento');
-            const atendimentoSelect = document.getElementById('select-atendimento');
-            let linhaParaEditar = null;
+    document.addEventListener('DOMContentLoaded', function() {
+        const openModalButtonProdutos = document.getElementById('openModalButtonProdutos');
+        const openModalButtonAtendimentos = document.getElementById('openModalButtonAtendimentos');
+        const modal = document.getElementById('modalProdutos');
+        const modalServicos = document.getElementById('modalServicos');
+        const cancelButtonProdutos = document.getElementById('cancelButtonProdutos');
+        const cancelButtonAtendimentos = document.getElementById('cancelButtonAtendimentos');
+        const adicionarProduto = document.getElementById('adicionarProduto');
+        const produtoSelect = document.getElementById('select-produtos');
+        const quantidadeInput = document.getElementById('quantidade-produtos');
+        const adicionarAtendimento = document.getElementById('adicionarAtendimento');
+        const atendimentoSelect = document.getElementById('select-atendimento');
+        const customerSelect = document.getElementById('customerSelect');
+        let linhaParaEditar = null;
 
-            atualizarVisibilidadeTabela('dataTableProdutos');
-            atualizarVisibilidadeTabela('dataTableAtendimentos');
+        atualizarVisibilidadeTabela('dataTableProdutos');
+        atualizarVisibilidadeTabela('dataTableAtendimentos');
 
-            function atualizarVisibilidadeTabela(tableId) {
-                const tabela = document.getElementById(tableId);
-                const tabelaCorpo = tabela.querySelector('tbody');
-                const header = tabela.querySelector('thead');
-                const message = document.getElementById('title-sem-registro');
+        function atualizarVisibilidadeTabela(tableId) {
+            const tabela = document.getElementById(tableId);
+            const tabelaCorpo = tabela.querySelector('tbody');
+            const header = tabela.querySelector('thead');
+            const message = document.getElementById('title-sem-registro');
 
-                if (tabelaCorpo.children.length === 0) {
-                    header.style.display = 'none';
-                    message.classList.remove('hidden');
-                } else {
-                    header.style.display = '';
-                    message.classList.add('hidden');
-                }
+            if (tabelaCorpo.children.length === 0) {
+                header.style.display = 'none';
+                message.classList.remove('hidden');
+            } else {
+                header.style.display = '';
+                message.classList.add('hidden');
             }
+        }
 
-            function addRowToTable(tableId, rowData, dados) {
-                const tabela = document.getElementById(tableId);
-                const tabelaCorpo = tabela.querySelector('tbody');
-                const novaLinha = document.createElement('tr');
+        function addRowToTable(tableId, rowData, dados) {
+            const tabela = document.getElementById(tableId);
+            const tabelaCorpo = tabela.querySelector('tbody');
+            const novaLinha = document.createElement('tr');
 
-                rowData.forEach(cellData => {
-                    const cell = document.createElement('td');
-                    cell.className = 'px-6 py-4';
-                    cell.textContent = cellData;
-                    novaLinha.appendChild(cell);
-                });
+            rowData.forEach(cellData => {
+                const cell = document.createElement('td');
+                cell.className = 'px-6 py-4';
+                cell.textContent = cellData;
+                novaLinha.appendChild(cell);
+            });
 
-                const colunaAcoes = document.createElement('td');
-                colunaAcoes.className = 'px-6 py-4 flex';
-                colunaAcoes.innerHTML = `
+            const colunaAcoes = document.createElement('td');
+            colunaAcoes.className = 'px-6 py-4 flex';
+            colunaAcoes.innerHTML = `
             <a href="#" class="text-blue-600 hover:underline editar">
                 <img src="{{ asset('icons/pencil.svg') }}" alt="Editar" tipo-modal='${tableId}' id="editarTable" dados='${dados}' class="h-4 w-4">
             </a>
-                    <button class="text-red-600 hover:underline ml-4 excluir">
-                        <img src="{{ asset('icons/trash3.svg') }}" alt="Excluir" class="h-4 w-4">
-                    </button>
-                `;
-                novaLinha.appendChild(colunaAcoes);
-                tabelaCorpo.appendChild(novaLinha);
-                tabela.classList.add('zebra-striping');
+            <button class="text-red-600 hover:underline ml-4 excluir">
+                <img src="{{ asset('icons/trash3.svg') }}" alt="Excluir" class="h-4 w-4">
+            </button>`;
+            novaLinha.appendChild(colunaAcoes);
+            tabelaCorpo.appendChild(novaLinha);
+            tabela.classList.add('zebra-striping');
 
-                atualizarVisibilidadeTabela(tableId);
-            }
+            atualizarVisibilidadeTabela(tableId);
+        }
 
-            if (openModalButtonProdutos && modal) {
-                openModalButtonProdutos.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    modal.style.display = 'flex';
-                });
-            }
-
-            if (cancelButtonProdutos && modal) {
-                cancelButtonProdutos.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    modal.style.display = 'none';
-                    resetarFormularioModal('produto');
-                });
-            }
-
-            if (openModalButtonAtendimentos && modalServicos) {
-                openModalButtonAtendimentos.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    modalServicos.style.display = 'flex';
-                });
-            }
-
-            if (cancelButtonAtendimentos && modalServicos) {
-                cancelButtonAtendimentos.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    modalServicos.style.display = 'none';
-                    resetarFormularioModal('atendimento');
-                });
-            }
-
-            if (adicionarProduto) {
-                adicionarProduto.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    const produtoId = produtoSelect.value;
-                    const quantidade = quantidadeInput.value;
-
-                    if (!produtoId || !quantidade || quantidade <= 0) {
-                        alert('Por favor, selecione um produto e insira uma quantidade válida.');
-                        return;
-                    }
-                    const dadosProdutos = @json($products);
-                    const valorUnitario = dadosProdutos.find(produto => produto.id === Number(produtoId))
-                        .price;
-                    const productName = produtoSelect.options[produtoSelect.selectedIndex].text;
-                    const valor = Number(valorUnitario) * Number(quantidade);
-
-                    if (linhaParaEditar) {
-                        linhaParaEditar.children[0].textContent = productName;
-                        linhaParaEditar.children[1].textContent = valorUnitario;
-                        linhaParaEditar.children[2].textContent = quantidade;
-                        linhaParaEditar.children[3].textContent = valor;
-                        linhaParaEditar = null;
-                    } else {
-                        const dados = {
-                            idProduto: produtoId,
-                            quantidade: quantidade,
-                        }
-                        addRowToTable('dataTableProdutos', [productName, valorUnitario, quantidade, valor],
-                            JSON.stringify(dados));
-                    }
-                    resetarFormularioModal('produto');
-                    modal.style.display = 'none';
-                });
-            }
-
-            if (adicionarAtendimento) {
-                adicionarAtendimento.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    const atendimentoId = atendimentoSelect.value;
-
-                    if (!atendimentoId) {
-                        alert('Por favor, selecione um atendimento.');
-                        return;
-                    }
-
-                    const productName = atendimentoSelect.options[atendimentoSelect.selectedIndex].text;
-
-                    if (linhaParaEditar) {
-                        linhaParaEditar.children[0].textContent = productName;
-                        linhaParaEditar = null;
-                    } else {
-                        addRowToTable('dataTableAtendimentos', [productName]), JSON.stringify({
-                            idAtendimento: atendimentoId
-                        });
-                    }
-                    resetarFormularioModal('atendimento');
-                    modalServicos.style.display = 'none';
-                });
-            }
-
-            document.addEventListener('click', function(event) {
-                if (event.target.closest('.excluir')) {
-                    const confirmacao = confirm('Tem certeza que deseja excluir este item?');
-                    if (confirmacao) {
-                        const linha = event.target.closest('tr');
-                        linha.remove();
-                        atualizarVisibilidadeTabela('dataTableProdutos');
-                    }
-                }
-
-                if (event.target.closest('.editar')) {
-                    event.preventDefault();
-                    linhaParaEditar = event.target.closest('tr');
-                    const buttonEditar = document.getElementById('editarTable');
-                    const tipoModal = buttonEditar.getAttribute('tipo-modal');
-
-                    if (tipoModal === 'dataTableProdutos') {
-                        const dados = JSON.parse(buttonEditar.getAttribute('dados'));
-                        const produtoId = dados.idProduto;
-                        const quantidade = dados.quantidade;
-
-                        produtoSelect.value = produtoId;
-                        quantidadeInput.value = quantidade;
-                        adicionarProduto.textContent = 'Editar';
-                        modal.style.display = 'flex';
-                    }
-
-                    if (tipoModal === 'dataTableAtendimentos') {
-                        const dados = JSON.parse(buttonEditar.getAttribute('dados'));
-                        const atendimentoId = dados.idAtendimento;
-
-                        atendimentoSelect.value = atendimentoId;
-                        adicionarAtendimento.textContent = 'Editar';
-                        modalServicos.style.display = 'flex';
-                    }
-                }
-            });
-
-            function resetarFormularioModal(modal) {
-                if (modal === 'produto') {
-                    produtoSelect.value = '';
-                    quantidadeInput.value = '';
-                    adicionarProduto.textContent = 'Adicionar';
-                    linhaParaEditar = null;
-                }
-
-                if (modal === 'atendimento') {
-                    atendimentoSelect.value = '';
-                    adicionarAtendimento.textContent = 'Adicionar';
-                    linhaParaEditar = null;
-                }
-            }
-
-            const form = document.querySelector('form');
-            const formBtn = document.getElementById('btnForm');
-            const saleItemsInput = document.getElementById('sales');
-            const productsTable = document.getElementById('dataTableProdutos');
-            const servicesTable = document.getElementById('dataTableAtendimentos');
-
-            formBtn.addEventListener('click', function(event) {
+        // Eventos para abrir e fechar modais
+        if (openModalButtonProdutos && modal) {
+            openModalButtonProdutos.addEventListener('click', function(event) {
                 event.preventDefault();
+                modal.style.display = 'flex';
+            });
+        }
 
-                const produtos = [];
-                const produtosRows = productsTable.querySelectorAll('tbody tr');
-                produtosRows.forEach(row => {
-                    const cells = row.querySelectorAll('td');
-                    const product = {
-                        type: 'product',
-                        price: parseFloat(cells[1].textContent), // Preço unitário
-                        product_item: {
-                            product_id: products.find(p => cells[0].textContent == p.name && cells[1].textContent == p.price)?.id, // TODO: melhorar obter Id do produto
-                            quantity: parseInt(cells[2].textContent), // Quantidade
-                        }
-                    };
-                    produtos.push(product);
-                });
+        if (cancelButtonProdutos && modal) {
+            cancelButtonProdutos.addEventListener('click', function(event) {
+                event.preventDefault();
+                modal.style.display = 'none';
+                resetarFormularioModal('produto');
+            });
+        }
 
-                const atendimentos = [];
-                const atendimentosRows = servicesTable.querySelectorAll('tbody tr');
-                atendimentosRows.forEach(row => {
-                    const cells = row.querySelectorAll('td');
-                    const service = {
-                        type: 'appointment',
-                        appointment_item: {
-                            appointment_id: cells[0].getAttribute('data-appointment-id'), // Id do atendimento
-                            price: parseFloat(cells[3].textContent) // Preço do atendimento
-                        }
-                    };
-                    atendimentos.push(service);
-                });
+        if (openModalButtonAtendimentos && modalServicos) {
+            openModalButtonAtendimentos.addEventListener('click', function(event) {
+                event.preventDefault();
+                modalServicos.style.display = 'flex';
+            });
+        }
 
-                const saleItems = [...produtos, ...atendimentos];
+        if (cancelButtonAtendimentos && modalServicos) {
+            cancelButtonAtendimentos.addEventListener('click', function(event) {
+                event.preventDefault();
+                modalServicos.style.display = 'none';
+                resetarFormularioModal('atendimento');
+            });
+        }
 
-                if (saleItems.length === 0) {
-                    alert('Por favor, adicione ao menos um produto ou atendimento.');
+        // Função para adicionar produto
+        if (adicionarProduto) {
+            adicionarProduto.addEventListener('click', function(event) {
+                event.preventDefault();
+                const produtoId = produtoSelect.value;
+                const quantidade = quantidadeInput.value;
+
+                if (!produtoId || !quantidade || quantidade <= 0) {
+                    alert('Por favor, selecione um produto e insira uma quantidade válida.');
                     return;
                 }
+                const dadosProdutos = @json($products);
+                const valorUnitario = dadosProdutos.find(produto => produto.id === Number(produtoId)).price;
+                const productName = produtoSelect.options[produtoSelect.selectedIndex].text;
+                const valor = Number(valorUnitario) * Number(quantidade);
 
-                saleItemsInput.value = JSON.stringify(saleItems);
-                event.target.closest('form').submit();
+                if (linhaParaEditar) {
+                    linhaParaEditar.children[0].textContent = productName;
+                    linhaParaEditar.children[1].textContent = valorUnitario;
+                    linhaParaEditar.children[2].textContent = quantidade;
+                    linhaParaEditar.children[3].textContent = valor;
+                    linhaParaEditar = null;
+                } else {
+                    const dados = {
+                        idProduto: produtoId,
+                        quantidade: quantidade,
+                    };
+                    addRowToTable('dataTableProdutos', [productName, valorUnitario, quantidade, valor], JSON.stringify(dados));
+                }
+                resetarFormularioModal('produto');
+                modal.style.display = 'none';
             });
+        }
+
+        adicionarAtendimento.addEventListener('click', function(event) {
+        event.preventDefault();
+        const atendimentoId = atendimentoSelect.value;
+
+        if (!atendimentoId) {
+            alert('Por favor, selecione um atendimento.');
+            return;
+        }
+
+        const selectedOption = atendimentoSelect.options[atendimentoSelect.selectedIndex];
+        const serviceName = selectedOption.getAttribute('data-service-name');
+        const date = selectedOption.getAttribute('data-date');
+        const petName = selectedOption.getAttribute('data-pet-name');
+        const value = selectedOption.getAttribute('data-value');
+
+        if (linhaParaEditar) {
+            linhaParaEditar.children[0].textContent = atendimentoId;
+            linhaParaEditar.children[1].textContent = serviceName;
+            linhaParaEditar.children[2].textContent = date;
+            linhaParaEditar.children[3].textContent = petName;
+            linhaParaEditar.children[4].textContent = value;
+            linhaParaEditar = null;
+        } else {
+            const dados = {
+                idAtendimento: atendimentoId
+            };
+            addRowToTable('dataTableAtendimentos', [atendimentoId, serviceName, date, petName, value], JSON.stringify(dados));
+        }
+        resetarFormularioModal('atendimento');
+        modalServicos.style.display = 'none';
+    });
+
+        function limparTabelaAtendimentos() {
+            const tabelaCorpo = document.querySelector('#dataTableAtendimentos tbody');
+            tabelaCorpo.innerHTML = ''; 
+            atualizarVisibilidadeTabela('dataTableAtendimentos'); 
+        }
+
+        customerSelect.addEventListener('change', function() {
+            const selectedCustomerId = customerSelect.value;
+
+            atendimentoSelect.innerHTML = '<option value="" disabled selected hidden>Selecione um atendimento</option>';
+            limparTabelaAtendimentos(); 
+
+            const selectedCustomerAppointments = pendingAppointmentsByCustomer.find(customer => customer.id == selectedCustomerId);
+
+            if (selectedCustomerAppointments && selectedCustomerAppointments.appointments) {
+                selectedCustomerAppointments.appointments.forEach(appointment => {
+                    const option = document.createElement('option');
+                    option.value = appointment.id;
+                    option.textContent = `${appointment.service_name} - ${appointment.pet_name} - ${appointment.date}`;
+                    option.setAttribute('data-service-name', appointment.service_name);
+                    option.setAttribute('data-date', appointment.date);
+                    option.setAttribute('data-pet-name', appointment.pet_name);
+                    option.setAttribute('data-value', appointment.value);
+                    atendimentoSelect.appendChild(option);
+                });
+            }
         });
-    </script>
+
+        function resetarFormularioModal(modal) {
+            if (modal === 'produto') {
+                produtoSelect.value = '';
+                quantidadeInput.value = '';
+                adicionarProduto.textContent = 'Adicionar';
+                linhaParaEditar = null;
+            }
+
+            if (modal === 'atendimento') {
+                atendimentoSelect.value = '';
+                adicionarAtendimento.textContent = 'Adicionar';
+                linhaParaEditar = null;
+            }
+        }
+
+    // Processamento final do formulário
+    const formBtn = document.getElementById('btnForm');
+    const saleItemsInput = document.getElementById('sales');
+    const productsTable = document.getElementById('dataTableProdutos');
+    const servicesTable = document.getElementById('dataTableAtendimentos');
+
+    formBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        const productsList = collectProductsFromTable(productsTable, products);
+        const serviceList  = collectServicesFromTable(servicesTable);
+
+        if (!validateItens(productsList, serviceList )) {
+            alert('Por favor, adicione ao menos um produto ou atendimento.');
+            return;
+        }
+
+        processForm(productsList, serviceList , saleItemsInput);
+        event.target.closest('form').submit();
+    });
+
+    function collectProductsFromTable(productsTable, products) {
+        const productsList = [];
+        const productsRows = productsTable.querySelectorAll('tbody tr');
+        productsRows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const product = {
+                type: 'product',
+                price: parseFloat(cells[1].textContent),
+                product_item: {
+                    product_id: products.find(p => cells[0].textContent == p.name && cells[1].textContent == p.price)?.id,
+                    quantity: parseInt(cells[2].textContent),
+                }
+            };
+            productsList.push(product);
+        });
+        return productsList;
+    }
+
+    function collectServicesFromTable(servicesTable) {
+        const serviceList  = [];
+        const serviceRows = servicesTable.querySelectorAll('tbody tr');
+        serviceRows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const service = {
+                type: 'appointment',
+                price: parseFloat(cells[4].textContent),
+                appointment_item: {
+                    appointment_id: parseInt(cells[0].textContent),
+                }
+            };
+            serviceList.push(service);
+        });
+        return serviceList ;
+    }
+
+    function validateItens(productsList, serviceList ) {
+        return productsList.length > 0 || serviceList .length > 0;
+    }
+
+    function processForm(productsList, serviceList , saleItemsInput) {
+        const saleItems = [...productsList, ...serviceList ];
+        saleItemsInput.value = JSON.stringify(saleItems);
+    }
+    });
+    
+</script>
+
 @endsection

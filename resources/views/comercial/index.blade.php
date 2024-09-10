@@ -41,13 +41,15 @@
             </div>
         </div>
 
-
         {{-- Conteúdo da aba de Atendimentos --}}
         <div id="Atendimentos" class="tab-content" style="display:block;">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center">
                     <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Pesquisar"
                         class="px-4 py-2 border border-gray-100 rounded-lg mr-2" />
+                </div> 
+                <div class="pagination-container">
+                    {{ $appointments->links() }}
                 </div>
                 <a href="{{ route('appointments.create') }}" class="add-button">
                     <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
@@ -72,14 +74,14 @@
                         'completed' => 'Concluído',
                         'canceled' => 'Cancelado',
                     ];
-            
+
                     $start_time = $appointment->start_time
                         ? \Carbon\Carbon::parse($appointment->start_time)->format('d/m/Y H:i')
                         : null;
                     $end_time = $appointment->end_time
                         ? \Carbon\Carbon::parse($appointment->end_time)->format('d/m/Y H:i')
                         : null;
-            
+
                     return [
                         $appointment->id,
                         $appointment->service->name,
@@ -103,50 +105,59 @@
                     <input type="text" id="searchSalesInput" onkeyup="searchSalesTable()" placeholder="Pesquisar"
                         class="px-4 py-2 border border-gray-100 rounded-lg mr-2" />
                 </div>
-                <a href="{{ route('commercial.scheduling.index') }}" class="add-button">
+                <div class="pagination-container">
+                    {{ $sales->links() }}
+                </div>
+                <a href="{{ route('sales.create') }}" class="add-button">
                     <img src="{{ asset('icons/plus.svg') }}" alt="Add Icon">
                     Registrar Venda
                 </a>
             </div>
 
-            @php
-                $sales = collect([
-                    (object) [
-                        'id' => 24,
-                        'products' => 'Ração Premium 2x, Sache...',
-                        'service' => 'Banho e Tosa',
-                        'date' => '28/08/2024',
-                        'value' => 'R$ 150,00',
-                        'customer' => 'Ana Paula Oliveira',
-                    ],
-                    (object) [
-                        'id' => 51,
-                        'products' => 'Ração Premium',
-                        'service' => 'Atendimento Veterinário',
-                        'date' => '23/08/2024',
-                        'value' => 'R$ 180,00',
-                        'customer' => 'Ricardo Peixoto',
-                    ],
-                ]);
-            @endphp
-
             @include('components.table', [
-                'header' => ['ID', 'Produtos', 'Serviços', 'Data', 'Valor', 'Cliente'],
+                'header' => [
+                    'ID',
+                    'Funcionário', 
+                    'Produto',                    
+                    'Serviço', 
+                    'Preço',
+                    'Cliente',
+
+                ],
                 'content' => $sales->map(function ($sale) {
+                    $products = [];
+                    $services = [];
+                    $totalPrice = 0;
+
+                    foreach ($sale->saleItem as $item) {
+                        if ($item->productItem) {
+                            $products[] = $item->productItem->product->name ?? 'Produto não especificado';
+                        }
+
+                        if ($item->appointmentItem) {
+                            $services[] = $item->appointmentItem->appointment->service->name ?? 'Serviço não especificado';
+                        }
+
+                        $totalPrice += $item->price ?? 0;
+                    }
+
+                    $productNames = implode(', ', $products) ?: 'Nenhum produto';
+                    $serviceNames = implode(', ', $services) ?: 'Nenhum serviço';
+
                     return [
                         $sale->id,
-                        $sale->products,
-                        $sale->service,
-                        $sale->date,
-                        $sale->value,
-                        $sale->customer,
+                        $sale->employee->user->name ?? 'N/A',
+                        $productNames,
+                        $serviceNames,
+                        number_format($totalPrice, 2, ',', '.'), 
+                        $sale->customer->user->name ?? 'Cliente não especificado',
                     ];
                 }),
-                'editRoute' => 'commercial.scheduling.index', // temporariamente, enquanto não é criada a rota
-                'deleteRoute' => 'commercial.scheduling.index',  // temporariamente, enquanto não é criada a rota
+                'editRoute' => 'sales.edit',
+                'deleteRoute' => 'sales.destroy',
             ])
+ 
         </div>
-
     </div>
 
     <script>
@@ -163,10 +174,7 @@
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
         }
-    </script>
 
-    <script>
-        // Função para filtrar Atendimentos
         function searchTable() {
             var input = document.getElementById("searchInput");
             var filter = input.value.toUpperCase();
@@ -189,7 +197,6 @@
             }
         }
 
-        // Função para filtrar Vendas
         function searchSalesTable() {
             var input = document.getElementById("searchSalesInput");
             var filter = input.value.toUpperCase();

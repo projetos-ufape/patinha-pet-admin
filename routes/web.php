@@ -7,15 +7,14 @@ use App\Http\Controllers\PetController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SaleController;
-use App\Http\Controllers\SaleTempController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StockController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => redirect()->route('login'));
+Route::get('/', fn() => redirect()->route('login'));
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return redirect()->route('comercial.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -30,10 +29,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/customers/{customer}/history', [CustomerController::class, 'history'])->name('customers.history');
         Route::resource('comercial', SaleController::class)->only(['index']);
         Route::resource('sales', SaleController::class);
-        Route::get('commercial/sales/create', [SaleTempController::class, 'create'])->name('commercial.scheduling.index');
     });
-    Route::resource('pets', PetController::class);
-
     Route::middleware('employeeRole:admin')->group(function () {
         Route::resource('employees', EmployeeController::class);
         Route::resource('services', ServiceController::class);
@@ -42,4 +38,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

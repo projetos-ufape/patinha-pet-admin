@@ -1,4 +1,19 @@
 # Sistema de Gerenciamento de Petshop
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/aaee87786b874fc385ca3d7c0348ccdd)](https://app.codacy.com/gh/projetos-ufape/patinha-pet-admin/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
+### Web (para o admin)
+[Link de acesso](https://patinha-pet.f-softsistemas.com.br)
+
+Login: test@example.com
+
+Senha: password
+
+### Mobile (para o cliente)
+[Link de acesso](https://patinha-pet-app.vercel.app)
+
+Login: test@app.com
+
+Senha: password
 
 ## Integrantes
 
@@ -75,8 +90,6 @@ cp .env.example .env
 Sugestão: [criar o alias](https://laravel.com/docs/11.x/sail#configuring-a-shell-alias) "sail" para "./vendor/bin/sail" 
 
 Para fazer uma analise estática do código e manter um code style padrão no projeto, utilizamos a ferramenta [Codacy](https://app.codacy.com/)
-
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/aaee87786b874fc385ca3d7c0348ccdd)](https://app.codacy.com/gh/projetos-ufape/patinha-pet-admin/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 ## 🛠️ Status do Projeto
 Em desenvolvimento
