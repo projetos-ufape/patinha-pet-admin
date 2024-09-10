@@ -11,7 +11,7 @@ test('A pet can be saved', function () {
     $data = [
         'name' => 'Belinha',
         'gender' => 'female',
-        'specie' => 'dog',
+        'species' => 'dog',
         'race' => 'Maltês',
         'height' => 1.5,
         'weight' => 1.0,
@@ -32,7 +32,7 @@ test('A pet can be saved', function () {
         'id' => $petId,
         'name' => 'Belinha',
         'gender' => 'female',
-        'specie' => 'dog',
+        'species' => 'dog',
         'race' => 'Maltês',
         'height' => 1.5,
         'weight' => 1.0,
@@ -46,7 +46,7 @@ test('A pet cannot be saved with invalid information', function () {
     $data = [
         'name' => 12,
         'gender' => 'female',
-        'specie' => 'dog',
+        'species' => 'dog',
         'race' => 'Maltês',
         'height' => 'text',
         'weight' => 1.0,
@@ -81,7 +81,7 @@ test('A pet cannot be saved with your required information', function () {
                 'gender' => [
                     'O gênero do pet é obrigatório.',
                 ],
-                'specie' => [
+                'species' => [
                     'A espécie do pet é obrigatória.',
                 ],
                 'race' => [
@@ -107,7 +107,7 @@ test('Pets can be loaded', function () {
                         ->whereType('customer_id', 'integer')
                         ->whereType('name', 'string')
                         ->whereType('gender', 'string')
-                        ->whereType('specie', 'string')
+                        ->whereType('species', 'string')
                         ->whereType('race', 'string')
                         ->whereType('height', 'double')
                         ->whereType('weight', 'double')
@@ -136,7 +136,7 @@ test('A pet must be searched by id', function () {
                     ->where('customer_id', $pet->customer_id)
                     ->where('name', $pet->name)
                     ->where('gender', $pet->gender)
-                    ->where('specie', $pet->specie)
+                    ->where('species', $pet->species)
                     ->where('race', $pet->race)
                     ->where('height', $pet->height)
                     ->where('weight', $pet->weight)
