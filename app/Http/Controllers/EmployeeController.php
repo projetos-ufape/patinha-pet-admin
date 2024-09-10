@@ -102,7 +102,7 @@ class EmployeeController extends Controller
             ];
 
             if (isset($validatedData['password'])) {
-                $uservalidatedData['password'] = Hash::make($validatedData['password']);
+                $userValidatedData['password'] = Hash::make($validatedData['password']);
             }
             $employee->user->update($userValidatedData);
 
